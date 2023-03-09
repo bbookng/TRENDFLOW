@@ -1,7 +1,12 @@
 import { css } from '@emotion/react';
 import { theme } from '@/styles/theme';
 
-const Button = () => {
+interface Props{
+    children?:string
+}
+
+const Button = (props:Props) => {
+  const {children} = props
   const buttonStyle = css`
     width: 150px;
     height: 50px;
@@ -12,7 +17,7 @@ const Button = () => {
   `;
   return (
     <button type="button" css={buttonStyle}>
-      ㅎㅇ띠
+   {children}
     </button>
   );
 };
