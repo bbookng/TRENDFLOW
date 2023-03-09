@@ -1,4 +1,7 @@
 import { css } from '@emotion/react';
+import { MEDIA_QUERY } from '@/constants/media';
+
+console.log(MEDIA_QUERY);
 
 export const reset = css`
   html,
@@ -124,5 +127,21 @@ export const reset = css`
   table {
     border-collapse: collapse;
     border-spacing: 0;
+  }
+  @media ${MEDIA_QUERY.DESKTOP} {
+    html {
+      font-size: 16px;
+    }
+  }
+  ,
+  @media ${MEDIA_QUERY.TABLET} {
+    html {
+      font-size: 14px;
+    }
+  }
+  @media ${MEDIA_QUERY.MOBILE} {
+    html {
+      font-size: 12px;
+    }
   }
 `;
