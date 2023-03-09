@@ -1,10 +1,10 @@
 import { configureStore, combineReducers, getDefaultMiddleware } from '@reduxjs/toolkit';
 
 // slices
-import counterSlice from './slices/counterSlice';
 // Redux Persist
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import counterSlice from '@/store/slices/counterSlice';
 
 const persistConfig = {
   key: 'root',
