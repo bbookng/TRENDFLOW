@@ -34,6 +34,7 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-shadow': 'warn',
+    'import/prefer-default-export': 'off',
     'no-use-before-define': 1,
     // 정의 전에 사용 금지
     'react/function-component-definition': [
