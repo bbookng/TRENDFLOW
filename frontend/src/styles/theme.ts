@@ -2,13 +2,15 @@ import { PALETTE } from '@/constants/palette';
 
 export const theme = {
   light: {
+    contentBackground: PALETTE.WHITE100,
     background: PALETTE.BRAND100,
-    color: PALETTE.BLACK400,
-    primary: PALETTE.BRAND400,
+    positive: PALETTE.BLUE400,
+    negative: PALETTE.RED400,
   },
   dark: {
-    background: PALETTE.BRAND200,
-    color: PALETTE.BLACK100,
-    primary: PALETTE.BRAND200,
+    contentBackground: PALETTE.BLACK300,
+    background: PALETTE.BLACK400,
+    positive: PALETTE.BLUE400,
+    negative: PALETTE.RED400,
   },
 };

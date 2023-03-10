@@ -2,7 +2,7 @@ import { Global } from '@emotion/react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { decrement, increment } from '@/store/slices/counterSlice';
 import { globalStyles } from '@/styles/globalStyles';
-import Button from '@/components/common/Button';
+import Button from '@/components/atoms/Button';
 
 const App = () => {
   const count = useAppSelector((state) => state.counterSlice.value);
@@ -17,7 +17,7 @@ const App = () => {
       <button type="button" onClick={() => dispatch(decrement())}>
         -
       </button>
-      <Button />
+      <Button variant="contained">버튼띠</Button>
     </>
   );
 };
