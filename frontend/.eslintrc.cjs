@@ -23,16 +23,8 @@ module.exports = {
   rules: {
     'react/react-in-jsx-scope': 0,
     // import React 할 필요 X
-    'import/extensions': [
-      'error',
-      {
-        js: 'never',
-        jsx: 'never',
-        ts: 'never',
-        tsx: 'never',
-        json: 'never',
-      },
-    ],
+    'import/extensions': 'off',
+    'storybook/story-exports': 'off',
     '@typescript-eslint/no-shadow': 'warn',
     'import/prefer-default-export': 'off',
     'no-use-before-define': 1,
