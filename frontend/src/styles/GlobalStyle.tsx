@@ -14,6 +14,10 @@ const style = css`
     font-display: swap;
   }
 
+  html {
+    font-size: 12px;
+  }
+
   html,
   span,
   a,
@@ -42,20 +46,15 @@ const style = css`
     cursor: pointer;
   }
 
-  @media ${MEDIA_QUERY.DESKTOP} {
-    html {
-      font-size: 16px;
-    }
-  }
-  ,
   @media ${MEDIA_QUERY.TABLET} {
     html {
       font-size: 14px;
     }
   }
-  @media ${MEDIA_QUERY.MOBILE} {
+
+  @media ${MEDIA_QUERY.DESKTOP} {
     html {
-      font-size: 12px;
+      font-size: 16px;
     }
   }
 `;
