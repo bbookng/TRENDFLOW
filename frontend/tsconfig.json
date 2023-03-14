@@ -16,11 +16,10 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "types": ["node"],
+    "jsxImportSource": "@emotion/react",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@assets/*": ["src/assets/*"]
+      "@/*": ["src/*"]
     }
   },
   "include": [".eslintrc.cjs", "src", "vite.config.ts"],
