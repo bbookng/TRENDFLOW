@@ -14,6 +14,12 @@ const style = css`
     font-display: swap;
   }
 
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
   html {
     font-size: 12px;
   }
