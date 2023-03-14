@@ -15,20 +15,6 @@ export interface ButtonPropsInterface {
 
 const Button = (props: ButtonPropsInterface) => {
   const { children, variant, fontSize, onClick, size } = props;
-  const fontColor = variant === 'contained' ? PALETTE.WHITE100 : PALETTE.BRAND400;
-  const border = variant === 'outlined' ? `1px solid ${PALETTE.BRAND400}` : 'none';
-
-  const buttonSize = {
-    LARGE: css`
-      padding: 1em 8em;
-    `,
-    MEDIUM: css`
-      padding: 1em 6em;
-    `,
-    SMALL: css`
-      padding: 1em 4em;
-    `,
-  };
 
   return (
     <Ripples color="rgba(221, 220, 222, 0.4)" during={700}>

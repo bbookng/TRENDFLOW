@@ -6,7 +6,9 @@ const MainPage = () => {
     <Container>
       <h1>MainPage</h1>
       <p>메인 페이지 입니다.</p>
-      <Button>버튼띠</Button>
+      <Button variant="contained" fontSize="X_SMALL" size="SMALL">
+        기본버튼
+      </Button>
     </Container>
   );
 };
