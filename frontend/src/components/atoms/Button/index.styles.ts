@@ -13,7 +13,7 @@ const defaultStyle = css`
   align-items: center;
   line-height: 1;
   border-radius: ${BORDER_RADIUS.XS};
-  font-weight: bold;
+  font-weight: 900;
   color: #000;
   font-size: 1rem;
   transition: background 0.3s;
