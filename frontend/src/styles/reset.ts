@@ -128,6 +128,7 @@ export const reset = css`
     border-collapse: collapse;
     border-spacing: 0;
   }
+
   @media ${MEDIA_QUERY.DESKTOP} {
     html {
       font-size: 16px;
