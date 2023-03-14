@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 
 import { PALETTE } from '@/constants/palette';
 
-import { BadgePropsInterface } from '../../atoms/Badge/index';
+import { BadgePropsInterface } from '@/components/atoms/Badge';
 
 const colorList = {
   red: css`
