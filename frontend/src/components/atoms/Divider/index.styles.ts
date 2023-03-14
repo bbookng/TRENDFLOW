@@ -6,8 +6,12 @@ import { PALETTE } from '@/constants/palette';
 const DividerStyle = (props: DividerPropsInterface) => css`
   overflow: hidden;
   ${props.direction === 'horizontal'
-    ? `border-top:${props.width}px ${props.type} ${PALETTE.BLACK100};`
-    : `border-left:${props.width}px ${props.type} ${PALETTE.BLACK100};`}
+    ? `border-top:${props.width}px ${props.type} ${
+        props.themeId === 'light' ? PALETTE.BLACK100 : PALETTE.WHITE100
+      };`
+    : `border-left:${props.width}px ${props.type} ${
+        props.themeId === 'light' ? PALETTE.BLACK100 : PALETTE.WHITE100
+      };`}
   width:${props.direction === 'horizontal' ? '100%' : '0'};
   height: ${props.direction === 'vertical' ? '100vh' : '0'};
 `;

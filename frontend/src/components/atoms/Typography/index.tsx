@@ -1,5 +1,6 @@
 /* eslint-disable react/require-default-props */
 import { ElementType } from 'react';
+import { useTheme } from '@emotion/react';
 import * as S from './index.styles';
 
 export interface TypographyPropsInterface {
@@ -11,10 +12,11 @@ export interface TypographyPropsInterface {
 
 const Typography = (props: TypographyPropsInterface) => {
   const { children, variant } = props;
+  const theme = useTheme();
 
   const tag = variant && variant.match(/^H/) ? `h${variant.substring(1)}` : 'p';
   return (
-    <S.Typography as={tag as ElementType} {...props}>
+    <S.Typography as={tag as ElementType} {...props} theme={theme}>
       {children}
     </S.Typography>
   );

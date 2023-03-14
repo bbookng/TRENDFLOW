@@ -1,6 +1,6 @@
 import { PALETTE } from '@/constants/palette';
 
-export const theme = {
+const theme = {
   light: {
     contentBackground: PALETTE.WHITE100,
     background: PALETTE.BRAND100,
@@ -14,3 +14,5 @@ export const theme = {
     negative: PALETTE.RED400,
   },
 };
+
+export default theme;
