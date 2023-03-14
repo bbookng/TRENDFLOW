@@ -10,7 +10,7 @@ const MainPage = () => {
       <Button variant="contained" fontSize="X_SMALL" size="SMALL">
         기본버튼
       </Button>
-      <Typography variant="BASE" weight="NORMAL" color="black">
+      <Typography variant="BASE" weight="normal" color="black">
         김수민
       </Typography>
     </Container>
