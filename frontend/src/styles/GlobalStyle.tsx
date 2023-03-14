@@ -14,7 +14,7 @@ const style = css`
     font-display: swap;
   }
   html {
-    font-family: 'PRETENDARD ';
+    font-family: 'PRETENDARD';
   }
 `;
 const GlobalStyle = () => {
