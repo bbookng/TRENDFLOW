@@ -8,16 +8,12 @@ export interface BadgePropsInterface {
   color: BadgeColorType;
 }
 
-const Badge = ({ children, width, color }: BadgePropsInterface) => {
+const Badge = ({ children, width = '120px', color }: BadgePropsInterface) => {
   return (
     <S.Badge width={width} color={color}>
       {children}
     </S.Badge>
   );
-};
-
-Badge.defaultProps = {
-  width: '120px',
 };
 
 export default Badge;
