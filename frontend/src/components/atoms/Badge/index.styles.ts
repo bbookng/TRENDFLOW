@@ -28,6 +28,13 @@ export const Badge = styled.div<Partial<BadgePropsInterface>>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  line-height: 1rem;
+
   border-radius: ${BORDER_RADIUS.ROUND};
   box-shadow: ${BOX_SHADOW.BLACK_SM};
+
+  p {
+    margin: 0;
+  }
 `;
