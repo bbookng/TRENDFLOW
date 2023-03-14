@@ -59,6 +59,7 @@ const style = css`
     }
   }
 `;
+
 const GlobalStyle = () => {
   return <Global styles={style} />;
 };
