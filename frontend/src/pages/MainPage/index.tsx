@@ -23,18 +23,6 @@ const MainPage = () => {
       <Button variant="contained" fontSize="X_SMALL" size="SMALL">
         기본버튼
       </Button>
-      <Typography variant="BASE" weight="normal" color="black">
-        김수민
-      </Typography>
-
-      <Button variant="contained" size="LARGE" onClick={openModal}>
-        열려라 모달!!!
-      </Button>
-      {modal && (
-        <PortalProvider>
-          <BasicModal handleModal={closeModal}>베이직</BasicModal>
-        </PortalProvider>
-      )}
 
       <Paper>
         <FilpBadge count="99%" changed="20%p" color="red" width="120px" />

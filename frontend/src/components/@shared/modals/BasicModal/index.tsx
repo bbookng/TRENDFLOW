@@ -3,7 +3,7 @@ import Typography from '@/components/atoms/Typography';
 import * as S from './index.styles';
 
 interface BasicModalPropsInterface {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   handleModal?: () => void;
 }
 
