@@ -1,5 +1,6 @@
 import Button from '@/components/atoms/Button';
 import Typography from '@/components/atoms/Typography';
+import FilpBadge from '@/components/molecules/FlipBadge';
 import { Container } from '@/pages/MainPage/index.styles';
 
 const MainPage = () => {
@@ -13,6 +14,8 @@ const MainPage = () => {
       <Typography variant="BASE" weight="normal" color="black">
         김수민
       </Typography>
+
+      <FilpBadge count="99%" changed="20%p" color="red" width="120px" />
     </Container>
   );
 };

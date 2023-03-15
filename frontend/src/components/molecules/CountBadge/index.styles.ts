@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 
 import { PALETTE } from '@/constants/palette';
 
+import Typography from '@/components/atoms/Typography';
 import { BadgePropsInterface } from '@/components/atoms/Badge';
 
 const colorList = {
@@ -17,7 +18,6 @@ const colorList = {
   `,
 };
 
-// TODO🍇 Typography 개발되면 H2로 수정
-export const CountText = styled.h2<Partial<BadgePropsInterface>>`
+export const CountText = styled(Typography)<Partial<BadgePropsInterface>>`
   ${({ color }) => color && colorList[color]}
 `;
