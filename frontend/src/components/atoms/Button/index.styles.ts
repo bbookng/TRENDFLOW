@@ -39,7 +39,7 @@ const fontSize = (props: ButtonPropsInterface) => css`
 `;
 
 const border = (props: ButtonPropsInterface) => css`
-  border: ${props.variant === 'outlined' ? `1px solid ${PALETTE.BLACK400}` : 'none'};
+  border: ${props.variant === 'outlined' ? `1px solid ${PALETTE.BRAND400}` : 'none'};
 `;
 
 // eslint-disable-next-line consistent-return
