@@ -2,8 +2,11 @@ import { useState } from 'react';
 
 import * as S from './index.styles';
 
+import { PALETTE } from '@/constants/palette';
+
 import CountBadge from '@/components/molecules/CountBadge';
 import Badge, { BadgeColorType } from '@/components/atoms/Badge';
+import Typography from '@/components/atoms/Typography';
 
 export interface FlipBadgePropsInterface {
   count: string;
@@ -44,10 +47,12 @@ const FilpBadge = ({ count, changed, width, color }: FlipBadgePropsInterface) =>
             {isNeutral && <p>전날과 동일</p>}
             {isNeutral || (
               <>
-                <p>전날에 비해</p>
-                <p>
+                <Typography color={PALETTE.BLACK200} variant="BASE" weight="500">
+                  전날에 비해
+                </Typography>
+                <Typography color={color} variant="BASE" weight="500">
                   {changed} {increaseText}
-                </p>
+                </Typography>
               </>
             )}
           </Badge>
