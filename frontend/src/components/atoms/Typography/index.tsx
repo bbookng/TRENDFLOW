@@ -7,7 +7,7 @@ export interface TypographyPropsInterface {
   children?: React.ReactNode;
   variant?: 'H1' | 'H2' | 'H3' | 'H4' | 'LARGE' | 'BASE' | 'SMALL' | 'X_SMALL';
   color?: string;
-  weight?: 'normal' | 'bold';
+  weight?: string;
 }
 
 const Typography = (props: TypographyPropsInterface) => {
