@@ -27,6 +27,7 @@ module.exports = {
     'storybook/story-exports': 'off',
     '@typescript-eslint/no-shadow': 'warn',
     'import/prefer-default-export': 'off',
+    'react/require-default-props': 'off',
     'no-use-before-define': 1,
     // 정의 전에 사용 금지
     'react/function-component-definition': [

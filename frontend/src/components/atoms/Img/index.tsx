@@ -5,13 +5,8 @@ export interface ImgPropsInterface {
   height?: string;
 }
 
-const Img = ({ width, height }: ImgPropsInterface) => {
+const Img = ({ width = '120px', height = '75px' }: ImgPropsInterface) => {
   return <S.Img width={width} height={height} />;
-};
-
-Img.defaultProps = {
-  width: '120px',
-  height: '75px',
 };
 
 export default Img;

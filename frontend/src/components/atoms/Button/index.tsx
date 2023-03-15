@@ -1,8 +1,6 @@
 /* eslint-disable react/require-default-props */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { css } from '@emotion/react';
 import Ripples from 'react-ripples';
-import { PALETTE } from '@/constants/palette';
 import * as S from './index.styles';
 
 export interface ButtonPropsInterface {
@@ -14,7 +12,7 @@ export interface ButtonPropsInterface {
 }
 
 const Button = (props: ButtonPropsInterface) => {
-  const { children, variant, fontSize, onClick, size } = props;
+  const { children } = props;
 
   return (
     <Ripples color="rgba(221, 220, 222, 0.4)" during={700}>
