@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Button from '@/components/atoms/Button';
+import Paper from '@/components/atoms/Paper';
 import Typography from '@/components/atoms/Typography';
+import FilpBadge from '@/components/molecules/FlipBadge';
 import { Container } from '@/pages/MainPage/index.styles';
 import PortalProvider from '@/components/@shared/PortalProvider';
 import BasicModal from '@/components/@shared/modals/BasicModal';
@@ -33,6 +35,10 @@ const MainPage = () => {
           <BasicModal handleModal={closeModal}>베이직</BasicModal>
         </PortalProvider>
       )}
+
+      <Paper>
+        <FilpBadge count="99%" changed="20%p" color="red" width="120px" />
+      </Paper>
     </Container>
   );
 };
