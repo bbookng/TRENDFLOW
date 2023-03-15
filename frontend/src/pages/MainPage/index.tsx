@@ -1,8 +1,19 @@
+import { useState } from 'react';
 import Button from '@/components/atoms/Button';
 import Typography from '@/components/atoms/Typography';
 import { Container } from '@/pages/MainPage/index.styles';
+import PortalProvider from '@/components/@shared/PortalProvider';
+import BasicModal from '@/components/@shared/modals/BasicModal';
 
 const MainPage = () => {
+  const [modal, setModal] = useState(false);
+
+  const openModal = () => {
+    setModal(true);
+  };
+  const closeModal = () => {
+    setModal(false);
+  };
   return (
     <Container>
       <h1>MainPage</h1>
@@ -13,6 +24,15 @@ const MainPage = () => {
       <Typography variant="BASE" weight="normal" color="black">
         김수민
       </Typography>
+
+      <Button variant="contained" size="LARGE" onClick={openModal}>
+        열려라 모달!!!
+      </Button>
+      {modal && (
+        <PortalProvider>
+          <BasicModal handleModal={closeModal}>베이직</BasicModal>
+        </PortalProvider>
+      )}
     </Container>
   );
 };

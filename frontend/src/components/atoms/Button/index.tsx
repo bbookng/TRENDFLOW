@@ -8,15 +8,17 @@ export interface ButtonPropsInterface {
   variant?: 'contained' | 'outlined';
   fontSize?: 'LARGE' | 'BASE' | 'SMALL' | 'X_SMALL';
   size?: 'LARGE' | 'MEDIUM' | 'SMALL';
-  onClick?: () => void;
+  onClick?: (state?: boolean) => void;
 }
 
 const Button = (props: ButtonPropsInterface) => {
-  const { children } = props;
+  const { children, onClick } = props;
 
   return (
     <Ripples color="rgba(221, 220, 222, 0.4)" during={700}>
-      <S.Button {...props}>{children}</S.Button>
+      <S.Button {...props} onClick={onClick}>
+        {children}
+      </S.Button>
     </Ripples>
   );
 };
