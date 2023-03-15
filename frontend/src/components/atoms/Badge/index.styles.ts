@@ -34,6 +34,7 @@ export const Badge = styled.div<Partial<BadgePropsInterface>>`
   border-radius: ${BORDER_RADIUS.ROUND};
   box-shadow: ${BOX_SHADOW.BLACK_SM};
 
+  cursor: pointer;
   p {
     margin: 0;
   }

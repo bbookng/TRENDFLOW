@@ -18,7 +18,8 @@ export const BOX_SHADOW = {
 };
 
 export const BORDER_RADIUS = {
-  LG: '24px',
+  XL: '24px',
+  LG: '20px',
   MD: '16px',
   SM: '12px',
   XS: '8px',
