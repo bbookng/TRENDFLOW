@@ -3,8 +3,8 @@ import { css } from '@emotion/react';
 import { PALETTE } from '@/constants/palette';
 
 export const HamburgerContainer = styled.div`
-  width: 30px;
-  height: 25px;
+  width: 23px;
+  height: 20px;
   position: relative;
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
