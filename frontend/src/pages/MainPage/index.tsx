@@ -1,9 +1,13 @@
 import SearchBar from '@/components/molecules/SearchBar';
 import Typography from '@/components/atoms/Typography';
-import Button from '@/components/atoms/Button';
 
 const MainPage = () => {
-  return <SearchBar />;
+  return (
+    <>
+      <SearchBar />
+      <Typography variant="H1">Hi</Typography>
+    </>
+  );
 };
 
 export default MainPage;
