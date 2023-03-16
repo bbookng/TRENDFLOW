@@ -13,13 +13,14 @@ export const Form = styled.form`
   box-shadow: ${BOX_SHADOW.BLACK_SM};
   display: flex;
   align-items: center;
+
   @media ${MEDIA_QUERY.DESKTOP} {
     width: 600px;
   }
 `;
 
 export const FormInput = styled(Input)`
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   border: none;
   height: 100%;
   flex: 1;
