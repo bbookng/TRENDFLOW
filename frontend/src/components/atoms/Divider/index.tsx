@@ -1,11 +1,10 @@
-import { ThemeId } from '@/styles/emotion';
 import * as S from './index.styles';
 
 export interface DividerPropsInterface {
-  themeId: ThemeId;
   type: 'solid' | 'dashed';
   direction: 'horizontal' | 'vertical';
   width: number;
+  color?: string;
 }
 
 const Divider = (props: DividerPropsInterface) => {

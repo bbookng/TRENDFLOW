@@ -1,12 +1,12 @@
-import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 
 import { PALETTE } from '@/constants/palette';
 import { BORDER_RADIUS, BOX_SHADOW } from '@/constants/styles';
 
 import { BadgePropsInterface } from '@/components/atoms/Badge';
 
-const backGroundColorList = {
+const backgroundColorList = {
   red: css`
     background-color: ${PALETTE.RED100};
   `,
@@ -19,7 +19,7 @@ const backGroundColorList = {
 };
 
 export const Badge = styled.div<Partial<BadgePropsInterface>>`
-  ${({ color }) => color && backGroundColorList[color]}
+  ${({ color }) => color && backgroundColorList[color]}
   width: ${({ width }) => width};
   height: ${({ width }) => width};
 

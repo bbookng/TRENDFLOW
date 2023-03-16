@@ -19,7 +19,7 @@ export interface FlipBadgePropsInterface {
  * @param {string} count 포도알 지수 또는 언급량 (단위까지)
  * @param {string} changed 전일 대비 변화량 (단위까지)
  * @param {string} width 가로, 세로의 길이
- * @param {BadgeColorType} color 뱃지 색 (red, blue, purple 중 택)
+ * @param {BadgeColorType} color 뱃지 색
  */
 const FilpBadge = ({ count, changed, width, color }: FlipBadgePropsInterface) => {
   const [flipped, setFlipped] = useState(false);
@@ -42,9 +42,12 @@ const FilpBadge = ({ count, changed, width, color }: FlipBadgePropsInterface) =>
         {/* 카드 뒷면 */}
         <S.Div className="back" onClick={flipCard}>
           <Badge color={color} width={width}>
-            {/* TODO🍇 Typography 개발되면 Text 수정 */}
             {/* 뱃지 텍스트 */}
-            {isNeutral && <p>전날과 동일</p>}
+            {isNeutral && (
+              <Typography color={color} variant="BASE" weight="500">
+                전날과 동일
+              </Typography>
+            )}
             {isNeutral || (
               <>
                 <Typography color={PALETTE.BLACK200} variant="BASE" weight="500">
