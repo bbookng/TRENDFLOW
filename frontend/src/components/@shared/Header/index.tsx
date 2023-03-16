@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import * as S from './index.styles';
 import Hamburger from '@/components/@shared/Header/components/Hamburger';
 import Menu from '@/components/@shared/Header/components/Menu';
