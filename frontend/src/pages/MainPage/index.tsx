@@ -5,7 +5,7 @@ const MainPage = () => {
   return (
     <>
       <SearchBar />
-      <Typography>Hi</Typography>
+      <Typography variant="H1">Hi</Typography>
     </>
   );
 };
