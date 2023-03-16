@@ -9,10 +9,12 @@ interface BaseLayoutProps {
 
 const BaseLayout = ({ children }: BaseLayoutProps) => {
   return (
-    <S.Container>
+    <S.Layout>
       <Header></Header>
-      <S.Contents>{children}</S.Contents>
-    </S.Container>
+      <S.Main>
+        <S.Container>{children}</S.Container>
+      </S.Main>
+    </S.Layout>
   );
 };
 
