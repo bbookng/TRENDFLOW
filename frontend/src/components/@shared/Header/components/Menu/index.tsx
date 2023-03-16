@@ -13,13 +13,14 @@ const Menu = ({ openMenu, onClick }: MenuPropsInterface) => {
     }
   };
   return (
-    <S.Dim css={openMenu && S.open} onClick={click}>
-      <S.Container>
+    <>
+      <S.Dim css={openMenu && S.dimVisible} onClick={click} />
+      <S.Container css={openMenu && S.open}>
         <S.Contents>
           <Typography variant="H1">LOGO</Typography>
         </S.Contents>
       </S.Container>
-    </S.Dim>
+    </>
   );
 };
 
