@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { PALETTE } from '@/constants/palette';
 
 export const HamburgerContainer = styled.div`
-  width: 25px;
+  width: 30px;
+  height: 25px;
+  position: relative;
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
   -o-transform: rotate(0deg);
@@ -12,12 +15,13 @@ export const HamburgerContainer = styled.div`
   -o-transition: 0.5s ease-in-out;
   transition: 0.5s ease-in-out;
   cursor: pointer;
+  z-index: 1000;
 `;
 export const Span = styled.span`
+  position: absolute;
   display: block;
-  height: 3px;
+  height: 4px;
   width: 100%;
-  margin-bottom: 5px;
   background: ${PALETTE.BLACK300};
   border-radius: 2px;
   opacity: 1;
@@ -31,25 +35,50 @@ export const Span = styled.span`
   -o-transition: 0.25s ease-in-out;
   transition: 0.25s ease-in-out;
 
-  &:nth-child(1) {
+  &:nth-of-type(1) {
+    top: 0;
     -webkit-transform-origin: left center;
     -moz-transform-origin: left center;
     -o-transform-origin: left center;
     transform-origin: left center;
   }
 
-  &:nth-child(2) {
+  &:nth-of-type(2) {
+    top: 50%;
+    transform: translateY(-50%);
     -webkit-transform-origin: left center;
     -moz-transform-origin: left center;
     -o-transform-origin: left center;
     transform-origin: left center;
   }
 
-  &:nth-child(3) {
+  &:nth-of-type(3) {
+    bottom: 0;
     margin-bottom: 0;
     -webkit-transform-origin: left center;
     -moz-transform-origin: left center;
     -o-transform-origin: left center;
     transform-origin: left center;
+  }
+`;
+
+export const open = css`
+  span:nth-of-type(1) {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: translateX(4px) rotate(45deg);
+  }
+
+  span:nth-of-type(2) {
+    width: 0%;
+    opacity: 0;
+  }
+
+  span:nth-of-type(3) {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: translateX(4px) rotate(-45deg);
   }
 `;

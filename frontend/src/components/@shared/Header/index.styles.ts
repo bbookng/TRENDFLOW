@@ -13,4 +13,5 @@ export const Header = styled.header`
   border-bottom: 0.5px solid ${PALETTE.WHITE400};
   background-color: transparent;
   padding: 0 2rem;
+  z-index: 1000;
 `;
