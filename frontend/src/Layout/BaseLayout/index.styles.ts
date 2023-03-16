@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { PALETTE } from '@/constants/palette';
 
 export const Layout = styled.div`
+  position: relative;
   width: 100%;
   min-height: 100vh;
   display: flex;
