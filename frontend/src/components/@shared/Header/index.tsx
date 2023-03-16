@@ -1,4 +1,3 @@
-import React from 'react';
 import Hamburger from '@/components/@shared/Header/components/Hamburger';
 import * as S from './index.styles';
 
