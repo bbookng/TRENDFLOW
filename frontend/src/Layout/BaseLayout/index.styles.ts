@@ -1,16 +1,29 @@
 import styled from '@emotion/styled';
 import { PALETTE } from '@/constants/palette';
 
-export const Container = styled.div`
+export const Layout = styled.div`
   width: 100%;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background-color: ${PALETTE.BRAND100};
 `;
 
-export const Contents = styled.div`
+export const Main = styled.main`
   width: 100%;
-  max-width: 1160px;
+  position: relative;
+  top: 56px;
   margin: 0 auto;
-  padding: 0 2rem;
-  padding-top: 86px;
+  flex: 1;
+  margin-bottom: 56px;
+`;
+
+export const Container = styled.div`
+  width: 100%;
+  position: relative;
+  padding: 2rem 2rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;

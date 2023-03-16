@@ -5,7 +5,7 @@ import { BORDER_RADIUS, BOX_SHADOW } from '@/constants/styles';
 import { PALETTE } from '@/constants/palette';
 
 export const Form = styled.form`
-  width: 360px;
+  width: 100%;
   height: 48px;
   padding: 0 2.6rem;
   background-color: ${PALETTE.WHITE100};
