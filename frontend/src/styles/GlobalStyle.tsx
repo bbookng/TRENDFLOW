@@ -9,6 +9,7 @@ const style = css`
   @font-face {
     font-family: 'PRETENDARD';
     src: url('${PRETENDARD_WOFF}') format('woff2-variations');
+    font-weight: 500;
     font-style: normal;
     font-display: swap;
   }

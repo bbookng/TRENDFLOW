@@ -6,10 +6,6 @@ export default {
   title: 'Atoms/Divider',
   component: Divider,
   argTypes: {
-    themeId: {
-      options: ['light', 'dark'],
-      control: { type: 'radio' },
-    },
     type: {
       options: ['solid', 'dashed'],
       control: { type: 'radio' },
