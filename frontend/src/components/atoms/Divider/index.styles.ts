@@ -10,5 +10,5 @@ export const Divider = styled.hr<DividerPropsInterface>`
 
   /* 공통 css */
   overflow: hidden;
-  border-color: ${({ theme, color }) => color || theme.text};
+  border-color: ${({ theme, color }) => color || theme.border};
 `;
