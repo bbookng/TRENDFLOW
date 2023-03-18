@@ -5,31 +5,25 @@ import * as S from './index.styles';
 export type RankChangeType = 'up' | 'down' | 'new' | 'same';
 
 export interface RankingItemPropsInterface {
-  type: RankChangeType;
-  rank: string;
+  rank: number;
   keyword: string;
-  step?: string;
+  type: RankChangeType;
+  step?: number;
   width: string;
-  margin: string;
 }
 
 /**
- * @param {RankChangeType} type 변화 유형
- * @param {string} rank 순위
+ * @param {number} rank 순위
  * @param {string} keyword 키워드
- * @param {string} step 변화 순위 (up 또는 down인 경우에만 입력)
- * @param {string} width 가로 길이
- * @param {string} margin '상 우 하 좌' 형식
+ * @param {RankChangeType} type 변화 유형
+ * @param {number} step 변화 순위 (up 또는 down인 경우에만 입력)
+ * @param {string} width 가로 길이 (단위 포함)
  */
-const RankingItem = ({ type, rank, keyword, step, width, margin }: RankingItemPropsInterface) => {
+const RankingItem = ({ rank, keyword, type, step, width }: RankingItemPropsInterface) => {
   const navi = useNavigate();
 
   return (
-    <S.Wrapper
-      width={width}
-      margin={margin}
-      onClick={() => navi('/social/result', { state: { keyword } })}
-    >
+    <S.Wrapper width={width} onClick={() => navi('/social/result', { state: { keyword } })}>
       <S.RankKeywordWrapper>
         {/* 순위 */}
         <S.Rank variant="BASE" weight="700">

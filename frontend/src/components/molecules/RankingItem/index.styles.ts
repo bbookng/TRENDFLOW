@@ -6,11 +6,6 @@ import { PALETTE } from '@/constants/palette';
 import Typography from '@/components/atoms/Typography';
 import { RankChangeType } from '@/components/molecules/RankingItem';
 
-interface WrapperPropsInterface {
-  width: string;
-  margin: string;
-}
-
 const colorList = {
   up: css`
     color: ${PALETTE.RED400};
@@ -26,14 +21,13 @@ const colorList = {
   `,
 };
 
-export const Wrapper = styled.div<WrapperPropsInterface>`
+export const Wrapper = styled.div<{ width: string }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   width: ${({ width }) => width};
-  min-width: 10.625rem;
-  margin: ${({ margin }) => margin};
+  min-width: 10rem;
   cursor: pointer;
 `;
 

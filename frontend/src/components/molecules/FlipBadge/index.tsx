@@ -16,12 +16,12 @@ export interface FlipBadgePropsInterface {
 }
 
 /**
- * @param {string} count 포도알 지수 또는 언급량 (단위까지)
- * @param {string} changed 전일 대비 변화량 (단위까지)
- * @param {string} width 가로, 세로의 길이
+ * @param {string} count 포도알 지수 또는 언급량 (단위 포함)
+ * @param {string} changed 전일 대비 변화량 (단위 포함)
+ * @param {string} width 가로, 세로의 길이 (단위 포함)
  * @param {BadgeColorType} color 뱃지 색
  */
-const FilpBadge = ({ count, changed, width, color }: FlipBadgePropsInterface) => {
+const FlipBadge = ({ count, changed, width, color }: FlipBadgePropsInterface) => {
   const [flipped, setFlipped] = useState(false);
   const flipCard = () => {
     setFlipped((prev) => !prev);
@@ -39,6 +39,7 @@ const FilpBadge = ({ count, changed, width, color }: FlipBadgePropsInterface) =>
             {count}
           </CountBadge>
         </S.Div>
+
         {/* 카드 뒷면 */}
         <S.Div className="back" onClick={flipCard}>
           <Badge color={color} width={width}>
@@ -65,4 +66,4 @@ const FilpBadge = ({ count, changed, width, color }: FlipBadgePropsInterface) =>
   );
 };
 
-export default FilpBadge;
+export default FlipBadge;

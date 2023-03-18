@@ -1,11 +1,14 @@
 import SearchBar from '@/components/molecules/SearchBar';
-import Typography from '@/components/atoms/Typography';
+import HotKeywords from '@/components/organisms/MainPage/HotKeywords';
+import NoBookmark from '@/components/organisms/MainPage/NoBookmark';
 
 const MainPage = () => {
   return (
     <>
       <SearchBar />
-      <Typography variant="H1">Hi</Typography>
+      <HotKeywords type="day" />
+      <HotKeywords type="week" />
+      <NoBookmark />
     </>
   );
 };
