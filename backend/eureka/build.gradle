@@ -8,12 +8,6 @@ group = 'com.trendflow'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
-
 repositories {
 	mavenCentral()
 }
@@ -23,21 +17,8 @@ ext {
 }
 
 dependencies {
-	// spring
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-	// lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-
-	// gateway
-	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
-
-	// eureka
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
-	// Security
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.7.9'
 }
 
 dependencyManagement {
