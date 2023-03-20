@@ -1,7 +1,7 @@
+import * as S from './index.styles';
 import { PALETTE } from '@/constants/palette';
 import { Typography } from '@/components/atoms';
-import * as S from './index.styles';
-import { ReactComponent as PlusCircle } from '@/assets/icons/PlusCircle.svg';
+import { PlusCircle } from '@/assets';
 
 const NoBookmark = () => {
   return (

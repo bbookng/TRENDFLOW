@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { MEDIA_QUERY } from '@/constants/media';
 import { PALETTE } from '@/constants/palette';
 
 export const Header = styled.header`
@@ -14,4 +15,8 @@ export const Header = styled.header`
   background-color: transparent;
   padding: 0 2rem;
   z-index: 1000;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    display: none;
+  }
 `;
