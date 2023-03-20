@@ -9,6 +9,7 @@ export const NoBookmarkPaper = styled.div`
   align-items: center;
 
   width: 100%;
+  height: 20rem;
   padding: 2rem;
   color: ${PALETTE.BRAND400};
   background-color: transparent;
@@ -20,4 +21,9 @@ export const TextWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 0.725rem;
+
+  & p:first-of-type {
+    margin-bottom: 0.25rem;
+  }
 `;

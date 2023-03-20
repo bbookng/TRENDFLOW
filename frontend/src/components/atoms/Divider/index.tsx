@@ -4,6 +4,7 @@ export interface DividerPropsInterface {
   type: 'solid' | 'dashed';
   direction: 'horizontal' | 'vertical';
   width: number;
+  length: string;
   color?: string;
 }
 
