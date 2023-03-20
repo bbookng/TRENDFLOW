@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '@/components/@shared/Header';
 
 import * as S from './index.styles';
-import Button from '@/components/atoms/Button';
+import Navbar from '@/components/@shared/Navbar';
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -11,7 +11,8 @@ interface BaseLayoutProps {
 const BaseLayout = ({ children }: BaseLayoutProps) => {
   return (
     <S.Layout>
-      <Header></Header>
+      <Header />
+      <Navbar />
       <S.Main>
         <S.Container>{children}</S.Container>
       </S.Main>
