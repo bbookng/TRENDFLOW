@@ -1,4 +1,4 @@
-import { Typography, Paper, Divider, Label } from '@/components/atoms';
+import { Divider, Label } from '@/components/atoms';
 import { RankingItem } from '@/components/molecules';
 import { RankChangeType } from '@/components/molecules/RankingItem';
 import * as S from './index.styles';
@@ -66,27 +66,40 @@ const RankingList: Array<RankingListItemInterface> = [
 ];
 
 const HotKeywords = ({ type }: HotKeywordsPropsInterface) => {
+  // const [isMobile, setIsMobile] = useState(window.innerWidth <= 576);
+
+  // const resizeWindow = () => {
+  //   setIsMobile(window.innerWidth <= 576);
+  // };
+
+  // useEffect(() => {
+  //   window.addEventListener('resize', resizeWindow);
+  //   return () => window.removeEventListener('resize', resizeWindow);
+  // }, []);
+
   return (
     <S.Wrapper>
       <Label>{type === 'day' ? '오늘의' : '이번 주'} HOT 키워드</Label>
 
-      <Paper>
-        <S.TempChart />
-        {/* <Divider type="solid" direction="vertical" width={0.8} /> */}
+      <S.ContentPaper>
+        <S.ChartWrapper>
+          <S.TempChart />
+          <Divider type="solid" direction="vertical" width={0.1} length="100%" />
+        </S.ChartWrapper>
 
-        <S.MobileRankingWrapper>
-          <S.Wrapper>
+        <S.RankingWrapper>
+          <S.RankingItemWrapper>
             {RankingList.slice(0, 4).map((item) => (
-              <RankingItem key={item.rank} {...item} width="120px" />
+              <RankingItem key={item.rank} {...item} width="8rem" />
             ))}
-          </S.Wrapper>
-          <S.Wrapper>
+          </S.RankingItemWrapper>
+          <S.RankingItemWrapper>
             {RankingList.slice(-4).map((item) => (
-              <RankingItem key={item.rank} {...item} width="120px" />
+              <RankingItem key={item.rank} {...item} width="9rem" />
             ))}
-          </S.Wrapper>
-        </S.MobileRankingWrapper>
-      </Paper>
+          </S.RankingItemWrapper>
+        </S.RankingWrapper>
+      </S.ContentPaper>
     </S.Wrapper>
   );
 };
