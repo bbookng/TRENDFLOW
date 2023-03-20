@@ -1,10 +1,11 @@
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { ROUTER_PATH } from '@/constants/path';
 import App from '@/App';
 
-const MainPage = lazy(() => import('@/pages/MainPage'));
-const LandingPage = lazy(() => import('@/pages/LandingPage'));
+import MainPage from '@/pages/MainPage';
+import LandingPage from '@/pages/LandingPage';
+
 const SocialMainPage = lazy(() => import('@/pages/SocialMainPage'));
 const SocialResultPage = lazy(() => import('@/pages/SocialResultPage'));
 const YoutubeMainPage = lazy(() => import('@/pages/YoutubeMainPage'));
@@ -30,27 +31,51 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTER_PATH.SOCIAL_MAIN_PAGE,
-        element: <SocialMainPage />,
+        element: (
+          <Suspense>
+            <SocialMainPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTER_PATH.SOCIAL_RESULT_PAGE,
-        element: <SocialResultPage />,
+        element: (
+          <Suspense>
+            <SocialResultPage />
+          </Suspense>
+        ),
       },
       {
-        path: ROUTER_PATH.YOUTUBUE_MAIN_PAGE,
-        element: <YoutubeMainPage />,
+        path: ROUTER_PATH.YOUTUBE_MAIN_PAGE,
+        element: (
+          <Suspense>
+            <YoutubeMainPage />
+          </Suspense>
+        ),
       },
       {
-        path: ROUTER_PATH.YOUTUBUE_RESULT_PAGE,
-        element: <YoutubeResultPage />,
+        path: ROUTER_PATH.YOUTUBE_RESULT_PAGE,
+        element: (
+          <Suspense>
+            <YoutubeResultPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTER_PATH.COMPARISON_MAIN_PAGE,
-        element: <ComparisonMainPage />,
+        element: (
+          <Suspense>
+            <ComparisonMainPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTER_PATH.COMPARISON_RESULT_PAGE,
-        element: <ComparisonResultPage />,
+        element: (
+          <Suspense>
+            <ComparisonResultPage />
+          </Suspense>
+        ),
       },
     ],
   },

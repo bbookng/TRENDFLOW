@@ -1,5 +1,5 @@
-import Typography from '@/components/atoms/Typography';
 import * as S from './index.styles';
+import { ReactComponent as Logo } from '@/assets/logos/logo.svg';
 
 interface MenuPropsInterface {
   openMenu: boolean;
@@ -17,7 +17,7 @@ const Menu = ({ openMenu, onClick }: MenuPropsInterface) => {
       <S.Dim css={openMenu && S.dimVisible} onClick={click} />
       <S.Container css={openMenu && S.open}>
         <S.Contents>
-          <Typography variant="H1">LOGO</Typography>
+          <Logo />
         </S.Contents>
       </S.Container>
     </>

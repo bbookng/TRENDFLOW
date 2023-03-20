@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { MEDIA_QUERY } from '@/constants/media';
 import { PALETTE } from '@/constants/palette';
 
 export const Layout = styled.div`
@@ -9,15 +10,28 @@ export const Layout = styled.div`
   flex-direction: column;
   justify-content: space-between;
   background-color: ${PALETTE.BRAND100};
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+
+    & > div:nth-of-type(1) {
+      grid-column: 1;
+    }
+  }
 `;
 
 export const Main = styled.main`
-  width: 100%;
   position: relative;
+  width: 100%;
   top: 56px;
-  margin: 0 auto;
   flex: 1;
-  margin-bottom: 56px;
+  margin-bottom: 112px;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    grid-column: 2;
+    padding: 0 3.5rem;
+  }
 `;
 
 export const Container = styled.div`
@@ -27,4 +41,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media ${MEDIA_QUERY.DESKTOP} {
+    padding: 0;
+  }
 `;
