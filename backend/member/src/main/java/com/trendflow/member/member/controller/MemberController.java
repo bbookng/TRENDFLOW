@@ -23,6 +23,19 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @GetMapping("/health_check")
+    public ResponseEntity<BasicResponse> healthCheck(){
+        log.info("healthCheck - Call");
+
+        try {
+            return ResponseEntity.ok().body(BasicResponse.Body(MemberCode.SUCCESS, null));
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(MemberCode.FAIL, null));
+        } catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(BasicResponse.Body(MemberCode.FAIL, null));
+        }
+    }
+
     @GetMapping("/{memberId}")
     public ResponseEntity<BasicResponse> findMember(@PathVariable("memberId") Long memberId){
         log.info("findMember - Call");
