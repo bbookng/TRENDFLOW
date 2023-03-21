@@ -21,9 +21,6 @@ export default {
     width: {
       control: { type: 'text' },
     },
-    margin: {
-      control: { type: 'text' },
-    },
   },
 } as ComponentMeta<typeof RankingItem>;
 
@@ -32,9 +29,8 @@ const Template: ComponentStory<typeof RankingItem> = (args) => <RankingItem {...
 export const Primary = Template.bind({});
 Primary.args = {
   type: 'up',
-  rank: '1',
+  rank: 1,
   keyword: '스타벅스',
-  step: '2',
+  step: 2,
   width: '200px',
-  margin: '0 0 0.5rem 0',
 };
