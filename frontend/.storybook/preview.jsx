@@ -1,9 +1,7 @@
 import GlobalStyle from '../src/styles/GlobalStyle';
 import { MemoryRouter } from 'react-router';
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import store from '../src/store/store';
-import { ThemeProvider } from '@emotion/react';
-import { darkTheme, lightTheme } from '../src/styles/theme';
 
 export const decorators = [
   (Story) => (
