@@ -12,15 +12,15 @@ export const HotKeywordsWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  margin-top: 3rem;
-  margin-bottom: 2.5rem;
+  margin: 3rem 0;
 
   & > div:nth-of-type(1) {
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
   }
 
   @media ${MEDIA_QUERY.DESKTOP} {
     flex-direction: row;
+    margin: 4rem 0 3rem 0;
 
     & > div:nth-of-type(1) {
       margin-bottom: 0;

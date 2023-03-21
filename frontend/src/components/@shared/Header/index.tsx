@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as S from './index.styles';
 import Hamburger from '@/components/@shared/Header/components/Hamburger';
 import Menu from '@/components/@shared/Header/components/Menu';
@@ -10,6 +11,7 @@ const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const { isDark } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
+  const navi = useNavigate();
   const handleMenuState = () => {
     setOpenMenu(!openMenu);
   };
@@ -20,7 +22,7 @@ const Header = () => {
     <S.Header>
       <S.Inner>
         <Hamburger openMenu={openMenu} onClick={handleMenuState}></Hamburger>
-        {isDark ? <DarkLogo /> : <Logo />}
+        {isDark ? <DarkLogo onClick={() => navi('/')} /> : <Logo onClick={() => navi('/')} />}
         <button type="button" onClick={handleIsDarkState}>
           토글 버튼
         </button>
