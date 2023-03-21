@@ -3,6 +3,11 @@ import Input from '@/components/atoms/Input';
 import { MEDIA_QUERY } from '@/constants/media';
 import { BORDER_RADIUS, BOX_SHADOW } from '@/constants/styles';
 
+export const Wrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+`;
 export const Form = styled.form`
   width: 100%;
   height: 48px;
