@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import * as S from './index.styles';
-import { Logo, Social, Youtube, Compare } from '@/assets';
+import { Logo, Social, Youtube, Compare, DarkLogo } from '@/assets';
 import { ROUTER_PATH } from '@/constants/path';
+import { useAppSelector } from '@/hooks/storeHook';
 
 const navList = [
   {
@@ -22,11 +23,11 @@ const navList = [
 ];
 
 const Navbar = () => {
+  const { isDark } = useAppSelector((state) => state);
   const navi = useNavigate();
-
   return (
     <S.Navbar>
-      <Logo onClick={() => navi('/')} />
+      {isDark ? <DarkLogo onClick={() => navi('/')} /> : <Logo onClick={() => navi('/')} />}
       {navList.map((item) => (
         <S.NavItem key="item.title" to={item.link}>
           <S.NavIcon>{item.icon}</S.NavIcon>

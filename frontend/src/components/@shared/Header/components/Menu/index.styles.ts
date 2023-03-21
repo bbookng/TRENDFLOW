@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { PALETTE } from '@/constants/palette';
+import { NavLink } from 'react-router-dom';
+import { BORDER_RADIUS } from '@/constants/styles';
 
 export const Dim = styled.div`
   position: absolute;
@@ -29,13 +30,56 @@ export const Container = styled.div`
 `;
 
 export const Contents = styled.div`
-  margin-top: 50px;
+  margin: 110px 0 80px 0;
 `;
 
 export const dimVisible = css`
   display: block;
 `;
 export const open = css`
-  width: 60%;
+  width: 240px;
   left: 0;
+`;
+
+export const NavList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+`;
+
+export const NavItem = styled(NavLink)`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 2.75rem;
+  width: 100%;
+  height: 3.55rem;
+  color: ${({ theme }) => theme.text200};
+  font-weight: 400;
+
+  svg {
+    fill: ${({ theme }) => theme.text200};
+    margin: 0;
+  }
+
+  &:hover,
+  &.active {
+    color: ${({ theme }) => theme.navbarActiveColor};
+    border-radius: ${BORDER_RADIUS.MD};
+    background-color: ${({ theme }) => theme.navbarBackground};
+    font-weight: 600;
+
+    svg {
+      fill: ${({ theme }) => theme.navbarActiveColor};
+    }
+  }
+`;
+
+export const NavIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 2rem;
 `;
