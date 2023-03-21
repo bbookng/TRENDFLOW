@@ -29,11 +29,12 @@ const Navbar = () => {
     <S.Navbar>
       {isDark ? <DarkLogo onClick={() => navi('/')} /> : <Logo onClick={() => navi('/')} />}
       {navList.map((item) => (
-        <S.NavItem key="item.title" to={item.link}>
+        <S.NavItem key={item.title} to={item.link}>
           <S.NavIcon>{item.icon}</S.NavIcon>
           {item.title}
         </S.NavItem>
       ))}
+      <S.NavUser>반갑습니다, 에헴띠님!</S.NavUser>
     </S.Navbar>
   );
 };
