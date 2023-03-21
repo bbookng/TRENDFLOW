@@ -9,8 +9,10 @@ declare module '@emotion/react' {
     text: string;
     text200: string;
     border: string;
-
+    headerBorder: string;
     positive: string;
     negative: string;
+    navbarBackground: string;
+    navbarActiveColor: string;
   }
 }
