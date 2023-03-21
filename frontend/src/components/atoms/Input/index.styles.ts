@@ -2,7 +2,8 @@ import styled from '@emotion/styled';
 import { PALETTE } from '@/constants/palette';
 
 export const Input = styled.input`
-  color: ${PALETTE.BLACK400};
+  background-color: transparent;
+  color: ${({ theme }) => theme.text};
   &::placeholder {
     color: ${PALETTE.BLACK100};
   }

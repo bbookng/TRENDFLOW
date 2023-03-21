@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { MEDIA_QUERY } from '@/constants/media';
-import { PALETTE } from '@/constants/palette';
 
 export const Layout = styled.div`
   position: relative;
@@ -9,7 +8,7 @@ export const Layout = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: ${PALETTE.BRAND100};
+  background-color: ${({ theme }) => theme.background};
 
   @media ${MEDIA_QUERY.DESKTOP} {
     display: grid;

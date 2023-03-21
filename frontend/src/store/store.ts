@@ -1,10 +1,10 @@
-import { configureStore, combineReducers, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 
 // slices
 // Redux Persist
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import counterSlice from '@/store/slices/counterSlice';
+import rootReducer from '@/store/rootReducer';
 
 const persistConfig = {
   key: 'root',
@@ -12,16 +12,13 @@ const persistConfig = {
   whiteList: ['userSlice'],
 };
 
-const rootReducer = combineReducers({
-  counterSlice,
-});
-
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
   reducer: persistedReducer,
   middleware: getDefaultMiddleware({
     serializableCheck: false,
     // {ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]},
+    devTools: process.env.NODE_ENV !== 'production',
   }),
 });
 

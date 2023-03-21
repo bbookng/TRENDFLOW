@@ -1,10 +1,11 @@
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { ROUTER_PATH } from '@/constants/path';
 import App from '@/App';
 
 import MainPage from '@/pages/MainPage';
 import LandingPage from '@/pages/LandingPage';
+import BaseLayout from '@/Layout/BaseLayout';
 
 const SocialMainPage = lazy(() => import('@/pages/SocialMainPage'));
 const SocialResultPage = lazy(() => import('@/pages/SocialResultPage'));
@@ -17,7 +18,11 @@ const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <BaseLayout>
+        <Outlet />
+      </BaseLayout>
+    ),
     errorElement: <NotFoundPage />,
     children: [
       {

@@ -1,5 +1,6 @@
 import * as S from './index.styles';
-import { ReactComponent as Logo } from '@/assets/logos/logo.svg';
+import { useAppSelector } from '@/hooks/storeHook';
+import { DarkLogo, Logo } from '@/assets';
 
 interface MenuPropsInterface {
   openMenu: boolean;
@@ -7,6 +8,7 @@ interface MenuPropsInterface {
 }
 
 const Menu = ({ openMenu, onClick }: MenuPropsInterface) => {
+  const { isDark } = useAppSelector((state) => state);
   const click = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClick();
@@ -16,9 +18,7 @@ const Menu = ({ openMenu, onClick }: MenuPropsInterface) => {
     <>
       <S.Dim css={openMenu && S.dimVisible} onClick={click} />
       <S.Container css={openMenu && S.open}>
-        <S.Contents>
-          <Logo />
-        </S.Contents>
+        <S.Contents>{isDark ? <DarkLogo /> : <Logo />}</S.Contents>
       </S.Container>
     </>
   );
