@@ -1,7 +1,5 @@
 import '@emotion/react';
 
-type ThemeId = 'light' | 'dark';
-
 declare module '@emotion/react' {
   export interface Theme {
     background: string;
@@ -9,11 +7,10 @@ declare module '@emotion/react' {
     text: string;
     text200: string;
     border: string;
-
+    headerBorder: string;
     navBackground: string;
     navSelected: string;
     navNotSelected: string;
-
     positive: string;
     negative: string;
   }
