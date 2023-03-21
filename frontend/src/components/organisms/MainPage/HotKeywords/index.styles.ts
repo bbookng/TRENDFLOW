@@ -21,17 +21,13 @@ export const ContentPaper = styled(Paper)`
 export const ChartWrapper = styled.div`
   display: none;
 
+  & > div {
+    margin: auto 2rem auto 0;
+  }
+
   @media ${MEDIA_QUERY.DESKTOP} {
     display: flex;
   }
-`;
-
-export const TempChart = styled.div`
-  width: 240px;
-  height: 240px;
-  margin: auto 2rem auto 0;
-  border-radius: 50%;
-  background-color: ${PALETTE.BRAND400};
 `;
 
 export const RankingWrapper = styled.div`

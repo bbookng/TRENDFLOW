@@ -21,3 +21,14 @@ export const PALETTE = {
   BRAND400: '#A86FE1',
   BRAND500: '#9147DB',
 };
+
+export const CIRCLE_CHART_PALLETE = [
+  '#E5D5F6',
+  '#CCAAEE',
+  '#B380E5',
+  '#9956DC',
+  '#802CD3',
+  '#6623A9',
+  '#4D1A7F',
+  '#331155',
+];
