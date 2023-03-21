@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,4 +30,7 @@ public class Member {
     private Integer age;
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
+    @OneToMany
+    @JoinColumn(name = "member_id")
+    private List<Role> roles;
 }
