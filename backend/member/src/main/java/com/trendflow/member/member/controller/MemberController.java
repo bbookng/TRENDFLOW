@@ -28,8 +28,8 @@ public class MemberController {
         log.info("findMember - Call");
 
         try {
-            FindMemberResponse response = memberService.findMember(memberId);
-            return ResponseEntity.ok().body(BasicResponse.Body(MemberCode.SUCCESS, response));
+            FindMemberResponse findMemberResponse = memberService.findMember(memberId);
+            return ResponseEntity.ok().body(BasicResponse.Body(MemberCode.SUCCESS, findMemberResponse));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(MemberCode.FAIL, null));
         } catch (RuntimeException e){

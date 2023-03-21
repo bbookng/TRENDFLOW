@@ -14,6 +14,7 @@ public class FindMemberResponse {
     private String platformCode;
     private String name;
     private String email;
+    private String password;
     private Integer age;
     private LocalDateTime regDt;
 
@@ -24,6 +25,7 @@ public class FindMemberResponse {
                 .platformCode(member.getPlatformCode())
                 .name(member.getName())
                 .email(member.getEmail())
+                .password(member.getPassword())
                 .age(member.getAge())
                 .regDt(member.getRegDt())
                 .build();

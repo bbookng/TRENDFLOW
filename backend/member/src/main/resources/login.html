@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>소셜 로그인 테스트</title>
+  </head>
+  <body>
+    <button id="kakao">카카오로그인</button>
+    <button id="google">구글로그인</button>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const kakaoId = "6e9502bc3ecab5f6997c9d97a8f9a933";
+    const kakaoRedirectUrl = "http://127.0.0.1:5500/auth.html";
+    const kakaoUrl =
+      "https://kauth.kakao.com/oauth/authorize?client_id=" +
+      kakaoId +
+      "&redirect_uri=" +
+      kakaoRedirectUrl +
+      "&response_type=code";
+
+    const kakao = () => {
+      window.location.href = kakaoUrl;
+    };
+    const google = () => {
+      alert("google");
+    };
+
+    kakaoBtn = document.querySelector("#kakao");
+    googleBtn = document.querySelector("#google");
+
+    kakaoBtn.addEventListener("click", kakao);
+    googleBtn.addEventListener("click", google);
+  </script>
+</html>
