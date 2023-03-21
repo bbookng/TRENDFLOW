@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
+import { BORDER_RADIUS } from '../../../constants/styles';
 import { MEDIA_QUERY } from '@/constants/media';
 import { PALETTE } from '@/constants/palette';
 
@@ -11,6 +12,7 @@ export const Navbar = styled.div`
   background-color: ${({ theme }) => theme.contentBackground};
   z-index: 1000;
 
+  /* 로고 */
   & > svg {
     margin: 5rem auto 4.5rem;
     cursor: pointer;
@@ -28,10 +30,10 @@ export const NavItem = styled(NavLink)`
   justify-content: start;
   align-items: center;
   width: 100%;
-  height: 3.75rem;
+  height: 3.5rem;
   padding: 0 3.25rem;
 
-  color: ${({ theme }) => theme.text200};
+  color: ${({ theme }) => theme.navNotSelected};
   font-weight: 400;
 
   svg {
@@ -41,13 +43,13 @@ export const NavItem = styled(NavLink)`
 
   &:hover,
   &.active {
-    color: ${PALETTE.BRAND400};
-    background-color: ${PALETTE.BRAND100};
-    border-right: 3px ${PALETTE.BRAND400} solid;
-    font-weight: 600;
+    color: ${({ theme }) => theme.navSelected};
+    background-color: ${({ theme }) => theme.navBackground};
+    border-right: 3px ${PALETTE.BRAND500} solid;
+    font-weight: 500;
 
     svg {
-      fill: ${PALETTE.BRAND400};
+      fill: ${({ theme }) => theme.navSelected};
     }
   }
 `;
@@ -59,4 +61,19 @@ export const NavIcon = styled.div`
   width: 20px;
   height: 20px;
   margin-right: 2rem;
+`;
+
+export const NavUser = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 2rem;
+  width: 12.5rem;
+  height: 2.5rem;
+  border-radius: ${BORDER_RADIUS.XL};
+
+  color: ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.background};
+  /* color: ${PALETTE.BRAND400}; */
 `;
