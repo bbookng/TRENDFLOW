@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { MEDIA_QUERY } from '@/constants/media';
-import { PALETTE } from '@/constants/palette';
 
 export const Header = styled.header`
   position: fixed;
@@ -8,7 +7,7 @@ export const Header = styled.header`
   left: 0;
   width: 100%;
   height: 56px;
-  border-bottom: 0.5px solid ${PALETTE.WHITE400};
+  border-bottom: 1px solid ${({ theme }) => theme.headerBorder};
   background-color: ${({ theme }) => theme.background};
   padding: 0 2rem;
   z-index: 1000;
