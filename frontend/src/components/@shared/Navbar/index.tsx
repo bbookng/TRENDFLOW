@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import * as S from './index.styles';
 import { Logo, Social, Youtube, Compare } from '@/assets';
 import { ROUTER_PATH } from '@/constants/path';
+import { Typography } from '@/components/atoms';
 
 const navList = [
   {
@@ -33,6 +34,7 @@ const Navbar = () => {
           {item.title}
         </S.NavItem>
       ))}
+      <S.NavUser>반갑습니다, 에헴띠님!</S.NavUser>
     </S.Navbar>
   );
 };
