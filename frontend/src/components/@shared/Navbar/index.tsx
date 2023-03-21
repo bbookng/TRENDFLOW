@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import * as S from './index.styles';
 import { Logo, Social, Youtube, Compare } from '@/assets';
 import { ROUTER_PATH } from '@/constants/path';
-import { Typography } from '@/components/atoms';
+import * as S from './index.styles';
 
 const navList = [
   {
@@ -29,7 +28,7 @@ const Navbar = () => {
     <S.Navbar>
       <Logo onClick={() => navi('/')} />
       {navList.map((item) => (
-        <S.NavItem key="item.title" to={item.link}>
+        <S.NavItem key={item.title} to={item.link}>
           <S.NavIcon>{item.icon}</S.NavIcon>
           {item.title}
         </S.NavItem>
