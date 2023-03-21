@@ -5,7 +5,7 @@ spring:
   application:
     name: member
   datasource:
-    url: jdbc:mysql://trendflow.site:3340/trendflow?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://trendflow.site:3306/member?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: trendflow
     password: trendflow205.!
     driver-class-name: com.mysql.cj.jdbc.Driver
