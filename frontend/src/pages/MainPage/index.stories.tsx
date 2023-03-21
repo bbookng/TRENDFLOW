@@ -1,6 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import MainPage from '@/pages/MainPage';
 import BaseLayout from '@/Layout/BaseLayout';
+import ThemeComponent from '@/components/@shared/Storybook/ThemeComponent';
 
 export default {
   title: 'Pages/MainPage',
@@ -8,9 +9,11 @@ export default {
 } as ComponentMeta<typeof MainPage>;
 
 const Template = () => (
-  <BaseLayout>
-    <MainPage />;
-  </BaseLayout>
+  <ThemeComponent>
+    <BaseLayout>
+      <MainPage />;
+    </BaseLayout>
+  </ThemeComponent>
 );
 
 export const MainPageTemplate: ComponentStory<typeof MainPage> = Template.bind({});

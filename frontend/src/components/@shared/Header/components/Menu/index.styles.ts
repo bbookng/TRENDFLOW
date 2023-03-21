@@ -24,7 +24,7 @@ export const Container = styled.div`
   box-sizing: border-box;
   min-height: 100vh;
   height: 100vh;
-  background-color: ${PALETTE.WHITE100};
+  background-color: ${({ theme }) => theme.contentBackground};
   transition: 0.3s cubic-bezier(0, 1, 1, 1.01);
 `;
 
@@ -36,6 +36,6 @@ export const dimVisible = css`
   display: block;
 `;
 export const open = css`
-  width: 70%;
+  width: 60%;
   left: 0;
 `;

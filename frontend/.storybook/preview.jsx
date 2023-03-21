@@ -1,15 +1,17 @@
-import { ThemeProvider } from '@emotion/react';
 import GlobalStyle from '../src/styles/GlobalStyle';
-import { lightTheme } from '../src/styles/theme';
-import { MemoryRouter } from "react-router";
+import { MemoryRouter } from 'react-router';
+import { Provider, useSelector } from 'react-redux';
+import store from '../src/store/store';
+import { ThemeProvider } from '@emotion/react';
+import { darkTheme, lightTheme } from '../src/styles/theme';
 
 export const decorators = [
   (Story) => (
     <MemoryRouter initialEntries={['/']}>
-      <ThemeProvider theme={lightTheme}>
+      <Provider store={store}>
         <GlobalStyle />
         <Story />
-      </ThemeProvider>
+      </Provider>
     </MemoryRouter>
   ),
 ];

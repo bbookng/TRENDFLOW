@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { PALETTE } from '@/constants/palette';
 
 export const HamburgerContainer = styled.div`
   width: 23px;
@@ -22,7 +21,7 @@ export const Span = styled.span`
   display: block;
   height: 4px;
   width: 100%;
-  background: ${PALETTE.BLACK300};
+  background: ${({ theme }) => theme.text};
   border-radius: 2px;
   opacity: 1;
   left: 0;
@@ -30,10 +29,10 @@ export const Span = styled.span`
   -moz-transform: rotate(0deg);
   -o-transform: rotate(0deg);
   transform: rotate(0deg);
-  -webkit-transition: 0.25s ease-in-out;
-  -moz-transition: 0.25s ease-in-out;
-  -o-transition: 0.25s ease-in-out;
-  transition: 0.25s ease-in-out;
+  -webkit-transition: transform 0.25s ease-in-out;
+  -moz-transition: transform 0.25s ease-in-out;
+  -o-transition: transform 0.25s ease-in-out;
+  transition: transform 0.25s ease-in-out;
 
   &:nth-of-type(1) {
     top: 0;

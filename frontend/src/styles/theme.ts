@@ -14,7 +14,7 @@ export const lightTheme = {
 export const darkTheme = {
   contentBackground: PALETTE.BLACK300,
   background: PALETTE.BLACK400,
-  text: PALETTE.WHITE400,
+  text: PALETTE.WHITE100,
   text200: PALETTE.WHITE200,
   border: PALETTE.WHITE300,
 
