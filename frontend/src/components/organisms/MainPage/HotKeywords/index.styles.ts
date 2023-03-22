@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { Paper } from '@/components/atoms/Paper/index.styles';
-import { PALETTE } from '@/constants/palette';
 import { MEDIA_QUERY } from '@/constants/media';
 
 export const Wrapper = styled.div`
