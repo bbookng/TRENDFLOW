@@ -1,71 +1,74 @@
 /* eslint-disable import/extensions */
-import { css, Global } from '@emotion/react';
+import { css, Global, useTheme } from '@emotion/react';
 import emotionReset from 'emotion-reset';
 import PRETENDARD_WOFF from '@/assets/fonts/PRETENDARD/PretendardVariable.woff2';
 import { MEDIA_QUERY } from '@/constants/media';
 
-const style = css`
-  ${emotionReset}
-  @font-face {
-    font-family: 'PRETENDARD';
-    src: url('${PRETENDARD_WOFF}') format('woff2-variations');
-    font-style: normal;
-    font-display: swap;
-  }
+const GlobalStyle = () => {
+  const theme = useTheme();
 
-  * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
+  const style = css`
+    ${emotionReset}
+    @font-face {
+      font-family: 'PRETENDARD';
+      src: url('${PRETENDARD_WOFF}') format('woff2-variations');
+      font-style: normal;
+      font-display: swap;
+    }
 
-  html {
-    font-size: 14px;
-  }
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
 
-  html,
-  span,
-  a,
-  input,
-  textarea,
-  button {
-    font-family: 'PRETENDARD';
-    font-weight: 500;
-  }
-
-  a {
-    text-decoration: none;
-    color: black;
-  }
-  input {
-    border: none;
-    outline: none;
-  }
-  textarea {
-    border: none;
-    resize: none;
-    outline: none;
-    line-height: 20px;
-  }
-  button {
-    border: none;
-    cursor: pointer;
-  }
-
-  @media ${MEDIA_QUERY.TABLET} {
     html {
       font-size: 14px;
+      background-color: ${theme.background};
     }
-  }
 
-  @media ${MEDIA_QUERY.DESKTOP} {
-    html {
-      font-size: 16px;
+    html,
+    span,
+    a,
+    input,
+    textarea,
+    button {
+      font-family: 'PRETENDARD';
+      font-weight: 500;
     }
-  }
-`;
 
-const GlobalStyle = () => {
+    a {
+      text-decoration: none;
+      color: black;
+    }
+    input {
+      border: none;
+      outline: none;
+    }
+    textarea {
+      border: none;
+      resize: none;
+      outline: none;
+      line-height: 20px;
+    }
+    button {
+      border: none;
+      cursor: pointer;
+    }
+
+    @media ${MEDIA_QUERY.TABLET} {
+      html {
+        font-size: 14px;
+      }
+    }
+
+    @media ${MEDIA_QUERY.DESKTOP} {
+      html {
+        font-size: 16px;
+      }
+    }
+  `;
+
   return <Global styles={style} />;
 };
 

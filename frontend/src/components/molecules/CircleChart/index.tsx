@@ -1,11 +1,10 @@
+import { useTheme } from '@emotion/react';
 import { Chart, ArcElement, Tooltip } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import { CIRCLE_CHART_PALLETE, PALETTE } from '@/constants/palette';
-import { useAppSelector } from '@/hooks/storeHook';
+import { CIRCLE_CHART_PALLETE } from '@/constants/palette';
 import * as S from './index.styles';
 
 Chart.register(ArcElement, Tooltip);
-Chart.defaults.color = 'red';
 
 interface CircleChartPropsInterface {
   width: string;
@@ -14,7 +13,7 @@ interface CircleChartPropsInterface {
 }
 
 const CircleChart = ({ width, label, data }: CircleChartPropsInterface) => {
-  const { isDark } = useAppSelector((state) => state);
+  const theme = useTheme();
 
   const chartData = {
     labels: label,
@@ -32,16 +31,15 @@ const CircleChart = ({ width, label, data }: CircleChartPropsInterface) => {
   const chartOptions = {
     plugins: {
       tooltip: {
-        backgroundColor: isDark ? `${PALETTE.BLACK300}` : `${PALETTE.WHITE100}`,
-
+        backgroundColor: theme.background,
         titleFont: { family: 'PRETENDARD', size: 14 },
-        titleColor: isDark ? `${PALETTE.WHITE100}` : `${PALETTE.BLACK400}`,
+        titleColor: theme.text,
 
         bodyFont: { family: 'PRETENDARD', size: 12 },
-        bodyColor: isDark ? `${PALETTE.WHITE100}` : `${PALETTE.BLACK400}`,
+        bodyColor: theme.text,
 
         borderWidth: 0.5,
-        borderColor: isDark ? `${PALETTE.WHITE300}` : `${PALETTE.BLACK100}`,
+        borderColor: theme.border,
 
         padding: 20,
       },
