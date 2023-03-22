@@ -19,7 +19,7 @@ export interface FlipBadgePropsInterface {
  * @param {string} count 포도알 지수 또는 언급량 (단위 포함)
  * @param {string} changed 전일 대비 변화량 (단위 포함)
  * @param {string} width 가로, 세로의 길이 (단위 포함)
- * @param {BadgeColorType} color 뱃지 색
+ * @param {BadgeColorType} color 뱃지 색 (red, blue, purple)
  */
 const FlipBadge = ({ count, changed, width, color }: FlipBadgePropsInterface) => {
   const [flipped, setFlipped] = useState(false);
