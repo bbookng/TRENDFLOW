@@ -3,6 +3,7 @@ import { PALETTE } from '@/constants/palette';
 export const lightTheme = {
   background: PALETTE.BRAND100,
   contentBackground: PALETTE.WHITE100,
+  darkToggleBackground: PALETTE.BLACK300,
   text: PALETTE.BLACK400,
   text200: PALETTE.BLACK200,
   border: PALETTE.BLACK100,
@@ -17,6 +18,7 @@ export const lightTheme = {
 export const darkTheme = {
   background: PALETTE.BLACK400,
   contentBackground: PALETTE.BLACK300,
+  darkToggleBackground: PALETTE.WHITE100,
   text: PALETTE.WHITE100,
   text200: PALETTE.WHITE200,
   border: PALETTE.WHITE300,

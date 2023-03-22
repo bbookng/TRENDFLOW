@@ -1,11 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
-import axios from 'axios';
 import * as S from './index.styles';
 import SearchBar from '@/components/molecules/SearchBar';
 import HotKeywords from '@/components/organisms/MainPage/HotKeywords';
 import NoBookmark from '@/components/organisms/MainPage/NoBookmark';
 import { RankChangeType } from '@/components/molecules/RankingItem';
 import DailyAnalysis from '@/components/organisms/MainPage/DailyAnalysis';
+import { useAppDispatch, useAppSelector } from '@/hooks/storeHook';
+import { fetchTestData } from '@/store/slices/testSlice';
 
 export interface RankingListItemInterface {
   rank: number;
@@ -159,6 +161,12 @@ const rankingList: RankingListInterface = {
 const analysisData = {};
 
 const MainPage = () => {
+  const dispatch = useAppDispatch();
+  const data = useAppSelector((state) => state.test.data);
+  useEffect(() => {
+    dispatch(fetchTestData());
+    console.log(data);
+  }, []);
   return (
     <S.Wrapper>
       <SearchBar />
