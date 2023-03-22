@@ -23,10 +23,10 @@ const navList = [
 ];
 
 const Navbar = () => {
-  const { isDark } = useAppSelector((state) => state);
+  const { isDark, isNavbar } = useAppSelector((state) => state);
   const navi = useNavigate();
   return (
-    <S.Navbar>
+    <S.Navbar isNavbar={isNavbar}>
       {isDark ? <DarkLogo onClick={() => navi('/')} /> : <Logo onClick={() => navi('/')} />}
       {navList.map((item) => (
         <S.NavItem key={item.title} to={item.link}>
