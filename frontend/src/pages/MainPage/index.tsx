@@ -8,40 +8,8 @@ import { RankChangeType } from '@/components/molecules/RankingItem';
 import DailyAnalysis from '@/components/organisms/MainPage/DailyAnalysis';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHook';
 import { fetchTestData } from '@/store/slices/testSlice';
-
-export interface RankingListItemInterface {
-  rank: number;
-  keyword: string;
-  type: RankChangeType;
-  step?: number;
-  mentionCount: number;
-}
-
-export interface RankingListInterface {
-  day: Array<RankingListItemInterface>;
-  week: Array<RankingListItemInterface>;
-}
-
-export interface SocialAnalysisDataInterface {
-  date: string;
-  mentionCountInfo: {
-    total: number;
-    daum: number;
-    naver: number;
-    twitter: number;
-  };
-  grapeQuotientInfo: {
-    positive: number;
-    negative: number;
-    neutral: number;
-  };
-  compareInfo: {
-    mentionCount: number;
-    mentionCountType: string;
-    grapeQuotient: number;
-    grapeQuotientType: string;
-  };
-}
+import { RankingListInterface } from '@/types/ranking';
+import { useGetHotKeywordQuery } from '@/apis/main';
 
 // 목업 데이터
 const rankingList: RankingListInterface = {
@@ -161,12 +129,15 @@ const rankingList: RankingListInterface = {
 const analysisData = {};
 
 const MainPage = () => {
-  const dispatch = useAppDispatch();
-  const data = useAppSelector((state) => state.test.data);
-  useEffect(() => {
-    dispatch(fetchTestData());
-    console.log(data);
-  }, []);
+  const { data, error, isLoading } = useGetHotKeywordQuery('');
+  console.log(data);
+
+  // const dispatch = useAppDispatch();
+  // const data = useAppSelector((state) => state.test.data);
+  // useEffect(() => {
+  //   dispatch(fetchTestData());
+  //   console.log(data);
+  // }, []);
   return (
     <S.Wrapper>
       <SearchBar />
