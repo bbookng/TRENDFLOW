@@ -54,23 +54,23 @@ export const NavItem = styled(NavLink)`
   padding: 0 2.75rem;
   width: 100%;
   height: 3.55rem;
-  color: ${({ theme }) => theme.text200};
+  color: ${({ theme }) => theme.navNotSelected};
   font-weight: 400;
 
   svg {
-    fill: ${({ theme }) => theme.text200};
+    fill: ${({ theme }) => theme.navNotSelected};
     margin: 0;
   }
 
   &:hover,
   &.active {
-    color: ${({ theme }) => theme.navbarActiveColor};
+    color: ${({ theme }) => theme.navSelected};
     border-radius: ${BORDER_RADIUS.MD};
-    background-color: ${({ theme }) => theme.navbarBackground};
+    background-color: ${({ theme }) => theme.navBackground};
     font-weight: 600;
 
     svg {
-      fill: ${({ theme }) => theme.navbarActiveColor};
+      fill: ${({ theme }) => theme.navSelected};
     }
   }
 `;
