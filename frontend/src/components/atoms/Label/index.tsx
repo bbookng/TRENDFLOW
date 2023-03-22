@@ -1,7 +1,11 @@
 import * as S from './index.styles';
 
-const Label = ({ children }: { children: React.ReactNode }) => {
-  return <S.Label variant="H4">{children}</S.Label>;
+const Label = ({ children, color }: { children: React.ReactNode; color?: string }) => {
+  return (
+    <S.Label variant="H4" color={color}>
+      {children}
+    </S.Label>
+  );
 };
 
 export default Label;
