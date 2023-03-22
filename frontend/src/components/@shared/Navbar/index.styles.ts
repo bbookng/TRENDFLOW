@@ -1,16 +1,26 @@
 import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
+import { css } from '@emotion/react';
 import { BORDER_RADIUS } from '../../../constants/styles';
 import { MEDIA_QUERY } from '@/constants/media';
 import { PALETTE } from '@/constants/palette';
 
-export const Navbar = styled.div`
+interface NavbarProps {
+  isNavbar: boolean;
+}
+
+const close = css`
+  transform: translateX(-240px);
+`;
+
+export const Navbar = styled.div<NavbarProps>`
   display: none;
   position: fixed;
   width: 15rem;
   height: 100vh;
   background-color: ${({ theme }) => theme.contentBackground};
   z-index: 1000;
+  transition: all 600ms ease-in-out;
 
   /* 로고 */
   & > svg {
@@ -22,6 +32,7 @@ export const Navbar = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    ${(props) => props.isNavbar && close}
   }
 `;
 
@@ -67,7 +78,7 @@ export const NavUser = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
+  position: absolute;
   bottom: 2rem;
   width: 12.5rem;
   height: 2.5rem;
