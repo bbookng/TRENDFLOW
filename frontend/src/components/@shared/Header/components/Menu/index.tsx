@@ -40,7 +40,7 @@ const Menu = ({ openMenu, onClick }: MenuPropsInterface) => {
         <S.Contents>{isDark ? <DarkLogo /> : <Logo />}</S.Contents>
         <S.NavList>
           {navList.map((item) => (
-            <S.NavItem key="item.title" to={item.link}>
+            <S.NavItem key={item.title} to={item.link}>
               <S.NavIcon>{item.icon}</S.NavIcon>
               {item.title}
             </S.NavItem>
