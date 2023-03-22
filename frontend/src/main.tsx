@@ -5,7 +5,9 @@ import store from '@/store/store';
 import { worker } from '@/mocks/browser';
 
 if (process.env.NODE_ENV === 'development') {
-  worker.start();
+  worker.start({
+    onUnhandledRequest: 'bypass',
+  });
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
