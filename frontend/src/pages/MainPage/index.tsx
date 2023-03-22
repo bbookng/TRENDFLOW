@@ -3,6 +3,7 @@ import SearchBar from '@/components/molecules/SearchBar';
 import HotKeywords from '@/components/organisms/MainPage/HotKeywords';
 import NoBookmark from '@/components/organisms/MainPage/NoBookmark';
 import { RankChangeType } from '@/components/molecules/RankingItem';
+import DailyAnalysis from '@/components/organisms/MainPage/DailyAnalysis';
 
 export interface RankingListItemInterface {
   rank: number;
@@ -15,6 +16,27 @@ export interface RankingListItemInterface {
 export interface RankingListInterface {
   day: Array<RankingListItemInterface>;
   week: Array<RankingListItemInterface>;
+}
+
+export interface SocialAnalysisDataInterface {
+  date: string;
+  mentionCountInfo: {
+    total: number;
+    daum: number;
+    naver: number;
+    twitter: number;
+  };
+  grapeQuotientInfo: {
+    positive: number;
+    negative: number;
+    neutral: number;
+  };
+  compareInfo: {
+    mentionCount: number;
+    mentionCountType: string;
+    grapeQuotient: number;
+    grapeQuotientType: string;
+  };
 }
 
 // 목업 데이터
@@ -131,6 +153,9 @@ const rankingList: RankingListInterface = {
   ],
 };
 
+// 목업 데이터
+const analysisData = {};
+
 const MainPage = () => {
   return (
     <S.Wrapper>
@@ -142,6 +167,7 @@ const MainPage = () => {
       </S.HotKeywordsWrapper>
 
       <NoBookmark />
+      <DailyAnalysis />
     </S.Wrapper>
   );
 };
