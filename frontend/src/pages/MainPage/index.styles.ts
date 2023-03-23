@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { MEDIA_QUERY } from '@/constants/media';
+import { Paper } from '@/components/atoms';
+import { PALETTE } from '@/constants/palette';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -27,4 +29,9 @@ export const HotKeywordsWrapper = styled.div`
       margin-right: 2.5rem;
     }
   }
+`;
+
+export const LineWrapper = styled.div`
+  width: 50%;
+  height: auto;
 `;

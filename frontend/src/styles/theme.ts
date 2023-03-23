@@ -13,6 +13,7 @@ export const lightTheme = {
   navNotSelected: PALETTE.BLACK200,
   positive: PALETTE.BLUE400,
   negative: PALETTE.RED400,
+  neutrality: PALETTE.BRAND500,
 };
 
 export const darkTheme = {
@@ -28,4 +29,5 @@ export const darkTheme = {
   navNotSelected: PALETTE.WHITE300,
   positive: PALETTE.BLUE400,
   negative: PALETTE.RED400,
+  neutrality: PALETTE.BRAND500,
 };
