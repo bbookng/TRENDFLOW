@@ -1,12 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import themeReducer from '@/store/slices/themeSlice';
-import testReducer from '@/store/slices/testSlice';
-import navbarReducer from '@/store/slices/navbarSlice';
+import testSlice from '@/store/slices/testSlice';
+import { keywordApi } from '@/apis/main';
 
 const rootReducer = combineReducers({
   isDark: themeReducer,
-  test: testReducer,
-  isNavbar: navbarReducer,
+  test: testSlice,
+  [keywordApi.reducerPath]: keywordApi.reducer,
 });
 
 export default rootReducer;
