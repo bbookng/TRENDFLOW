@@ -20,7 +20,7 @@ export const Navbar = styled.div<NavbarProps>`
   height: 100vh;
   background-color: ${({ theme }) => theme.contentBackground};
   z-index: 1000;
-  transition: all 600ms ease-in-out;
+  transition: transform 600ms ease-in-out;
 
   /* 로고 */
   & > svg {
