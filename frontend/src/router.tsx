@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { ROUTER_PATH } from '@/constants/path';
-import App from '@/App';
 
 import MainPage from '@/pages/MainPage';
 import LandingPage from '@/pages/LandingPage';
