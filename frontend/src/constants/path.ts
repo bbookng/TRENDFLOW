@@ -7,4 +7,5 @@ export const ROUTER_PATH = {
   COMPARISON_MAIN_PAGE: 'comparison',
   COMPARISON_RESULT_PAGE: 'comparison/result',
   NOT_FOUND_PAGE: 'error',
+  LOGIN_PAGE: 'login',
 };

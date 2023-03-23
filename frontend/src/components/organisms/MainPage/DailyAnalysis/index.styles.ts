@@ -37,3 +37,24 @@ export const BadgeWrapper = styled.div`
     flex-direction: column;
   }
 `;
+
+export const RelatedWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const RelatedPaper = styled(Paper)`
+  display: flex;
+  justify-content: space-between;
+  padding: 2.5rem;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    flex-direction: column;
+  }
+`;
+
+export const RelatedItemWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+`;
