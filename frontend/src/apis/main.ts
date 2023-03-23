@@ -1,17 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { api } from '@/apis/utils/axios';
 import { RankingListInterface } from '@/types/ranking';
-
-// export const getHotKeywords = () => {
-//   return api.get('/keyword/hot').then((res) => res.data);
-// };
 
 export const keywordApi = createApi({
   reducerPath: 'keywordApi',
+  // baseUrl은 .env로 관리하는 url 넣으면 될듯 ?
   baseQuery: fetchBaseQuery({ baseUrl: '/keyword/' }),
   tagTypes: ['get'],
   endpoints: (builder) => ({
-    getHotKeyword: builder.query<RankingListInterface, string>({
+    getHotKeyword: builder.query<RankingListInterface, void>({
       query: () => `hot`,
     }),
   }),

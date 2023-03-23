@@ -129,15 +129,9 @@ const rankingList: RankingListInterface = {
 const analysisData = {};
 
 const MainPage = () => {
-  const { data, error, isLoading } = useGetHotKeywordQuery('');
+  const { data, error, isLoading } = useGetHotKeywordQuery();
   console.log(data);
 
-  // const dispatch = useAppDispatch();
-  // const data = useAppSelector((state) => state.test.data);
-  // useEffect(() => {
-  //   dispatch(fetchTestData());
-  //   console.log(data);
-  // }, []);
   return (
     <S.Wrapper>
       <SearchBar />

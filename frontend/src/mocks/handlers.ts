@@ -8,6 +8,6 @@ export const handlers = [
   }),
 
   rest.get('/keyword/hot', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(hot));
+    return res(ctx.status(500), ctx.json(hot));
   }),
 ];
