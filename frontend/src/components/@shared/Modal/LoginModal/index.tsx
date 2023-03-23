@@ -13,8 +13,9 @@ interface Props {
 const LoginModal = ({ handleClickModalClose, width, height }: Props): React.ReactElement => {
   const { isDark } = useAppSelector((state) => state);
   const handleLogin = () => {
+    const { VITE_API_URL: BASE_URL } = import.meta.env;
     const REST_API_KEY = '6e9502bc3ecab5f6997c9d97a8f9a933';
-    const REDIRECT_URI = 'http://127.0.0.1:5173/login/kakao';
+    const REDIRECT_URI = `http://${BASE_URL}/login/kakao`;
     const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
     window.location.href = KAKAO_URL;
   };
