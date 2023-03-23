@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,5 +16,7 @@ import java.util.List;
 public class KakaoUser {
     private String name;
     private String email;
-    private Integer age;
+    private String gender;
+    private String age;
+    private String birthday;
 }

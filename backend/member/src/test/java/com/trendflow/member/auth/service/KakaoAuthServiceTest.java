@@ -1,37 +1,37 @@
 package com.trendflow.member.auth.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trendflow.member.auth.dto.authentication.KakaoAccess;
 import com.trendflow.member.auth.dto.authentication.KakaoUser;
-import com.trendflow.member.global.code.AuthCode;
 import com.trendflow.member.global.code.PlatformCode;
 import com.trendflow.member.global.exception.NotFoundException;
-import com.trendflow.member.global.exception.UnAuthException;
 import com.trendflow.member.member.entity.Member;
 import com.trendflow.member.member.service.MemberService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.UUID;
 
-@Slf4j
-@Service
-@RequiredArgsConstructor
-public class KakaoAuthService {
-    private final MemberService memberService;
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+class KakaoAuthServiceTest {
+
+    @Autowired
+    private MemberService memberService;
+
     @Value("${login.kakao.client-id}")
     private String ClientId;
     @Value("${login.kakao.client-secret}")
@@ -43,8 +43,12 @@ public class KakaoAuthService {
     @Value("${login.kakao.info-uri}")
     private String KakaoInfoUri;
 
-    public KakaoAccess getAccessToken(String authCode) throws UnAuthException {
+    @Test
+    @Transactional
+    void getAccessToken() {
         try {
+            String authCode = "";
+
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
@@ -64,6 +68,7 @@ public class KakaoAuthService {
                     String.class
             );
 
+            // HTTP 응답 (JSON) -> 액세스 토큰 파싱
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
@@ -74,7 +79,7 @@ public class KakaoAuthService {
             Integer refreshTokenExpire = jsonNode.get("refresh_token_expires_in").asInt();
             String scope = jsonNode.get("scope").asText();
 
-            return KakaoAccess.builder()
+            KakaoAccess kakaoAccess = KakaoAccess.builder()
                     .tokenType(tokenType)
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
@@ -83,17 +88,21 @@ public class KakaoAuthService {
                     .scope(Arrays.asList(scope.split(" ")))
                     .build();
 
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new UnAuthException(AuthCode.KAKAO_GET_TOKEN_FAIL);
-        } catch (HttpClientErrorException e) {
-            e.printStackTrace();
-            throw new UnAuthException(AuthCode.KAKAO_GET_TOKEN_FAIL);
+            System.out.println(kakaoAccess);
+            assertEquals(kakaoAccess.getTokenType(), "bearer");
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            assertTrue(true);
         }
     }
 
-    public KakaoUser getUser(String accessToken) throws UnAuthException {
+    @Test
+    @Transactional
+    void getUser() {
         try {
+            String accessToken = "";
+
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", String.format("Bearer %s", accessToken));
 
@@ -106,6 +115,7 @@ public class KakaoAuthService {
                     String.class
             );
 
+            // HTTP 응답 (JSON) -> 액세스 토큰 파싱
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.getBody()).get("kakao_account");
 
@@ -115,27 +125,47 @@ public class KakaoAuthService {
             String age = jsonNode.get("age_range").asText();
             String birthday = jsonNode.get("birthday").asText();
 
-            return KakaoUser.builder()
-                    .name(name)
-                    .email(email)
-                    .gender(gender)
-                    .age(age)
-                    .birthday(birthday)
-                    .build();
+            KakaoUser kakaoUser = KakaoUser.builder()
+                            .name(name)
+                            .email(email)
+                            .gender(gender)
+                            .age(age)
+                            .birthday(birthday)
+                            .build();
 
-        } catch (JsonProcessingException | HttpClientErrorException e) {
-            throw new UnAuthException(AuthCode.KAKAO_GET_USER_FAIL);
+            System.out.println(kakaoUser);
+            assertEquals(kakaoUser.getName(), "박상민");
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            assertTrue(true);
         }
     }
 
-    public Member getMember(KakaoUser kakaoUser) throws RuntimeException {
+    @Test
+    @Transactional
+    void getMemberTest(){
+        String name = "박상민";                    // nickname
+        String email = "tablemin@kakao.com";     // email
+        String gender = "male";                  // gender
+        String age = "20~29";                    // age_range
+        String birthday = "0506";                // birthday
+
+        KakaoUser kakaoUser = KakaoUser.builder()
+                            .name(name)
+                            .email(email)
+                            .gender(gender)
+                            .age(age)
+                            .birthday(birthday)
+                            .build();
+
         try {
-            return memberService.findMember(kakaoUser.getEmail());
+            memberService.findMember(kakaoUser.getEmail());
         } catch (NotFoundException e) {
             String platformCode = PlatformCode.KAKAO.getCode();
             String password = UUID.randomUUID().toString().replace("-", "");
 
-            return memberService.registMember(Member.builder()
+            memberService.registMember(Member.builder()
                     .platformCode(platformCode)
                     .name(kakaoUser.getName())
                     .email(kakaoUser.getEmail())

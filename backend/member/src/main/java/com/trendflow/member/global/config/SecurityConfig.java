@@ -26,10 +26,6 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
 
                 .and()
-                .oauth2Login()
-                .loginPage("")
-
-                .and()
                 .logout().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

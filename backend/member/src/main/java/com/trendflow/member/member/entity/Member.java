@@ -1,6 +1,8 @@
 package com.trendflow.member.member.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "member")
 public class Member {
     @Id
@@ -26,13 +30,16 @@ public class Member {
     private String name;
     @Column(name = "email")
     private String email;
+    @Column(name = "gender")
+    private String gender;
+    @Column(name = "age")
+    private String age;
+    @Column(name = "birthday")
+    private String birthday;
     @Column(name = "password")
     private String password;
-    @Column(name = "age")
-    private Integer age;
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
-    @OneToMany
-    @JoinColumn(name = "member_id")
+    @OneToMany(mappedBy = "member")
     private List<Role> roles;
 }

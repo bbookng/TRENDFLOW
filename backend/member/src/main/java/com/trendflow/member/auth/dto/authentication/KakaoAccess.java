@@ -11,7 +11,7 @@ public class KakaoAccess {
     private String accessToken;
     private String refreshToken;
     private String tokenType;
-    private Long accessTokenExpire;
-    private Long refreshTokenExpire;
+    private Integer accessTokenExpire;
+    private Integer refreshTokenExpire;
     private List<String> scope;
 }
