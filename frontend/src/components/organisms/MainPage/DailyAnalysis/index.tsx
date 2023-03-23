@@ -1,7 +1,7 @@
 import { Label } from '@/components/atoms';
 import { BadgeContent, RankingItem } from '@/components/molecules';
 import { PALETTE } from '@/constants/palette';
-import { RankingListItemInterface } from '@/pages/MainPage';
+import { RankingListItemInterface } from '@/types/ranking';
 import * as S from './index.styles';
 
 // 목업 데이터
