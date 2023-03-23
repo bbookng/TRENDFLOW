@@ -1,6 +1,6 @@
 import { Divider, Label } from '@/components/atoms';
 import { CircleChart, RankingItem } from '@/components/molecules';
-import { RankingListItemInterface } from '@/pages/MainPage';
+import { RankingListItemInterface } from '@/types/ranking';
 
 import * as S from './index.styles';
 
