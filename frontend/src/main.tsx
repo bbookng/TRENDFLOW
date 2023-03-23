@@ -1,7 +1,8 @@
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import App from '@/App';
-import store from '@/store/store';
+import store, { persistor } from '@/store/store';
 import { worker } from '@/mocks/browser';
 
 if (process.env.NODE_ENV === 'development') {
@@ -12,6 +13,8 @@ if (process.env.NODE_ENV === 'development') {
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Provider store={store}>
-    <App />
+    <PersistGate loading={null} persistor={persistor}>
+      <App />
+    </PersistGate>
   </Provider>
 );
