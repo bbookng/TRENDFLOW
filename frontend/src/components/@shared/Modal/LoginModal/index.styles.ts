@@ -11,7 +11,13 @@ export const Wrapper = styled.div`
   gap: 3rem;
 `;
 
-export const Logo = styled.div``;
+export const Logo = styled.div`
+  margin-top: 2rem;
+  & > svg {
+    width: 210px;
+    height: 40px;
+  }
+`;
 
 export const ButtonContainer = styled.div`
   display: flex;
@@ -30,4 +36,8 @@ export const Button = styled.button`
   padding: 10px 16px;
 `;
 
-export const Footer = styled.div``;
+export const Footer = styled.div`
+  & > p {
+    color: ${({ theme }) => theme.text200};
+  }
+`;

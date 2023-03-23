@@ -1,3 +1,5 @@
+import { RankChangeType } from '@/components/molecules/RankingItem';
+
 export interface RankingListItemInterface {
   rank: number;
   keyword: string;
