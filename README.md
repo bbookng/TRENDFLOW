@@ -71,13 +71,13 @@
 - 키워드 별로 다양한 소스에서 방대한 양의 데이터를 수집하여 분석한 결과를 시각화 하여 보여주기 때문에 트렌드 추이를 한 눈에 파악하여 브랜드 마케터의 업무에 도움이 된다.
 - 오늘의 HOT 키워드, 이번주 HOT 키워드 등을 제공하기 때문에 키워드 별로 말고도 전반적인 트렌드 파악를 파악할 수 있다.
 
-## ❗ **아키텍처**
----
-![Untitled](./assets/Untitled%206.png)
-
 ## ❗ **데이터 파이프라인**
 ---
-![Untitled](./assets/Untitled%207.png)
+![Untitled](./assets/Untitled%208.png)
+
+## ❗ **아키텍처**
+---
+![Untitled](./assets/Untitled%209.png)
 
 📄 [API 명세서](https://www.notion.so/API-a22b363b35c046ddac2e92edadb66459)
 
