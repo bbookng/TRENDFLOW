@@ -21,7 +21,7 @@ const { VITE_MAIN: MAIN } = import.meta.env;
 
 export const login = createAsyncThunk('user/login', async (data: LoginDataInterface) => {
   const res = await api.post('/member/login', data);
-  console.log(res.data);
+  console.log('로그인 res 데이터', res.data);
   return res.data;
 });
 
