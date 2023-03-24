@@ -32,9 +32,15 @@ export const ChartPaper = styled(Paper)`
 export const BadgeWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  margin: 3rem 0;
 
   @media ${MEDIA_QUERY.DESKTOP} {
     flex-direction: column;
+    margin: 0;
+
+    & > div:first-of-type {
+      margin-bottom: 2rem;
+    }
   }
 `;
 
@@ -47,6 +53,7 @@ export const RelatedPaper = styled(Paper)`
   display: flex;
   justify-content: space-between;
   padding: 2.5rem;
+  height: 100%;
 
   @media ${MEDIA_QUERY.DESKTOP} {
     flex-direction: column;
@@ -57,4 +64,8 @@ export const RelatedItemWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    height: 50%;
+  }
 `;
