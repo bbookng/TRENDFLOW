@@ -3,7 +3,8 @@ import themeReducer from '@/store/slices/themeSlice';
 import testReducer from '@/store/slices/testSlice';
 import navbarReducer from '@/store/slices/navbarSlice';
 import userReducer from '@/store/slices/userSlice';
-import { keywordApi } from '@/apis/main';
+import { keywordApi } from '@/apis/keyword';
+import { analyzeApi } from '@/apis/analyze';
 
 const rootReducer = combineReducers({
   isDark: themeReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   isNavbar: navbarReducer,
   user: userReducer,
   [keywordApi.reducerPath]: keywordApi.reducer,
+  [analyzeApi.reducerPath]: analyzeApi.reducer,
 });
 
 export default rootReducer;
