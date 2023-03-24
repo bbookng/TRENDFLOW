@@ -1,5 +1,6 @@
 import { Label } from '@/components/atoms';
 import { BadgeContent, RankingItem } from '@/components/molecules';
+import BarChart from '@/components/molecules/BarChart';
 import { PALETTE } from '@/constants/palette';
 import { RankingListItemInterface } from '@/types/ranking';
 import * as S from './index.styles';
@@ -71,7 +72,7 @@ const DailyAnalysis = () => {
       </S.TitleWrapper>
 
       <S.ContentWrapper>
-        <S.ChartPaper />
+        <BarChart />
 
         <S.BadgeWrapper>
           {/* <BadgeContent type="grape" />

@@ -11,6 +11,7 @@ import { RankingListInterface } from '@/types/ranking';
 import { useGetHotKeywordQuery } from '@/apis/main';
 import LineChart from '@/components/molecules/LineChart';
 import { Paper } from '@/components/atoms';
+import BarChart from '@/components/molecules/BarChart';
 
 // 목업 데이터
 const rankingList: RankingListInterface = {
@@ -144,14 +145,7 @@ const MainPage = () => {
 
       <NoBookmark />
 
-      <S.LineWrapper>
-        <S.Box>
-          <LineChart />
-        </S.Box>
-        <S.Box>
-          <LineChart />
-        </S.Box>
-      </S.LineWrapper>
+      <DailyAnalysis />
     </S.Wrapper>
   );
 };

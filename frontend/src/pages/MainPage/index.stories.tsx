@@ -11,7 +11,7 @@ export default {
 const Template = () => (
   <ThemeComponent>
     <BaseLayout>
-      <MainPage />;
+      <MainPage />
     </BaseLayout>
   </ThemeComponent>
 );
