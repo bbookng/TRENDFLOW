@@ -11,6 +11,14 @@ export interface ButtonPropsInterface {
   onClick?: () => void;
 }
 
+/**
+ *
+ * @param variant
+ * @param fontSize
+ * @param size
+ * @param onClick
+ * @returns
+ */
 const Button = (props: ButtonPropsInterface) => {
   const { children, onClick } = props;
 
