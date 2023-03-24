@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/keyword")
 public class KeywordController {
-    @GetMapping("/headlth_check")
+    @GetMapping("/health_check")
     public ResponseEntity<BasicResponse> healthCheck(){
         log.info("healthCheck - Call");
 
