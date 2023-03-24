@@ -10,10 +10,9 @@ import {
   LineElement,
   PointElement,
 } from 'chart.js';
-import { Bar, getElementAtEvent } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { PALETTE } from '@/constants/palette';
 import * as S from './index.styles';
-import React from 'react';
 
 Chart.register(
   Tooltip,
@@ -30,7 +29,7 @@ const labels = ['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24'];
 
 const BarChart = () => {
   const theme = useTheme();
-  const data = {
+  const data: any = {
     labels,
     datasets: [
       {
@@ -50,7 +49,7 @@ const BarChart = () => {
       },
     ],
   };
-  const options = {
+  const options: any = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
@@ -132,7 +131,7 @@ const BarChart = () => {
 
   return (
     <S.BarPaper>
-      <Bar data={data} options={options} style={{ height: '100%', width: '100%' }} />
+      <Bar data={data} options={options} />
     </S.BarPaper>
   );
 };

@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { MEDIA_QUERY } from '@/constants/media';
 
 export const Wrapper = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: column;
 `;
