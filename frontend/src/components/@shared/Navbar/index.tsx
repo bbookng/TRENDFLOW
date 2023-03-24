@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import * as S from './index.styles';
 import { Logo, Social, Youtube, Compare, DarkLogo } from '@/assets';
 import { ROUTER_PATH } from '@/constants/path';
 import { useAppSelector } from '@/hooks/storeHook';
+import LoginModal from '@/components/@shared/Modal/LoginModal';
 
 const navList = [
   {
@@ -23,8 +25,16 @@ const navList = [
 ];
 
 const Navbar = () => {
-  const { isDark, isNavbar } = useAppSelector((state) => state);
+  const {
+    isDark,
+    isNavbar,
+    user: { isLoggedIn },
+  } = useAppSelector((state) => state);
+  const [open, setOpen] = useState(false);
   const navi = useNavigate();
+  const handleClickBtn = () => {
+    setOpen(true);
+  };
   return (
     <S.Navbar isNavbar={isNavbar}>
       {isDark ? <DarkLogo onClick={() => navi('/')} /> : <Logo onClick={() => navi('/')} />}
@@ -34,7 +44,12 @@ const Navbar = () => {
           {item.title}
         </S.NavItem>
       ))}
-      <S.NavUser>반갑습니다, 에헴띠님!</S.NavUser>
+      <S.NavUser isLogin={isLoggedIn} onClick={handleClickBtn}>
+        {isLoggedIn ? '반갑습니다, 에헴띠님!' : '로그인'}
+      </S.NavUser>
+      {open && (
+        <LoginModal handleClickModalClose={() => setOpen(false)} width="400px" height="360px" />
+      )}
     </S.Navbar>
   );
 };

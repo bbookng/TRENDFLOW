@@ -1,11 +1,13 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { ROUTER_PATH } from '@/constants/path';
-import App from '@/App';
 
 import MainPage from '@/pages/MainPage';
 import LandingPage from '@/pages/LandingPage';
 import BaseLayout from '@/Layout/BaseLayout';
+
+import LoginPage from '@/pages/LoginPage';
+import Kakao from '@/pages/LoginPage/platform/Kakao';
 
 const SocialMainPage = lazy(() => import('@/pages/SocialMainPage'));
 const SocialResultPage = lazy(() => import('@/pages/SocialResultPage'));
@@ -81,6 +83,16 @@ const router = createBrowserRouter([
             <ComparisonResultPage />
           </Suspense>
         ),
+      },
+      {
+        path: ROUTER_PATH.LOGIN_PAGE,
+        element: <LoginPage />,
+        children: [
+          {
+            path: 'kakao',
+            element: <Kakao />,
+          },
+        ],
       },
     ],
   },

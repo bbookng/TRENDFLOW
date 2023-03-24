@@ -7,6 +7,7 @@ declare module '@emotion/react' {
     darkToggleBackground: string;
     text: string;
     text200: string;
+    hoverText: string;
     border: string;
     headerBorder: string;
     navBackground: string;

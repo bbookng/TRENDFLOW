@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react';
 import * as S from './index.styles';
 import SearchBar from '@/components/molecules/SearchBar';
 import HotKeywords from '@/components/organisms/MainPage/HotKeywords';

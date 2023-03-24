@@ -9,6 +9,10 @@ interface NavbarProps {
   isNavbar: boolean;
 }
 
+interface NavUserProps {
+  isLogin: boolean;
+}
+
 const close = css`
   transform: translateX(-240px);
 `;
@@ -19,7 +23,7 @@ export const Navbar = styled.div<NavbarProps>`
   width: 15rem;
   height: 100vh;
   background-color: ${({ theme }) => theme.contentBackground};
-  z-index: 1000;
+  z-index: 10;
   transition: transform 600ms ease-in-out;
 
   /* 로고 */
@@ -74,7 +78,11 @@ export const NavIcon = styled.div`
   margin-right: 2rem;
 `;
 
-export const NavUser = styled.div`
+const logoutStyle = css`
+  cursor: pointer;
+`;
+
+export const NavUser = styled.div<NavUserProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -83,8 +91,12 @@ export const NavUser = styled.div`
   width: 12.5rem;
   height: 2.5rem;
   border-radius: ${BORDER_RADIUS.XL};
-
+  transition: all 300ms ease;
   color: ${({ theme }) => theme.text};
   background-color: ${({ theme }) => theme.background};
-  /* color: ${PALETTE.BRAND400}; */
+  ${(props) => !props.isLogin && logoutStyle}
+  &:hover {
+    background-color: ${({ theme }) => theme.navSelected};
+    color: ${({ theme }) => theme.hoverText};
+  }
 `;
