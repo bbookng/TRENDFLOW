@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Paper } from '@/components/atoms';
+import { Paper } from '@/components/atoms/Paper/index.styles';
 
 export const Container = styled(Paper)`
   width: 100%;

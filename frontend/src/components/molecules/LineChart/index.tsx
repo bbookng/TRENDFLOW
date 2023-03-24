@@ -11,6 +11,7 @@ import {
 import { useTheme } from '@emotion/react';
 import * as S from './index.styles';
 import { PALETTE } from '@/constants/palette';
+import { Paper } from '@/components/atoms';
 
 interface LineChartInterface {
   labels: string[];
@@ -25,6 +26,7 @@ const LineChart = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'bottom' as const,
@@ -66,8 +68,8 @@ const LineChart = () => {
         },
       },
     },
-    pointRadius: 5,
-    pointHoverRadius: 5,
+    pointRadius: 3,
+    pointHoverRadius: 3,
     borderWidth: 2,
     pointHoverBorderWidth: 3,
     hoverBorderWidth: 2,
@@ -104,7 +106,7 @@ const LineChart = () => {
   };
   return (
     <S.Container>
-      <Line options={options} data={data} />
+      <Line options={options} data={data} style={{ height: '100%', width: '100%' }} />
     </S.Container>
   );
 };

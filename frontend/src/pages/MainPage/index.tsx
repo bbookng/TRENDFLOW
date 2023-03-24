@@ -145,7 +145,12 @@ const MainPage = () => {
       <NoBookmark />
 
       <S.LineWrapper>
-        <LineChart />
+        <S.Box>
+          <LineChart />
+        </S.Box>
+        <S.Box>
+          <LineChart />
+        </S.Box>
       </S.LineWrapper>
     </S.Wrapper>
   );

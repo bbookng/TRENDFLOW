@@ -32,6 +32,24 @@ export const HotKeywordsWrapper = styled.div`
 `;
 
 export const LineWrapper = styled.div`
-  width: 50%;
-  height: auto;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 4rem 0 3rem 0;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    flex-direction: row;
+  }
+`;
+
+export const Box = styled.div`
+  display: flex;
+  width: 100%;
+  height: 300px;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    width: 48%;
+    height: 400px;
+  }
 `;
