@@ -4,6 +4,7 @@ import { ROUTER_PATH } from '@/constants/path';
 
 import MainPage from '@/pages/MainPage';
 import LandingPage from '@/pages/LandingPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 import BaseLayout from '@/Layout/BaseLayout';
 
 import LoginPage from '@/pages/LoginPage';
@@ -15,7 +16,6 @@ const YoutubeMainPage = lazy(() => import('@/pages/YoutubeMainPage'));
 const YoutubeResultPage = lazy(() => import('@/pages/YoutubeResultPage'));
 const ComparisonMainPage = lazy(() => import('@/pages/ComparisonMainPage'));
 const ComparisonResultPage = lazy(() => import('@/pages/ComparisonResultPage'));
-const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 const router = createBrowserRouter([
   {

@@ -12,8 +12,8 @@ export default {
     width: {
       control: { type: 'text' },
     },
-    color: {
-      options: ['red', 'blue', 'purple'],
+    type: {
+      options: ['up', 'down', 'same'],
       control: { type: 'radio' },
     },
   },
@@ -25,5 +25,5 @@ export const Primary = Template.bind({});
 Primary.args = {
   children: '100%',
   width: '120px',
-  color: 'red',
+  type: 'up',
 };

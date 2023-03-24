@@ -1,16 +1,16 @@
 import * as S from './index.styles';
 
-export type BadgeColorType = 'red' | 'blue' | 'purple';
+export type BadgeType = 'up' | 'down' | 'same';
 
 export interface BadgePropsInterface {
   children: React.ReactNode;
   width?: string;
-  color: BadgeColorType;
+  type: BadgeType;
 }
 
-const Badge = ({ children, width = '120px', color }: BadgePropsInterface) => {
+const Badge = ({ children, width = '120px', type }: BadgePropsInterface) => {
   return (
-    <S.Badge width={width} color={color}>
+    <S.Badge width={width} type={type}>
       {children}
     </S.Badge>
   );
