@@ -31,11 +31,12 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, { payload }) => {
+      console.log('페이로드', payload);
       state.isLoggedIn = true;
       state.userName = payload.name;
       document.cookie = `refreshToken=${payload.refreshToken}`;
       window.localStorage.setItem('accessToken', payload.accessToken);
-      window.location.href = MAIN;
+      // window.location.href = MAIN;
     });
   },
 });
