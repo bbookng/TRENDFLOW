@@ -28,6 +28,7 @@ public class AuthController {
 
         try {
             LoginResponse loginResponse = authService.login(loginRequest);
+            log.info(loginResponse.toString());
             return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, loginResponse));
         } catch (UnAuthException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getCode(), null));
