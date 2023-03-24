@@ -1,0 +1,48 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      default-filters:
+        - name: GlobalFilter
+          args:
+            baseMessage: Hello Spring Cloud Gateway Global Filter
+            preLogger: true
+            postLogger: true
+      routes:
+        - id: analyze
+          predicates:
+            - Path=/analyze/**
+          uri: lb://ANALYZE
+          filters:
+            - CustomFilter
+
+        - id: common
+          predicates:
+            - Path=/common/**
+          uri: lb://COMMON
+          filters:
+            - CustomFilter
+
+        - id: keyword
+          predicates:
+            - Path=/keyword/**
+          uri: lb://KEYWORD
+          filters:
+            - CustomFilter
+
+        - id: member
+          predicates:
+            - Path=/member/**
+          uri: lb://MEMBER
+          filters:
+            - CustomFilter
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
