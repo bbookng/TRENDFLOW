@@ -2,8 +2,10 @@
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 import { useGetHotKeywordQuery, useGetRelatedKeywordQuery } from '@/apis/keyword';
 import { SearchBar } from '@/components/molecules';
+import LineChart from '@/components/molecules/LineChart';
 import { HotKeywords, NoBookmark, DailyAnalysis } from '@/components/organisms/MainPage';
 import * as S from './index.styles';
+
 
 const MainPage = () => {
   const {
@@ -38,11 +40,23 @@ const MainPage = () => {
       </S.HotKeywordsWrapper>
 
       <NoBookmark />
+
       <DailyAnalysis
         keyword="싸피"
         socialAnaysis={socialAnalysis!}
         relatedKeywords={relatedKeywords!}
       />
+
+
+      <S.LineWrapper>
+        <S.Box>
+          <LineChart />
+        </S.Box>
+        <S.Box>
+          <LineChart />
+        </S.Box>
+      </S.LineWrapper>
+
     </S.Wrapper>
   );
 };

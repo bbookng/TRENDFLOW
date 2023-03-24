@@ -15,5 +15,6 @@ declare module '@emotion/react' {
     navNotSelected: string;
     positive: string;
     negative: string;
+    neutrality: string;
   }
 }
