@@ -1,6 +1,7 @@
 import { Label } from '@/components/atoms';
 import { BadgeType } from '@/components/atoms/Badge';
 import { BadgeContent, RankingItem } from '@/components/molecules';
+import BarChart from '@/components/molecules/BarChart';
 import { PALETTE } from '@/constants/palette';
 import { RankingListItemInterface } from '@/types/ranking';
 import { SocialAnalysisItemInterface } from '@/types/social';
@@ -39,7 +40,7 @@ const DailyAnalysis = ({
       </S.TitleWrapper>
 
       <S.ContentWrapper>
-        <S.ChartPaper />
+        <BarChart />
 
         <S.BadgeWrapper>
           <BadgeContent type="grape" badge={grapeBadgeProps} />

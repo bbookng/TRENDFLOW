@@ -11,11 +11,6 @@ import {
 import { useTheme } from '@emotion/react';
 import * as S from './index.styles';
 import { PALETTE } from '@/constants/palette';
-import { Paper } from '@/components/atoms';
-
-interface LineChartInterface {
-  labels: string[];
-}
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
