@@ -7,7 +7,14 @@ export interface DividerPropsInterface {
   length: string;
   color?: string;
 }
-
+/**
+ *
+ * @param  type require
+ * @param direction require
+ * @param width require
+ * @param length require
+ * @param color
+ */
 const Divider = (props: DividerPropsInterface) => {
   return <S.Divider {...props} />;
 };
