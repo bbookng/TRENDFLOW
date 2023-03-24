@@ -13,8 +13,8 @@ interface Props {
 const LoginModal = ({ handleClickModalClose, width, height }: Props): React.ReactElement => {
   const { isDark } = useAppSelector((state) => state);
   const handleLogin = () => {
-    const REST_API_KEY = '6e9502bc3ecab5f6997c9d97a8f9a933';
-    const REDIRECT_URI = 'https://trendflow.site:44301/login/kakao';
+    const { VITE_KAKAO_REDIRECT_URI: REDIRECT_URI, VITE_KAKAO_REST_API_KEY: REST_API_KEY } =
+      import.meta.env;
     const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
     window.location.href = KAKAO_URL;
   };
