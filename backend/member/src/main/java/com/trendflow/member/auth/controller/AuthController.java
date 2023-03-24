@@ -21,7 +21,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<BasicResponse> login(LoginRequest loginRequest){
+    public ResponseEntity<BasicResponse> login(@RequestBody LoginRequest loginRequest){
         log.info("login - Call");
 
         log.info(loginRequest.toString());
