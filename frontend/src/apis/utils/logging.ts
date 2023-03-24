@@ -1,4 +1,4 @@
-import { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 interface LogOnDevInterface {
   log: (msg: any, color?: string) => void;
@@ -10,29 +10,34 @@ interface LogOnDevInterface {
 
 const logOnDev: LogOnDevInterface = {
   log: (msg, color = '') => {
-    if (import.meta.env.MODE === 'development') {
-      console.log(msg, color);
-    }
+    console.log(msg, color);
+    // if (import.meta.env.MODE === 'development') {
+    //   console.log(msg, color);
+    // }
   },
   info: (msg, color = '') => {
-    if (import.meta.env.MODE === 'development') {
-      console.info(msg, color);
-    }
+    console.info(msg, color);
+    //   if (import.meta.env.MODE === 'development') {
+    //     console.info(msg, color);
+    //   }
   },
   error: (msg) => {
-    if (import.meta.env.MODE === 'development') {
-      console.error(msg);
-    }
+    console.error(msg);
+    // if (import.meta.env.MODE === 'development') {
+    //   console.error(msg);
+    // }
   },
   warn: (msg) => {
-    if (import.meta.env.MODE === 'development') {
-      console.warn(msg);
-    }
+    console.warn(msg);
+    // if (import.meta.env.MODE === 'development') {
+    //   console.warn(msg);
+    // }
   },
   dir: (msg) => {
-    if (import.meta.env.MODE === 'development') {
-      console.dir(msg);
-    }
+    console.dir(msg);
+    // if (import.meta.env.MODE === 'development') {
+    //   console.dir(msg);
+    // }
   },
 };
 
