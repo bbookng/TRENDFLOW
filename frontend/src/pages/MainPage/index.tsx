@@ -9,6 +9,8 @@ import { useAppDispatch, useAppSelector } from '@/hooks/storeHook';
 import { fetchTestData } from '@/store/slices/testSlice';
 import { RankingListInterface } from '@/types/ranking';
 import { useGetHotKeywordQuery } from '@/apis/main';
+import LineChart from '@/components/molecules/LineChart';
+import { Paper } from '@/components/atoms';
 
 // 목업 데이터
 const rankingList: RankingListInterface = {
@@ -141,7 +143,15 @@ const MainPage = () => {
       </S.HotKeywordsWrapper>
 
       <NoBookmark />
-      <DailyAnalysis />
+
+      <S.LineWrapper>
+        <S.Box>
+          <LineChart />
+        </S.Box>
+        <S.Box>
+          <LineChart />
+        </S.Box>
+      </S.LineWrapper>
     </S.Wrapper>
   );
 };

@@ -30,6 +30,9 @@ const CircleChart = ({ width, label, data }: CircleChartPropsInterface) => {
 
   const chartOptions = {
     plugins: {
+      legend: {
+        display: false,
+      },
       tooltip: {
         backgroundColor: theme.background,
         titleFont: { family: 'PRETENDARD', size: 14 },
