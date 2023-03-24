@@ -10,34 +10,29 @@ interface LogOnDevInterface {
 
 const logOnDev: LogOnDevInterface = {
   log: (msg, color = '') => {
-    console.log(msg, color);
-    // if (import.meta.env.MODE === 'development') {
-    //   console.log(msg, color);
-    // }
+    if (import.meta.env.MODE === 'development') {
+      console.log(msg, color);
+    }
   },
   info: (msg, color = '') => {
-    console.info(msg, color);
-    //   if (import.meta.env.MODE === 'development') {
-    //     console.info(msg, color);
-    //   }
+    if (import.meta.env.MODE === 'development') {
+      console.info(msg, color);
+    }
   },
   error: (msg) => {
-    console.error(msg);
-    // if (import.meta.env.MODE === 'development') {
-    //   console.error(msg);
-    // }
+    if (import.meta.env.MODE === 'development') {
+      console.error(msg);
+    }
   },
   warn: (msg) => {
-    console.warn(msg);
-    // if (import.meta.env.MODE === 'development') {
-    //   console.warn(msg);
-    // }
+    if (import.meta.env.MODE === 'development') {
+      console.warn(msg);
+    }
   },
   dir: (msg) => {
-    console.dir(msg);
-    // if (import.meta.env.MODE === 'development') {
-    //   console.dir(msg);
-    // }
+    if (import.meta.env.MODE === 'development') {
+      console.dir(msg);
+    }
   },
 };
 
