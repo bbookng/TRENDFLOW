@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
-
+import { BadgeType } from '@/components/atoms/Badge/index';
+import { Typography } from '@/components/atoms/Typography/index.styles';
+import { badgeColorList } from '@/components/atoms/Badge/index.styles';
 import { FlipBadgePropsInterface } from '@/components/molecules/FlipBadge';
 
 interface FlipDivPropsInterface extends FlipBadgePropsInterface {
@@ -39,4 +41,8 @@ export const Div = styled.div<Partial<FlipDivPropsInterface>>`
   &.back {
     transform: rotateY(180deg);
   }
+`;
+
+export const ChangedText = styled(Typography)<{ type: BadgeType }>`
+  ${({ type }) => type && badgeColorList[type]}
 `;
