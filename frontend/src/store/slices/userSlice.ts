@@ -21,7 +21,6 @@ const { VITE_MAIN: MAIN } = import.meta.env;
 
 export const login = createAsyncThunk('user/login', async (data: LoginDataInterface) => {
   const res = await api.post('/member/login', data);
-  console.log('로그인 res 데이터', res.data);
   return res.data;
 });
 
@@ -31,7 +30,10 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, { payload }) => {
-      console.log('페이로드', payload);
+      console.log('페이로드 바디', payload.body);
+      console.log('페이로드 네임', payload.body.name);
+      console.log('페이로드 액세스', payload.body.accessToken);
+      console.log('페이로드 리프레시', payload.body.refreshToken);
       state.isLoggedIn = true;
       state.userName = payload.name;
       document.cookie = `refreshToken=${payload.refreshToken}`;
