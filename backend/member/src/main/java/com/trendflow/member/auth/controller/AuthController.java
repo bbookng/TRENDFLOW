@@ -1,7 +1,9 @@
 package com.trendflow.member.auth.controller;
 
 import com.trendflow.member.auth.dto.request.LoginRequest;
+import com.trendflow.member.auth.dto.response.AuthAccessTokenResponse;
 import com.trendflow.member.auth.dto.response.LoginResponse;
+import com.trendflow.member.auth.dto.response.RefreshTokenResponse;
 import com.trendflow.member.auth.service.AuthService;
 import com.trendflow.member.global.code.AuthCode;
 import com.trendflow.member.global.exception.NotFoundException;
@@ -24,27 +26,56 @@ public class AuthController {
     public ResponseEntity<BasicResponse> login(@RequestBody LoginRequest loginRequest){
         log.info("login - Call");
 
-        log.info(loginRequest.toString());
-
         try {
-            LoginResponse loginResponse = authService.login(loginRequest);
-            log.info(loginResponse.toString());
+            String accessToken = loginRequest.getPlatformCode();
+            String authCode = loginRequest.getAuthCode();
+            LoginResponse loginResponse = authService.login(accessToken, authCode);
             return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, loginResponse));
         } catch (UnAuthException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getCode(), null));
         } catch (RuntimeException e){
-            e.printStackTrace();
             return ResponseEntity.internalServerError().body(BasicResponse.Body(AuthCode.FAIL, null));
         }
     }
 
+    @PostMapping("/auth/refresh")
+    public ResponseEntity<BasicResponse> refresh(@RequestHeader(value = "RefreshToken", required = false) String refreshToken){
+        log.info("refresh - Call");
+
+        try {
+            RefreshTokenResponse refreshTokenResponse = authService.refresh(refreshToken);
+            return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, refreshTokenResponse));
+        } catch (UnAuthException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getCode(), null));
+        } catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(BasicResponse.Body(AuthCode.FAIL, null));
+        }
+    }
+
+    @GetMapping("/auth/{level}/{accessToken}")
+    public ResponseEntity<AuthAccessTokenResponse> authAccessToken(@PathVariable String level,
+                                                                   @PathVariable String accessToken){
+        log.info("authAccessToken - Call");
+
+        try {
+            // 1단계 인증
+            if ("v1".equals(level)) authService.authAccessTokenToKakao(accessToken);
+            // 2단계 인증
+            if ("v2".equals(level)) authService.authAccessToken(accessToken);
+            return ResponseEntity.ok().body(AuthAccessTokenResponse.builder().isValid(true).build());
+        } catch (UnAuthException e){
+            return ResponseEntity.ok().body(AuthAccessTokenResponse.builder().isValid(false).build());
+        } catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
     @GetMapping("/logout")
-    public ResponseEntity<BasicResponse> logout(@RequestHeader(value = "Authorization", required = false) String accessToken,
-                                                @RequestHeader(value = "RefreshToken", required = false) String refreshToken){
+    public ResponseEntity<BasicResponse> logout(@RequestHeader(value = "RefreshToken", required = false) String refreshToken){
         log.info("logout - Call");
 
         try {
-            authService.logout(accessToken, refreshToken);
+            authService.logout(refreshToken);
             return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, null));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(AuthCode.FAIL, null));

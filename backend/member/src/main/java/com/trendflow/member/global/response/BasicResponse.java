@@ -3,9 +3,10 @@ package com.trendflow.member.global.response;
 import com.trendflow.member.global.code.BasicCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 public class BasicResponse {

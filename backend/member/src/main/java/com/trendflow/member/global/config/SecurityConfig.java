@@ -22,7 +22,7 @@ public class SecurityConfig {
                 // 세분화 되어있을수록 위쪽에 위치해야한다.
                 .authorizeRequests()
                 .antMatchers("/member").permitAll()
-                .antMatchers("/member/logout").hasAnyRole("PL100", "PL200")
+//                .antMatchers("/member/logout").hasAnyRole("PL100", "PL200")
                 .anyRequest().permitAll()
 
                 .and()

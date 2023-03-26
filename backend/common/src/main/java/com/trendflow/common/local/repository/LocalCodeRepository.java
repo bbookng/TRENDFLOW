@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface LocalCodeRepository extends JpaRepository<LocalCode, String> {
     List<LocalCode> findByGroupCode(String groupCode);
+    Optional<LocalCode> findByName(String name);
 }
