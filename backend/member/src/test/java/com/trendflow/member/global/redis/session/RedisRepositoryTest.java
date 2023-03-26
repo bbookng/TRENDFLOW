@@ -14,8 +14,6 @@ class RedisRepositoryTest {
 
     @Autowired
     private LoginAccessTokenRepository loginAccessTokenRepository;
-    @Autowired
-    private LogoutAccessTokenRepository logoutAccessTokenRepository;
 
     @Test
     @Transactional
