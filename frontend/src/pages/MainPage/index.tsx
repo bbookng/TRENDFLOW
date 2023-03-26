@@ -2,6 +2,7 @@
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 import { useGetHotKeywordQuery, useGetRelatedKeywordQuery } from '@/apis/keyword';
 import { SearchBar } from '@/components/molecules';
+import LineChart from '@/components/molecules/LineChart';
 import { HotKeywords, NoBookmark, DailyAnalysis } from '@/components/organisms/MainPage';
 import * as S from './index.styles';
 
