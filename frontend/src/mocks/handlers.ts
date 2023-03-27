@@ -15,4 +15,8 @@ export const handlers = [
   rest.get('/analyze/social', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(social));
   }),
+
+  rest.post('/member/login', (req, res, ctx) => {
+    return res(ctx.status(500));
+  }),
 ];

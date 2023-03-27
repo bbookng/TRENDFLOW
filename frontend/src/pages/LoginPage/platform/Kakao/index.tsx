@@ -1,4 +1,3 @@
-import { Typography } from '@/components/atoms';
 import { useAppDispatch } from '@/hooks/storeHook';
 import { login } from '@/store/slices/userSlice';
 
@@ -9,8 +8,8 @@ const Kakao = () => {
     platformCode: 'PL100',
     authCode,
   };
+
   dispatch(login(data));
-  return <Typography variant="H2">카카오!!!!!!</Typography>;
 };
 
 export default Kakao;
