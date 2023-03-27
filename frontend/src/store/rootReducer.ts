@@ -3,6 +3,7 @@ import themeReducer from '@/store/slices/themeSlice';
 import testReducer from '@/store/slices/testSlice';
 import navbarReducer from '@/store/slices/navbarSlice';
 import userReducer from '@/store/slices/userSlice';
+import toastReducer from '@/store/slices/toastSlice';
 import { keywordApi } from '@/apis/keyword';
 import { analyzeApi } from '@/apis/analyze';
 
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   test: testReducer,
   isNavbar: navbarReducer,
   user: userReducer,
+  toast: toastReducer,
   [keywordApi.reducerPath]: keywordApi.reducer,
   [analyzeApi.reducerPath]: analyzeApi.reducer,
 });
