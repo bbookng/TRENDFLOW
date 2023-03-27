@@ -3,9 +3,9 @@ package com.trendflow.member.auth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trendflow.member.auth.dto.authentication.KakaoAccess;
+import com.trendflow.member.auth.dto.authentication.SocialAccess;
 import com.trendflow.member.auth.dto.authentication.KakaoTokenInfo;
-import com.trendflow.member.auth.dto.authentication.KakaoUser;
+import com.trendflow.member.auth.dto.authentication.SocialUser;
 import com.trendflow.member.global.code.AuthCode;
 import com.trendflow.member.global.code.CommonCode;
 import com.trendflow.member.global.exception.NotFoundException;
@@ -54,7 +54,7 @@ public class KakaoAuthService {
     @Value("${login.kakao.info-uri}")
     private String KakaoInfoUri;
 
-    public KakaoAccess getAccessToken(String authCode) throws UnAuthException {
+    public SocialAccess getAccessToken(String authCode) throws UnAuthException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -85,7 +85,7 @@ public class KakaoAuthService {
             Integer refreshTokenExpire = jsonNode.get("refresh_token_expires_in").asInt();
             String scope = jsonNode.get("scope").asText();
 
-            return KakaoAccess.builder()
+            return SocialAccess.builder()
                     .tokenType(tokenType)
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
@@ -103,7 +103,7 @@ public class KakaoAuthService {
         }
     }
 
-    public KakaoAccess refreshAccessToken(String refreshToken, Integer refreshTokenExpire) throws UnAuthException {
+    public SocialAccess refreshAccessToken(String refreshToken, Integer refreshTokenExpire) throws UnAuthException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -135,7 +135,7 @@ public class KakaoAuthService {
                 refreshTokenExpire = jsonNode.get("refresh_token_expires_in").asInt();
             }
 
-            return KakaoAccess.builder()
+            return SocialAccess.builder()
                     .tokenType(tokenType)
                     .accessToken(accessToken)
                     .accessTokenExpire(accessTokenExpire)
@@ -210,7 +210,7 @@ public class KakaoAuthService {
 
     }
 
-    public KakaoUser getUser(String accessToken) throws UnAuthException {
+    public SocialUser getUser(String accessToken) throws UnAuthException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", String.format("Bearer %s", accessToken));
@@ -234,7 +234,7 @@ public class KakaoAuthService {
             String age = jsonNode.get("kakao_account").get("age_range").asText();
             String birthday = jsonNode.get("kakao_account").get("birthday").asText();
 
-            return KakaoUser.builder()
+            return SocialUser.builder()
                     .kakaoUserId(kakaoUserId)
                     .name(name)
                     .email(email)
@@ -248,22 +248,22 @@ public class KakaoAuthService {
         }
     }
 
-    public Member getMember(KakaoUser kakaoUser) throws RuntimeException {
+    public Member getMember(SocialUser socialUser) throws RuntimeException {
         String KAKAO = commonService.getLocalCode(CommonCode.KAKAO.getName()).getCode();
 
         try {
-            return memberService.findMember(kakaoUser.getEmail());
+            return memberService.findMember(socialUser.getEmail());
         } catch (NotFoundException e) {
             String platformCode = KAKAO;
             String password = UUID.randomUUID().toString().replace("-", "");
 
             return memberService.registMember(Member.builder()
                     .platformCode(platformCode)
-                    .name(kakaoUser.getName())
-                    .email(kakaoUser.getEmail())
-                    .gender(kakaoUser.getGender())
-                    .age(kakaoUser.getAge())
-                    .birthday(kakaoUser.getBirthday())
+                    .name(socialUser.getName())
+                    .email(socialUser.getEmail())
+                    .gender(socialUser.getGender())
+                    .age(socialUser.getAge())
+                    .birthday(socialUser.getBirthday())
                     .password(password)
                     .build());
         }

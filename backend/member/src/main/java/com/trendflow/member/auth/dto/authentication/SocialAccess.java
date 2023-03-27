@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class GoogleAccess {
+public class SocialAccess {
     private String accessToken;
     private String refreshToken;
     private String tokenType;
