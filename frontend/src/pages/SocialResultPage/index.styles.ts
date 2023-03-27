@@ -85,7 +85,6 @@ export const RelatedKeywordContentsWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-
   @media ${MEDIA_QUERY.DESKTOP} {
     width: 45%;
   }
@@ -93,11 +92,12 @@ export const RelatedKeywordContentsWrapper = styled.div`
 
 export const TrendChartContentsWrapper = styled.div`
   margin-top: 2.875rem;
+  display: flex;
+  flex-direction: column;
   @media ${MEDIA_QUERY.DESKTOP} {
     width: 100%;
-    display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 600px;
+    height: 560px;
   }
 `;

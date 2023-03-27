@@ -78,8 +78,8 @@ const SocialResultPage = () => {
       </S.KeywordContentsWrapper>
       {/* 긍부정, 트렌드 LineChart */}
       <S.TrendChartContentsWrapper>
-        <TrendLineChart />
-        <TrendLineChart />
+        <TrendLineChart text="긍부정 추이" />
+        <TrendLineChart text="검색 엔진 트렌트 추이" />
       </S.TrendChartContentsWrapper>
     </>
   );

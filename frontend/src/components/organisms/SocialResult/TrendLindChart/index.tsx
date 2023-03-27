@@ -2,13 +2,15 @@ import { Typography } from '@/components/atoms/Typography/index.styles';
 import LineChart from '@/components/molecules/LineChart';
 import * as S from './index.styles';
 
-const TrendLineChart = () => {
+interface TrendLineChartProps {
+  text: string;
+}
+
+const TrendLineChart = ({ text }: TrendLineChartProps) => {
   return (
     <S.Container>
-      <Typography variant="H3">긍부정 추이</Typography>
-      <S.LineChartWrapper>
-        <LineChart />
-      </S.LineChartWrapper>
+      <S.SpaceTypography variant="H3">{text}</S.SpaceTypography>
+      <LineChart />
     </S.Container>
   );
 };

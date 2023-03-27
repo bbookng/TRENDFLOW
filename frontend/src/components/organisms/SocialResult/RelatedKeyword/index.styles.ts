@@ -15,7 +15,7 @@ export const WordCloudPaper = styled(Paper)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
