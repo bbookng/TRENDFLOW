@@ -8,8 +8,9 @@ const Kakao = () => {
     platformCode: 'PL100',
     authCode,
   };
-
   dispatch(login(data));
+
+  return <div />;
 };
 
 export default Kakao;
