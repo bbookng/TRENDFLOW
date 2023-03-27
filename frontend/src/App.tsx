@@ -8,9 +8,9 @@ import { openNavbar, closeNavbar } from '@/store/slices/navbarSlice';
 
 const App = () => {
   const dispatch = useAppDispatch();
-  window.addEventListener('scroll', (e) => {
+  window.addEventListener('scroll', () => {
     const xPos = window.scrollX;
-    if (xPos > 240) {
+    if (xPos > 0) {
       dispatch(closeNavbar());
     } else {
       dispatch(openNavbar());
