@@ -224,13 +224,6 @@ public class AuthService {
                             .build());
             // 현재 리프레시 토큰 삭제
             loginRefreshTokenRepository.delete(refreshToken);
-
-            // DB 에 로그인 정보 (RefreshToken) 저장
-            Member member = memberRepository.findById(loginRefreshToken.getMemberId())
-                    .orElseThrow(() -> new UnAuthException(AuthCode.KAKAO_GET_TOKEN_FAIL));
-            member.setRefreshToken(null);
-            memberRepository.save(member);
-
         }
         // 구글 소셜 로그인
         else if (GOOGLE.equals(loginRefreshToken.getPlatformCode())){
