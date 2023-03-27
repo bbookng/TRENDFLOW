@@ -22,7 +22,7 @@ const colorList = {
   `,
 };
 
-export const Wrapper = styled.div<{ width: string }>`
+export const Wrapper = styled.li<{ width: string }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
