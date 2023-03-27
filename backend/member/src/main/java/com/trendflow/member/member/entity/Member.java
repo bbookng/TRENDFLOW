@@ -38,6 +38,8 @@ public class Member {
     private String birthday;
     @Column(name = "password")
     private String password;
+    @Column(name = "refresh_token")
+    private String refreshToken;
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
     @OneToMany(mappedBy = "member")

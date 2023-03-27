@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.trendflow.member.global.redis.session.LoginRefreshToken;
 import com.trendflow.member.global.redis.session.LoginAccessToken;
-import com.trendflow.member.global.redis.session.LoginMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +44,7 @@ public class RedisConfig {
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .registerModules(new JavaTimeModule());
-        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(LoginAccessToken.class);
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(LoginRefreshToken.class);
         serializer.setObjectMapper(objectMapper);
         return serializer;
     }
@@ -57,7 +57,7 @@ public class RedisConfig {
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .registerModules(new JavaTimeModule());
-        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(LoginMember.class);
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(LoginAccessToken.class);
         serializer.setObjectMapper(objectMapper);
         return serializer;
     }
