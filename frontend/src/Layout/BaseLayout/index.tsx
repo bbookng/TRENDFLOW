@@ -3,6 +3,7 @@ import Header from '@/components/@shared/Header';
 
 import * as S from './index.styles';
 import Navbar from '@/components/@shared/Navbar';
+import DarkModeFixBtn from '@/components/molecules/DarkModeFixBtn';
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ const BaseLayout = ({ children }: BaseLayoutProps) => {
       <S.Main>
         <S.Container>{children}</S.Container>
       </S.Main>
+      <DarkModeFixBtn />
     </S.Layout>
   );
 };

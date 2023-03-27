@@ -29,7 +29,7 @@ export const ChartWrapper = styled.div`
   }
 `;
 
-export const RankingWrapper = styled.div`
+export const RankingWrapper = styled.ul`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
