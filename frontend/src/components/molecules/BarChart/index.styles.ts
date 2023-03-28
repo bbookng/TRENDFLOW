@@ -5,4 +5,5 @@ export const Wrapper = styled.div``;
 
 export const BarPaper = styled(Paper)`
   width: 100%;
+  height: 100%;
 `;
