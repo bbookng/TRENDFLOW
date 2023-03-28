@@ -11,6 +11,7 @@ import com.trendflow.member.global.exception.UnAuthException;
 import com.trendflow.member.global.response.BasicResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,11 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @GetMapping("/health")
+    public ResponseEntity<BasicResponse> login() {
+        return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, null));
+    }
+
     @PostMapping("/login")
     public ResponseEntity<BasicResponse> login(@RequestBody LoginRequest loginRequest){
         log.info("login - Call");
@@ -32,7 +38,7 @@ public class AuthController {
             LoginResponse loginResponse = authService.login(accessToken, authCode);
             return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, loginResponse));
         } catch (UnAuthException e){
-            log.error(e.getMessage());
+            log.error(e.getCode().toString());
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getCode(), null));
         } catch (RuntimeException e){
             log.error(e.getMessage());
@@ -48,7 +54,7 @@ public class AuthController {
             RefreshTokenResponse refreshTokenResponse = authService.refresh(refreshToken);
             return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, refreshTokenResponse));
         } catch (UnAuthException e){
-            log.error(e.getMessage());
+            log.error(e.getCode().toString());
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getCode(), null));
         } catch (RuntimeException e){
             log.error(e.getMessage());
@@ -68,8 +74,8 @@ public class AuthController {
             if ("v2".equals(level)) authService.authAccessToken(accessToken);
             return ResponseEntity.ok().body(AuthAccessTokenResponse.builder().isValid(true).build());
         } catch (UnAuthException e){
-            log.error(e.getMessage());
-            return ResponseEntity.ok().body(AuthAccessTokenResponse.builder().isValid(false).build());
+            log.error(e.getCode().toString());
+            return ResponseEntity.badRequest().body(AuthAccessTokenResponse.builder().isValid(false).build());
         } catch (RuntimeException e){
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().body(null);
@@ -84,7 +90,7 @@ public class AuthController {
             authService.logout(refreshToken);
             return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, null));
         } catch (NotFoundException e){
-            log.error(e.getMessage());
+            log.error("logout : NotFoundException");
             return ResponseEntity.badRequest().body(BasicResponse.Body(AuthCode.FAIL, null));
         } catch (RuntimeException e){
             log.error(e.getMessage());

@@ -1,15 +1,12 @@
 package com.trendflow.member.auth.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trendflow.member.auth.dto.authentication.KakaoAccess;
-import com.trendflow.member.auth.dto.authentication.KakaoTokenInfo;
-import com.trendflow.member.auth.dto.authentication.KakaoUser;
-import com.trendflow.member.global.code.AuthCode;
+import com.trendflow.member.auth.dto.authentication.SocialAccess;
+import com.trendflow.member.auth.dto.authentication.SocialTokenInfo;
+import com.trendflow.member.auth.dto.authentication.SocialUser;
 import com.trendflow.member.global.code.CommonCode;
 import com.trendflow.member.global.exception.NotFoundException;
-import com.trendflow.member.global.exception.UnAuthException;
 import com.trendflow.member.member.entity.Member;
 import com.trendflow.member.member.service.MemberService;
 import org.junit.jupiter.api.Test;
@@ -23,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -88,7 +84,7 @@ class KakaoAuthServiceTest {
             Integer refreshTokenExpire = jsonNode.get("refresh_token_expires_in").asInt();
             String scope = jsonNode.get("scope").asText();
 
-            KakaoAccess kakaoAccess = KakaoAccess.builder()
+            SocialAccess socialAccess = SocialAccess.builder()
                     .tokenType(tokenType)
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
@@ -97,8 +93,8 @@ class KakaoAuthServiceTest {
                     .scope(Arrays.asList(scope.split(" ")))
                     .build();
 
-            System.out.println("kakaoAccess = " + kakaoAccess);
-            assertEquals(kakaoAccess.getTokenType(), "bearer");
+            System.out.println("kakaoAccess = " + socialAccess);
+            assertEquals(socialAccess.getTokenType(), "bearer");
 
         } catch (Exception e){
             e.printStackTrace();
@@ -143,14 +139,14 @@ class KakaoAuthServiceTest {
                 refreshTokenExpire = jsonNode.get("refresh_token_expires_in").asInt();
             }
 
-            KakaoAccess kakaoAccess = KakaoAccess.builder()
+            SocialAccess socialAccess = SocialAccess.builder()
                                     .tokenType(tokenType)
                                     .accessToken(accessToken)
                                     .refreshToken(refreshToken)
                                     .accessTokenExpire(accessTokenExpire)
                                     .refreshTokenExpire(refreshTokenExpire)
                                     .build();
-            System.out.println("kakaoAccess = " + kakaoAccess);
+            System.out.println("kakaoAccess = " + socialAccess);
             assertTrue(true);
         } catch(Exception e){
             e.printStackTrace();
@@ -182,13 +178,12 @@ class KakaoAuthServiceTest {
             Integer expire = jsonNode.get("expires_in").asInt();
             Integer appId = jsonNode.get("app_id").asInt();
 
-            KakaoTokenInfo kakaoTokenInfo = KakaoTokenInfo.builder()
+            SocialTokenInfo socialTokenInfo = SocialTokenInfo.builder()
                                             .id(id)
                                             .expire(expire)
-                                            .appId(appId)
                                             .build();
 
-            System.out.println("kakaoTokenInfo = " + kakaoTokenInfo);
+            System.out.println("kakaoTokenInfo = " + socialTokenInfo);
             assertTrue(true);
         } catch (Exception e){
             e.printStackTrace();
@@ -249,15 +244,15 @@ class KakaoAuthServiceTest {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
-            Long kakaoUserId = jsonNode.get("id").asLong();
+            String kakaoUserId = String.valueOf(jsonNode.get("id").asLong());
             String name = jsonNode.get("kakao_account").get("profile").get("nickname").asText();
             String email = jsonNode.get("kakao_account").get("email").asText();
             String gender = jsonNode.get("kakao_account").get("gender").asText();
             String age = jsonNode.get("kakao_account").get("age_range").asText();
             String birthday = jsonNode.get("kakao_account").get("birthday").asText();
 
-            KakaoUser kakaoUser = KakaoUser.builder()
-                            .kakaoUserId(kakaoUserId)
+            SocialUser socialUser = SocialUser.builder()
+                            .userId(kakaoUserId)
                             .name(name)
                             .email(email)
                             .gender(gender)
@@ -265,8 +260,8 @@ class KakaoAuthServiceTest {
                             .birthday(birthday)
                             .build();
 
-            System.out.println(kakaoUser);
-            assertEquals(kakaoUser.getName(), "박상민");
+            System.out.println(socialUser);
+            assertEquals(socialUser.getName(), "박상민");
 
         } catch (Exception e){
             assertTrue(false);
@@ -282,7 +277,7 @@ class KakaoAuthServiceTest {
         String age = "20~29";                    // age_range
         String birthday = "0506";                // birthday
 
-        KakaoUser kakaoUser = KakaoUser.builder()
+        SocialUser socialUser = SocialUser.builder()
                             .name(name)
                             .email(email)
                             .gender(gender)
@@ -291,18 +286,18 @@ class KakaoAuthServiceTest {
                             .build();
 
         try {
-            memberService.findMember(kakaoUser.getEmail());
+            memberService.findMemberByEmail(socialUser.getEmail());
         } catch (NotFoundException e) {
             String platformCode = CommonCode.KAKAO.getName();
             String password = UUID.randomUUID().toString().replace("-", "");
 
             memberService.registMember(Member.builder()
                     .platformCode(platformCode)
-                    .name(kakaoUser.getName())
-                    .email(kakaoUser.getEmail())
-                    .gender(kakaoUser.getGender())
-                    .age(kakaoUser.getAge())
-                    .birthday(kakaoUser.getBirthday())
+                    .name(socialUser.getName())
+                    .email(socialUser.getEmail())
+                    .gender(socialUser.getGender())
+                    .age(socialUser.getAge())
+                    .birthday(socialUser.getBirthday())
                     .password(password)
                     .build());
         }

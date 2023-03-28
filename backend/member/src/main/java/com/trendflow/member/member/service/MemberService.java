@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -20,9 +22,41 @@ public class MemberService {
     private final CommonService commonService;
 
     @Transactional(readOnly = true)
-    public Member findMember(String email) throws NotFoundException {
-        return memberRepository.findByEmail(email)
+    public Member findMemberByMemberId(Long memberId) throws NotFoundException {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException());
+        return Member.builder()
+                .memberId(member.getMemberId())
+                .keywordId(member.getKeywordId())
+                .platformCode(member.getPlatformCode())
+                .name(member.getName())
+                .email(member.getEmail())
+                .gender(member.getGender())
+                .age(member.getAge())
+                .birthday(member.getBirthday())
+                .password(member.getPassword())
+                .regDt(member.getRegDt())
+                .roles(member.getRoles().stream().collect(Collectors.toList()))
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public Member findMemberByEmail(String email) throws NotFoundException {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException());
+        return Member.builder()
+                .memberId(member.getMemberId())
+                .keywordId(member.getKeywordId())
+                .platformCode(member.getPlatformCode())
+                .name(member.getName())
+                .email(member.getEmail())
+                .gender(member.getGender())
+                .age(member.getAge())
+                .birthday(member.getBirthday())
+                .password(member.getPassword())
+                .regDt(member.getRegDt())
+                .roles(member.getRoles().stream().collect(Collectors.toList()))
+                .build();
     }
 
     @Transactional
