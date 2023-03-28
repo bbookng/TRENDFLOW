@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useTheme } from '@emotion/react';
 import {
   Chart,
@@ -130,9 +131,11 @@ const BarChart = () => {
   };
 
   return (
-    <S.BarPaper>
-      <Bar data={data} options={options} />
-    </S.BarPaper>
+    <S.Wrapper>
+      <S.BarPaper>
+        <Bar data={data} options={options} />
+      </S.BarPaper>
+    </S.Wrapper>
   );
 };
 
