@@ -28,7 +28,7 @@ export const login = createAsyncThunk(
       const res = await api.post('/member/login', data);
       return res.data;
     } catch (err) {
-      dispatch(showToast({ msg: LOGIN_FAILED }));
+      dispatch(showToast(LOGIN_FAILED));
       throw err;
     }
   }
