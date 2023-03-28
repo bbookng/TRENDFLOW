@@ -56,6 +56,8 @@ public class AuthService {
 
                 String accessToken = loginRefreshToken.getAccessToken();
                 String refreshToken = token.getRefreshToken();
+                // 매번 리프레시 재발급 되기 때문에 엑세스 토큰을 이용해 기존 리프레시 토큰 만료 시킴
+                kakaoAuthService.expireToken(accessToken);
                 loginAccessTokenRepository.deleteById(accessToken);
                 loginRefreshTokenRepository.deleteById(refreshToken);
             } catch (NotFoundException e) {
@@ -104,8 +106,6 @@ public class AuthService {
 
                     // 활성화된 리프레시 토큰 만료 시킴 (엑세스 토큰도 같이 만료됨)
                     googleAuthService.expireToken(token.getRefreshToken());
-                    // 활성화된 엑세스 토큰 삭제
-//                    loginAccessTokenRepository.deleteById(socialAccess.getAccessToken());
                     // 활성화된 리프레시 토큰 삭제
                     loginRefreshTokenRepository.deleteById(token.getRefreshToken());
                 } catch (NotFoundException e){

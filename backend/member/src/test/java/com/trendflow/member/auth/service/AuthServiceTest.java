@@ -58,7 +58,7 @@ class AuthServiceTest {
     @Test
     void expireTest() {
         try {
-            String refreshToken = "1//0ehZ2D_Br4b1NCgYIARAAGA4SNwF-L9IrZ8pW1KQbXfUzjZSMor-evSSIiygGrq3UeP4nzJgQvszHuZ6O9lY9UFgi04RbhQ1G31I";
+            String refreshToken = "XADOmdwuG7h-CsjNFrBGT4UOePMzKQEX7ENyw4HXCiolEQAAAYcoWro2";
             authService.logout(refreshToken);
             assertTrue(true);
         } catch (Exception e) {

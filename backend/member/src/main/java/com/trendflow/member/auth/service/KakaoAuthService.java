@@ -175,14 +175,12 @@ public class KakaoAuthService {
         }
     }
 
-    public void expireToken(String kakaoUserId) throws UnAuthException {
+    public void expireToken(String accessToken) throws UnAuthException {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", String.format("KakaoAK %s", ADMIN_KEY));
+            headers.add("Authorization", String.format("Authorization %s", accessToken));
 
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-            body.add("target_id_type", "user_id");
-            body.add("target_id", kakaoUserId);
 
             HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
             RestTemplate rt = new RestTemplate();
