@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class KakaoAccess {
+public class SocialAccess {
     private String accessToken;
     private String refreshToken;
     private String tokenType;

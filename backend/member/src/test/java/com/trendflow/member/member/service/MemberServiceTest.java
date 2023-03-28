@@ -1,6 +1,6 @@
 package com.trendflow.member.member.service;
 
-import com.trendflow.member.auth.dto.authentication.KakaoUser;
+import com.trendflow.member.auth.dto.authentication.SocialUser;
 import com.trendflow.member.global.exception.NotFoundException;
 import com.trendflow.member.member.entity.Member;
 import com.trendflow.member.member.entity.Role;
@@ -44,7 +44,7 @@ class MemberServiceTest {
         String birthday = "0506";                // birthday
         String password = UUID.randomUUID().toString().replace("-", "");
 
-        KakaoUser kakaoUser = KakaoUser.builder()
+        SocialUser socialUser = SocialUser.builder()
                             .name(name)
                             .email(email)
                             .gender(gender)
@@ -54,11 +54,11 @@ class MemberServiceTest {
 
         Member member = Member.builder()
                 .platformCode(platformCode)
-                .name(kakaoUser.getName())
-                .email(kakaoUser.getEmail())
-                .gender(kakaoUser.getGender())
-                .age(kakaoUser.getAge())
-                .birthday(kakaoUser.getBirthday())
+                .name(socialUser.getName())
+                .email(socialUser.getEmail())
+                .gender(socialUser.getGender())
+                .age(socialUser.getAge())
+                .birthday(socialUser.getBirthday())
                 .password(password)
                 .build();
         memberRepository.save(member);
