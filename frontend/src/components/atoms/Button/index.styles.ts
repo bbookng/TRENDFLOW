@@ -17,11 +17,11 @@ const defaultStyle = css`
   color: #000;
   font-size: 1rem;
   transition: background 0.3s;
-  padding: 2px 4px;
+  padding: 0.5rem 1rem;
 `;
 const background = (props: ButtonPropsInterface) =>
   css`
-    background-color: ${props.variant === 'contained' ? PALETTE.BRAND400 : PALETTE.WHITE100};
+    background-color: ${props.variant === 'contained' ? PALETTE.BRAND400 : 'transparent'};
   `;
 
 const event = (props: ButtonPropsInterface) => css`
@@ -39,21 +39,27 @@ const fontSize = (props: ButtonPropsInterface) => css`
 `;
 
 const border = (props: ButtonPropsInterface) => css`
-  border: ${props.variant === 'outlined' ? `1px solid ${PALETTE.BRAND400}` : 'none'};
+  border: ${props.variant === 'outlined'
+    ? `${props.borderSize ? props.borderSize : 1}px solid ${PALETTE.BRAND400}`
+    : 'none'};
 `;
 
 // eslint-disable-next-line consistent-return
 const buttonSize = (props: ButtonPropsInterface) => {
   if (props.size === 'SMALL') {
     return css`
-      width: 71px;
-      height: 44px;
+      min-width: 71px;
+      min-height: 44px;
+      width: auto;
+      height: auto;
     `;
   }
   if (props.size === 'LARGE') {
     return css`
-      width: 360px;
-      height: 44px;
+      min-width: 360px;
+      min-height: 44px;
+      width: auto;
+      height: auto;
     `;
   }
 };

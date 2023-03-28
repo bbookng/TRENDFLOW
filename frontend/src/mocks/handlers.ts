@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { hot, relate, social } from '@/mocks/data';
+import { hot, relate, social, recommend } from '@/mocks/data';
 
 export const handlers = [
   // 키워드
@@ -9,6 +9,10 @@ export const handlers = [
 
   rest.get('/keyword/relate', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(relate));
+  }),
+
+  rest.get('/keyword/recommend', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(recommend));
   }),
 
   // 분석

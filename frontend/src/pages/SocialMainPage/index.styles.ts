@@ -28,7 +28,6 @@ export const Left = styled.div`
     display: flex;
     width: 33%;
     height: 400px;
-    background-color: ${PALETTE.BRAND300};
     border-radius: 10px;
   }
 `;

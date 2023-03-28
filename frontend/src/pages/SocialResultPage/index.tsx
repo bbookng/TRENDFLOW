@@ -16,6 +16,7 @@ import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 import { DailyAnalysis } from '@/components/organisms/MainPage';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
+import PostContents from '@/components/organisms/SocialResult/PostContents';
 
 interface CustomInputInterface {
   value?: React.ReactNode;
@@ -81,6 +82,12 @@ const SocialResultPage = () => {
         <TrendLineChart text="긍부정 추이" />
         <TrendLineChart text="검색 엔진 트렌트 추이" />
       </S.TrendChartContentsWrapper>
+
+      <S.RelatedPostWrapper>
+        <PostContents />
+        <PostContents />
+        <PostContents />
+      </S.RelatedPostWrapper>
     </>
   );
 };
