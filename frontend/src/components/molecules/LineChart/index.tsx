@@ -17,7 +17,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip,
 const LineChart = () => {
   const theme = useTheme();
 
-  const labels = ['January', 'February', 'March', 'April', 'May'];
+  const labels = ['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24', '3/25', '3/26', '3/27'];
 
   const options = {
     responsive: true,
@@ -47,18 +47,20 @@ const LineChart = () => {
     scales: {
       x: {
         grid: {
-          color: theme.darkToggleBackground,
+          color: PALETTE.WHITE300,
         },
         ticks: {
+          fontSize: 14,
           color: theme.text,
         },
       },
 
       y: {
         grid: {
-          color: theme.darkToggleBackground,
+          color: PALETTE.WHITE300,
         },
         ticks: {
+          fontSize: 14,
           color: theme.text,
         },
       },
@@ -75,7 +77,7 @@ const LineChart = () => {
     datasets: [
       {
         label: '긍정',
-        data: [-1000, -500, 0, 500, -300],
+        data: [20, 100, 150, 80, 50, 300, 245, 300, 110, 80],
         borderColor: theme.positive,
         backgroundColor: theme.positive,
         pointBorderColor: theme.positive,
@@ -83,7 +85,7 @@ const LineChart = () => {
       },
       {
         label: '중립',
-        data: [-800, -300, 192, 400, -200],
+        data: [0, 35, 78, 145, 245, 211, 178, 190, 44, 20, 65],
         borderColor: theme.neutrality,
         backgroundColor: theme.neutrality,
         pointBorderColor: theme.neutrality,
@@ -91,7 +93,7 @@ const LineChart = () => {
       },
       {
         label: '부정',
-        data: [-1500, -1000, -400, 0, -288],
+        data: [100, 50, 89, 98, 150, 200, 50, 100, 156, 200],
         borderColor: theme.negative,
         backgroundColor: theme.negative,
         pointBorderColor: theme.negative,
