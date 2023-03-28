@@ -11,12 +11,10 @@ import { getSevenDaysAgoDate } from '@/utils/date';
 import star from '@/assets/icons/star.svg';
 import 'react-datepicker/dist/react-datepicker.css';
 import BarChart from '@/components/molecules/BarChart';
-import { useGetHotKeywordQuery, useGetRelatedKeywordQuery } from '@/apis/keyword';
-import { useGetSocialAnalysisQuery } from '@/apis/analyze';
-import { DailyAnalysis } from '@/components/organisms/MainPage';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
 import PostContents from '@/components/organisms/SocialResult/PostContents';
+import { useGetWordCloudKeywordQuery } from '@/apis/keyword';
 
 interface CustomInputInterface {
   value?: React.ReactNode;
@@ -26,9 +24,13 @@ interface CustomInputInterface {
 const SocialResultPage = () => {
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
+
   const CustomDataPicker = ({ value, onClick }: CustomInputInterface) => (
     <S.CustomDataPicker onClick={onClick}>{value}</S.CustomDataPicker>
   );
+
+  const { data: wordCloudKeywords, isSuccess } = useGetWordCloudKeywordQuery();
+  console.log(wordCloudKeywords);
 
   return (
     <>
@@ -74,7 +76,7 @@ const SocialResultPage = () => {
         </S.BarChartWrapper>
         {/* 워드 클라우드 */}
         <S.RelatedKeywordContentsWrapper>
-          <RelatedKeyword />
+          {isSuccess && <RelatedKeyword wordCloudKeywords={wordCloudKeywords} />}
         </S.RelatedKeywordContentsWrapper>
       </S.KeywordContentsWrapper>
       {/* 긍부정, 트렌드 LineChart */}

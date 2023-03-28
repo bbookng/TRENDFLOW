@@ -10,6 +10,7 @@ export interface ButtonPropsInterface {
   size?: 'LARGE' | 'MEDIUM' | 'SMALL';
   borderSize?: string;
   isDark?: boolean;
+  weight?: 'string';
   onClick?: () => void;
 }
 

@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { hot, relate, social, recommend } from '@/mocks/data';
+import { hot, relate, social, recommend, wordCloud } from '@/mocks/data';
 
 export const handlers = [
   // 키워드
@@ -13,6 +13,11 @@ export const handlers = [
 
   rest.get('/keyword/recommend', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(recommend));
+  }),
+
+  // 워드 클라우드
+  rest.get('/keyword/wordcloud', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(wordCloud));
   }),
 
   // 분석

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RankingListInterface, RankingListItemInterface } from '@/types/ranking';
-import { RecommendKeywordInterface } from '@/types/keyword';
+import { RecommendKeywordInterface, WordCloudInterface } from '@/types/keyword';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 
@@ -17,8 +17,16 @@ export const keywordApi = createApi({
     getRecommendKeyword: builder.query<RecommendKeywordInterface[], void>({
       query: () => 'recommend',
     }),
+    getWordCloudKeyword: builder.query<WordCloudInterface[], void>({
+      query: () => `wordcloud`,
+      keepUnusedDataFor: 1,
+    }),
   }),
 });
 
-export const { useGetHotKeywordQuery, useGetRelatedKeywordQuery, useGetRecommendKeywordQuery } =
-  keywordApi;
+export const {
+  useGetHotKeywordQuery,
+  useGetRelatedKeywordQuery,
+  useGetRecommendKeywordQuery,
+  useGetWordCloudKeywordQuery,
+} = keywordApi;

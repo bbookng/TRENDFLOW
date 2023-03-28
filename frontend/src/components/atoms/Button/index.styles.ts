@@ -16,7 +16,7 @@ const defaultStyle = css`
   font-weight: 900;
   color: #000;
   font-size: 1rem;
-  transition: background 0.3s;
+  transition: all 0.3s;
   padding: 0.5rem 1rem;
 `;
 const background = (props: ButtonPropsInterface) =>
@@ -44,12 +44,16 @@ const border = (props: ButtonPropsInterface) => css`
     : 'none'};
 `;
 
+const fontWeight = (props: ButtonPropsInterface) => css`
+  font-weight: ${props.weight};
+`;
+
 // eslint-disable-next-line consistent-return
 const buttonSize = (props: ButtonPropsInterface) => {
   if (props.size === 'SMALL') {
     return css`
       min-width: 71px;
-      min-height: 44px;
+      height: 44px;
       width: auto;
       height: auto;
     `;
@@ -57,7 +61,7 @@ const buttonSize = (props: ButtonPropsInterface) => {
   if (props.size === 'LARGE') {
     return css`
       min-width: 360px;
-      min-height: 44px;
+      height: 44px;
       width: auto;
       height: auto;
     `;
@@ -72,4 +76,5 @@ export const Button = styled.button`
   ${background}
   ${buttonSize}
   ${event}
+  ${fontWeight}
 `;
