@@ -69,10 +69,8 @@ public class AuthService {
             member = googleAuthService.getMember(socialUser);
 
             // 기존 리프레시 토큰 재사용
+            // 캐시에서 리프레시 토큰을 제외하고 모두 삭제
             if (socialAccess.getRefreshToken() == null) {
-
-                log.error("refresh in db");
-
                 Token token = tokenRepository.findByMemberId(member.getMemberId())
                         .orElseThrow(() -> new UnAuthException(AuthCode.SEARCH_REFRESH_TOKEN_FAIL));
 
@@ -85,21 +83,31 @@ public class AuthService {
 
                 LoginRefreshToken loginRefreshToken = loginRefreshTokenRepository.findById(socialAccess.getRefreshToken())
                         .orElseThrow(() -> new UnAuthException(AuthCode.SEARCH_REFRESH_TOKEN_FAIL));
-                String accessToken = loginRefreshToken.getAccessToken();
-                loginAccessTokenRepository.deleteById(accessToken);
+
+                // 현재 활성화 되어 있는 엑세스 토큰 만료 시킴
+                loginAccessTokenRepository.save(LoginAccessToken.builder()
+                        .accessToken(loginRefreshToken.getAccessToken())
+                        .accessExpire(loginRefreshToken.getAccessExpire())
+                        .refreshToken(socialAccess.getRefreshToken())
+                        .memberId(loginRefreshToken.getMemberId())
+                        .isValid(false)
+                        .build());
             } 
-            // 새로운 리프레시 토큰 (기존 토큰 캐시에서 제거)
+            // 새로운 리프레시 토큰 (기존 토큰 캐시에서 제거) -> 리프레시가 만료된 경우만 적용
+            // 캐시에서 관련된 모든 토큰 삭제 (초기화)
             else {
                 try {
                     Token token = tokenRepository.findByMemberId(member.getMemberId())
                             .orElseThrow(() -> new NotFoundException());
-                    LoginRefreshToken loginRefreshToken = loginRefreshTokenRepository.findById(socialAccess.getRefreshToken())
+                    LoginRefreshToken loginRefreshToken = loginRefreshTokenRepository.findById(token.getRefreshToken())
                             .orElseThrow(() -> new NotFoundException());
 
-                    String accessToken = loginRefreshToken.getAccessToken();
-                    String refreshToken = token.getRefreshToken();
-                    loginAccessTokenRepository.deleteById(accessToken);
-                    loginRefreshTokenRepository.deleteById(refreshToken);
+                    // 활성화된 리프레시 토큰 만료 시킴 (엑세스 토큰도 같이 만료됨)
+                    googleAuthService.expireToken(token.getRefreshToken());
+                    // 활성화된 엑세스 토큰 삭제
+//                    loginAccessTokenRepository.deleteById(socialAccess.getAccessToken());
+                    // 활성화된 리프레시 토큰 삭제
+                    loginRefreshTokenRepository.deleteById(token.getRefreshToken());
                 } catch (NotFoundException e){
                     log.warn("Not found Token in DB");
                 }
@@ -108,15 +116,6 @@ public class AuthService {
 
         // 플랫폼 코드 인식 불가
         else throw new UnAuthException(AuthCode.PLATFORM_FAIL);
-
-        // 기존 캐시에 남아있는 토큰 정보가 있으면 삭제
-        Optional<LoginRefreshToken> loginRefreshToken = loginRefreshTokenRepository.findById(socialAccess.getRefreshToken());
-        if (loginRefreshToken.isPresent()){
-            String refreshToken = loginRefreshToken.get().getRefreshToken();
-            String accessToken = loginRefreshToken.get().getAccessToken();
-            loginRefreshTokenRepository.deleteById(refreshToken);
-            loginAccessTokenRepository.deleteById(accessToken);
-        }
 
         // 세션 캐시에 로그인 정보 (RefreshToken) 저장
         loginRefreshTokenRepository.saveLogin(LoginRefreshToken.builder()
@@ -127,7 +126,7 @@ public class AuthService {
                 .accessTokenExpire(socialAccess.getAccessTokenExpire())
                 .accessExpire(LocalDateTime.now().plusSeconds(socialAccess.getAccessTokenExpire()))
                 .memberId(member.getMemberId())
-                .platformCode(KAKAO)
+                .platformCode(platformCode)
                 .platformUserId(socialUser.getUserId())
                 .build());
 

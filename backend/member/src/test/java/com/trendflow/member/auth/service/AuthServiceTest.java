@@ -24,7 +24,7 @@ class AuthServiceTest {
 
     @Test
     void googleLoginTest() {
-        String authCode = "4/0AVHEtk7YUbyezBblj59Zli6ypXuzYBGnfjrScIq-XuhkMy_C9k5EvxBEvx2bmtKas3cCUQ";
+        String authCode = "4/0AVHEtk6OeHHDWYzwiy_S4LQwRe0DCJDrTUBhbq65d-TeGWWSamf3cRTQAfmIVM1NC1DfGA";
         LoginResponse loginResponse = authService.login("PL200", authCode);
         assertEquals(loginResponse.getName(), "박상민");
     }
@@ -58,7 +58,7 @@ class AuthServiceTest {
     @Test
     void expireTest() {
         try {
-            String refreshToken = "4yncmzBFNZJHjdWwPKhAvDTNcguT9JSx_UBcXmVaCj1ymAAAAYcm6Lca";
+            String refreshToken = "1//0ehZ2D_Br4b1NCgYIARAAGA4SNwF-L9IrZ8pW1KQbXfUzjZSMor-evSSIiygGrq3UeP4nzJgQvszHuZ6O9lY9UFgi04RbhQ1G31I";
             authService.logout(refreshToken);
             assertTrue(true);
         } catch (Exception e) {

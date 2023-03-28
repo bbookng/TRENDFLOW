@@ -175,7 +175,7 @@ public class KakaoAuthService {
         }
     }
 
-    public Long expireToken(String kakaoUserId) throws UnAuthException {
+    public void expireToken(String kakaoUserId) throws UnAuthException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", String.format("KakaoAK %s", ADMIN_KEY));
@@ -193,16 +193,11 @@ public class KakaoAuthService {
                     String.class
             );
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(response.getBody());
-
-            Long id = jsonNode.get("id").asLong();
-            return id;
-
-        } catch (JsonProcessingException | HttpClientErrorException e) {
+        } catch (HttpClientErrorException e) {
+            log.info("Expire Fail");
+        } catch (RuntimeException e) {
             throw new UnAuthException(AuthCode.KAKAO_LOGOUT_FAIL);
         }
-
     }
 
     public SocialUser getUser(String accessToken) throws UnAuthException {

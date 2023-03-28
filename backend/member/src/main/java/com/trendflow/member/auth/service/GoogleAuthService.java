@@ -193,6 +193,9 @@ public class GoogleAuthService {
             );
 
         } catch (HttpClientErrorException e) {
+            e.printStackTrace();
+            log.info("Expire Fail");
+        } catch (RuntimeException e) {
             throw new UnAuthException(AuthCode.KAKAO_LOGOUT_FAIL);
         }
     }
