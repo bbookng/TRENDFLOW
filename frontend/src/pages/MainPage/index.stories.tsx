@@ -2,6 +2,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import MainPage from '@/pages/MainPage';
 import BaseLayout from '@/Layout/BaseLayout';
 import ThemeComponent from '@/components/@shared/Storybook/ThemeComponent';
+import { handlers } from '@/mocks/handlers';
 
 export default {
   title: 'Pages/MainPage',
@@ -18,3 +19,8 @@ const Template = () => (
 
 export const MainPageTemplate: ComponentStory<typeof MainPage> = Template.bind({});
 MainPageTemplate.args = {};
+MainPageTemplate.parameters = {
+  msw: {
+    handlers: [...handlers],
+  },
+};
