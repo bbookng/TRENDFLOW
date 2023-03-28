@@ -178,7 +178,7 @@ public class KakaoAuthService {
     public void expireToken(String accessToken) throws UnAuthException {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", String.format("Authorization %s", accessToken));
+            headers.add("Authorization", String.format("Bearer %s", accessToken));
 
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
