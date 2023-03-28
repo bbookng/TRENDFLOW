@@ -7,7 +7,7 @@ interface CommentTextProps {
 }
 
 export const Wrapper = styled.div`
-  width: 360px;
+  width: 100%;
   display: flex;
   gap: 16px;
   justify-content: space-between;
@@ -35,7 +35,7 @@ const more = css`
 `;
 
 export const CommentText = styled.p<CommentTextProps>`
-  width: 90%;
+  width: 100%;
   line-height: 1.25rem;
   ${(props) => !props.isShow && more}
 `;
