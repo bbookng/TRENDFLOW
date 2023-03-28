@@ -5,22 +5,30 @@ import com.trendflow.member.auth.dto.response.LoginResponse;
 import com.trendflow.member.auth.dto.response.RefreshTokenResponse;
 import com.trendflow.member.global.code.AuthCode;
 import com.trendflow.member.global.code.CommonCode;
+import com.trendflow.member.global.exception.NotFoundException;
 import com.trendflow.member.global.exception.UnAuthException;
 import com.trendflow.member.global.redis.session.*;
 import com.trendflow.member.member.entity.Member;
+import com.trendflow.member.member.entity.Token;
 import com.trendflow.member.member.repository.MemberRepository;
+import com.trendflow.member.member.repository.TokenRepository;
 import com.trendflow.member.msa.service.CommonService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final LoginRefreshTokenRepository loginRefreshTokenRepository;
     private final LoginAccessTokenRepository loginAccessTokenRepository;
-    private final MemberRepository memberRepository;
+    private final TokenRepository tokenRepository;
     private final KakaoAuthService kakaoAuthService;
     private final GoogleAuthService googleAuthService;
     private final CommonService commonService;
@@ -35,23 +43,80 @@ public class AuthService {
         
         // 카카오 소셜 로그인
         if (KAKAO.equals(platformCode)){
-            // accessToken 발급
             socialAccess = kakaoAuthService.getAccessToken(authCode);
-            // accessToken 으로 카카오 사용자 정보 수집
             socialUser = kakaoAuthService.getUser(socialAccess.getAccessToken());
-            // 카카오 사용자 정보를 통해 회원가입 여부 확인 (by Email)
-            // 회원가입이 되어있으면 DB Member 반환
-            // 회원가입이 안되어있으면 DB 에 등록 이후 Member 반환
             member = kakaoAuthService.getMember(socialUser);
+
+            // DB에 남아있는 토큰 정보가 캐시에 있으면 삭제
+            try {
+                Token token = tokenRepository.findById(member.getMemberId())
+                        .orElseThrow(() -> new NotFoundException());
+                LoginRefreshToken loginRefreshToken = loginRefreshTokenRepository.findById(token.getRefreshToken())
+                        .orElseThrow(() -> new NotFoundException());
+
+                String accessToken = loginRefreshToken.getAccessToken();
+                String refreshToken = token.getRefreshToken();
+                loginAccessTokenRepository.deleteById(accessToken);
+                loginRefreshTokenRepository.deleteById(refreshToken);
+            } catch (NotFoundException e) {
+                log.warn("Not found Token in DB");
+            }
         } 
         // 구글 소셜 로그인
         else if (GOOGLE.equals(platformCode)){
             socialAccess = googleAuthService.getAccessToken(authCode);
             socialUser = googleAuthService.getUser(socialAccess.getAccessToken());
             member = googleAuthService.getMember(socialUser);
-        } 
+
+            // 기존 리프레시 토큰 재사용
+            if (socialAccess.getRefreshToken() == null) {
+
+                log.error("refresh in db");
+
+                Token token = tokenRepository.findByMemberId(member.getMemberId())
+                        .orElseThrow(() -> new UnAuthException(AuthCode.SEARCH_REFRESH_TOKEN_FAIL));
+
+                if (LocalDateTime.now().isAfter(token.getExpireDt()))
+                    throw new UnAuthException(AuthCode.SEARCH_REFRESH_TOKEN_FAIL);
+
+                Long expire = Duration.between(LocalDateTime.now(), token.getExpireDt()).getSeconds();
+                socialAccess.setRefreshToken(token.getRefreshToken());
+                socialAccess.setRefreshTokenExpire(Long.valueOf(expire).intValue());
+
+                LoginRefreshToken loginRefreshToken = loginRefreshTokenRepository.findById(socialAccess.getRefreshToken())
+                        .orElseThrow(() -> new UnAuthException(AuthCode.SEARCH_REFRESH_TOKEN_FAIL));
+                String accessToken = loginRefreshToken.getAccessToken();
+                loginAccessTokenRepository.deleteById(accessToken);
+            } 
+            // 새로운 리프레시 토큰 (기존 토큰 캐시에서 제거)
+            else {
+                try {
+                    Token token = tokenRepository.findByMemberId(member.getMemberId())
+                            .orElseThrow(() -> new NotFoundException());
+                    LoginRefreshToken loginRefreshToken = loginRefreshTokenRepository.findById(socialAccess.getRefreshToken())
+                            .orElseThrow(() -> new NotFoundException());
+
+                    String accessToken = loginRefreshToken.getAccessToken();
+                    String refreshToken = token.getRefreshToken();
+                    loginAccessTokenRepository.deleteById(accessToken);
+                    loginRefreshTokenRepository.deleteById(refreshToken);
+                } catch (NotFoundException e){
+                    log.warn("Not found Token in DB");
+                }
+            }
+        }
+
         // 플랫폼 코드 인식 불가
         else throw new UnAuthException(AuthCode.PLATFORM_FAIL);
+
+        // 기존 캐시에 남아있는 토큰 정보가 있으면 삭제
+        Optional<LoginRefreshToken> loginRefreshToken = loginRefreshTokenRepository.findById(socialAccess.getRefreshToken());
+        if (loginRefreshToken.isPresent()){
+            String refreshToken = loginRefreshToken.get().getRefreshToken();
+            String accessToken = loginRefreshToken.get().getAccessToken();
+            loginRefreshTokenRepository.deleteById(refreshToken);
+            loginAccessTokenRepository.deleteById(accessToken);
+        }
 
         // 세션 캐시에 로그인 정보 (RefreshToken) 저장
         loginRefreshTokenRepository.saveLogin(LoginRefreshToken.builder()
@@ -63,7 +128,7 @@ public class AuthService {
                 .accessExpire(LocalDateTime.now().plusSeconds(socialAccess.getAccessTokenExpire()))
                 .memberId(member.getMemberId())
                 .platformCode(KAKAO)
-                .platformUserId(socialUser.getKakaoUserId())
+                .platformUserId(socialUser.getUserId())
                 .build());
 
         // 세션 캐시에 로그인 정보 (AccessToken) 저장
@@ -76,8 +141,13 @@ public class AuthService {
                 .build());
 
         // DB 에 로그인 정보 (RefreshToken) 저장
-        member.setRefreshToken(socialAccess.getRefreshToken());
-        memberRepository.save(member);
+        tokenRepository.save(Token.builder()
+                        .memberId(member.getMemberId())
+                        .refreshToken(socialAccess.getRefreshToken())
+                        .expire(socialAccess.getRefreshTokenExpire())
+                        .expireDt(LocalDateTime.now().plusSeconds(socialAccess.getRefreshTokenExpire()))
+                        .regDt(LocalDateTime.now())
+                        .build());
 
         // 로그인 정보 응답 객체 생성
         return LoginResponse.builder()
@@ -98,16 +168,26 @@ public class AuthService {
 
         SocialAccess socialAccess = null;
 
-        if (KAKAO.equals(loginRefreshToken.getPlatformCode())) {
-            socialAccess = kakaoAuthService.refreshAccessToken(
-                    loginRefreshToken.getRefreshToken(),
-                    loginRefreshToken.getRefreshTokenExpire());
+        try {
+            // 카카오 엑세스 토큰 갱신
+            if (KAKAO.equals(loginRefreshToken.getPlatformCode())) {
+                socialAccess = kakaoAuthService.refreshAccessToken(
+                        loginRefreshToken.getRefreshToken(),
+                        loginRefreshToken.getRefreshTokenExpire());
 
-        }
-        // 구글 소셜 로그인
-        else if (GOOGLE.equals(loginRefreshToken.getPlatformCode())){
+            }
+            // 구글 엑세스 토큰 갱신
+            else if (GOOGLE.equals(loginRefreshToken.getPlatformCode())) {
+                socialAccess = googleAuthService.refreshAccessToken(
+                        loginRefreshToken.getRefreshToken(),
+                        loginRefreshToken.getRefreshTokenExpire());
+            }
+            // 플랫폼 코드 인식 불가
+            else throw new UnAuthException(AuthCode.PLATFORM_FAIL);
 
-            return null;
+        } catch (HttpClientErrorException e) {
+            tokenRepository.deleteByMemberId(loginRefreshToken.getMemberId());
+            throw new UnAuthException(AuthCode.SEARCH_REFRESH_TOKEN_FAIL);
         }
 
         // 새로운 엑세스 토큰 등록
@@ -132,13 +212,7 @@ public class AuthService {
                 .platformUserId(loginRefreshToken.getPlatformUserId())
                 .build());
 
-        // DB 에 로그인 정보 (RefreshToken) 저장
-        Member member = memberRepository.findById(loginRefreshToken.getMemberId())
-                .orElseThrow(() -> new UnAuthException(AuthCode.KAKAO_GET_TOKEN_FAIL));
-        member.setRefreshToken(socialAccess.getRefreshToken());
-        memberRepository.save(member);
-
-        // 기존의 엑세스 토큰을 무효화 시킴
+        // 기존의 엑세스 토큰을 무효화
         loginAccessTokenRepository.save(LoginAccessToken.builder()
                 .accessToken(loginRefreshToken.getAccessToken())
                 .accessExpire(loginRefreshToken.getAccessExpire())
@@ -159,28 +233,26 @@ public class AuthService {
         String KAKAO = commonService.getLocalCode(CommonCode.KAKAO.getName()).getCode();
         String GOOGLE = commonService.getLocalCode(CommonCode.GOOGLE.getName()).getCode();
 
+        // 엑세스 토큰으로 리프레시 토큰 조회
         LoginAccessToken loginAccessToken = loginAccessTokenRepository.findById(accessToken)
                 .orElseThrow(() -> new UnAuthException(AuthCode.INVALID_TOKEN_FAIL));
 
         if (!loginAccessToken.getIsValid()) throw new UnAuthException(AuthCode.INVALID_TOKEN_FAIL);
 
+        // 리프레시 토큰 정보 조회
         LoginRefreshToken loginRefreshToken = loginRefreshTokenRepository.findById(loginAccessToken.getRefreshToken())
                 .orElseThrow(() -> new UnAuthException(AuthCode.INVALID_TOKEN_FAIL));
 
+        // 소셜 인증 서버로 토큰 정보 요청
+        SocialTokenInfo socialTokenInfo = null;
         // 카카오 토큰 인증
-        if (KAKAO.equals(loginRefreshToken.getPlatformCode())) {
-            KakaoTokenInfo kakaoTokenInfo = kakaoAuthService.authAccessToken(accessToken);
-
-            // 토큰 인증 확인한 회원 ID가 현재 세션 캐시에 저장된 회원 ID와 다를 경우
-            if (!kakaoTokenInfo.getId().equals(loginRefreshToken.getPlatformUserId())){
-                throw new UnAuthException(AuthCode.INVALID_TOKEN_FAIL);
-            }
-        }
+        if (KAKAO.equals(loginRefreshToken.getPlatformCode())) socialTokenInfo = kakaoAuthService.authAccessToken(accessToken);
         // 구글 토큰 인증
-        else if (GOOGLE.equals(loginRefreshToken.getPlatformCode())){
-            GoogleTokenInfo googleTokenInfo = googleAuthService.authAccessToken(accessToken);
+        else if (GOOGLE.equals(loginRefreshToken.getPlatformCode())) socialTokenInfo = googleAuthService.authAccessToken(accessToken);
 
-            if (!googleTokenInfo.getEmail())
+        // 응답 토큰 정보 ID 비교 확인
+        if (!socialTokenInfo.getId().equals(loginRefreshToken.getPlatformUserId())){
+            throw new UnAuthException(AuthCode.INVALID_TOKEN_FAIL);
         }
     }
 
@@ -189,12 +261,13 @@ public class AuthService {
         LoginAccessToken loginAccessToken = loginAccessTokenRepository.findById(accessToken)
                 .orElseThrow(() -> new UnAuthException(AuthCode.INVALID_TOKEN_FAIL));
 
+        // accessToken 만료 시킨 토큰인 경우
         if (!loginAccessToken.getIsValid()) throw new UnAuthException(AuthCode.INVALID_TOKEN_FAIL);
 
         LoginRefreshToken loginRefreshToken = loginRefreshTokenRepository.findById(loginAccessToken.getRefreshToken())
                 .orElseThrow(() -> new UnAuthException(AuthCode.INVALID_TOKEN_FAIL));
 
-        // 엑세스 토큰의 만료시간이 지난 경우 (토큰이 만료된 경우) / accessToken 만료 시킨 토큰인 경우
+        // 엑세스 토큰의 만료시간이 지난 경우 (토큰이 만료된 경우)
         if (LocalDateTime.now().isAfter(loginRefreshToken.getAccessExpire())){
             throw new UnAuthException(AuthCode.INVALID_TOKEN_FAIL);
         }
@@ -227,7 +300,8 @@ public class AuthService {
                 .memberId(loginAccessToken.getMemberId())
                 .isValid(false)
                 .build());
+
         // 현재 리프레시 토큰 삭제
-        loginRefreshTokenRepository.delete(refreshToken);
+        loginRefreshTokenRepository.deleteById(refreshToken);
     }
 }

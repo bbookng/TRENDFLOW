@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trendflow.member.auth.dto.authentication.SocialAccess;
-import com.trendflow.member.auth.dto.authentication.KakaoTokenInfo;
+import com.trendflow.member.auth.dto.authentication.SocialTokenInfo;
 import com.trendflow.member.auth.dto.authentication.SocialUser;
 import com.trendflow.member.global.code.AuthCode;
 import com.trendflow.member.global.code.CommonCode;
@@ -36,23 +36,23 @@ public class KakaoAuthService {
     private final MemberService memberService;
     private final CommonService commonService;
     @Value("${login.kakao.admin-key}")
-    private String adminKey;
+    private String ADMIN_KEY;
     @Value("${login.kakao.client-id}")
-    private String ClientId;
+    private String CLIENT_ID;
     @Value("${login.kakao.client-secret}")
-    private String ClientSecret;
+    private String CLIENT_SECRET;
     @Value("${login.kakao.redirect-uri}")
-    private String RedirectUri;
+    private String REDIRECT_URI;
     @Value("${login.kakao.token-issuance-uri}")
-    private String KakaoTokenIssuanceUri;
+    private String KAKAO_TOKEN_ISSUANCE_URI;
     @Value("${login.kakao.token-reissue-uri}")
-    private String kakaoReissueUri;
+    private String KAKAO_REISSUE_URI;
     @Value("${login.kakao.token-expire-uri}")
-    private String kakaoExpireUri;
+    private String KAKAO_EXPIRE_URI;
     @Value("${login.kakao.token-auth-uri}")
-    private String kakaoAuthUri;
+    private String KAKAO_AUTH_URI;
     @Value("${login.kakao.info-uri}")
-    private String KakaoInfoUri;
+    private String KAKAO_INFO_URI;
 
     public SocialAccess getAccessToken(String authCode) throws UnAuthException {
         try {
@@ -62,14 +62,14 @@ public class KakaoAuthService {
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("code", authCode);
             body.add("grant_type", "authorization_code");
-            body.add("client_id", ClientId);
-            body.add("redirect_uri", RedirectUri);
-            body.add("client_secret", ClientSecret);
+            body.add("client_id", CLIENT_ID);
+            body.add("redirect_uri", REDIRECT_URI);
+            body.add("client_secret", CLIENT_SECRET);
 
             HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
             RestTemplate rt = new RestTemplate();
             ResponseEntity<String> response = rt.exchange(
-                    KakaoTokenIssuanceUri,
+                    KAKAO_TOKEN_ISSUANCE_URI,
                     HttpMethod.POST,
                     kakaoTokenRequest,
                     String.class
@@ -94,11 +94,7 @@ public class KakaoAuthService {
                     .scope(Arrays.asList(scope.split(" ")))
                     .build();
 
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new UnAuthException(AuthCode.KAKAO_GET_TOKEN_FAIL);
-        } catch (HttpClientErrorException e) {
-            e.printStackTrace();
+        } catch (JsonProcessingException | HttpClientErrorException e) {
             throw new UnAuthException(AuthCode.KAKAO_GET_TOKEN_FAIL);
         }
     }
@@ -110,14 +106,14 @@ public class KakaoAuthService {
 
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("grant_type", "refresh_token");
-            body.add("client_id", ClientId);
+            body.add("client_id", CLIENT_ID);
             body.add("refresh_token", refreshToken);
-            body.add("client_secret", ClientSecret);
+            body.add("client_secret", CLIENT_SECRET);
 
             HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
             RestTemplate rt = new RestTemplate();
             ResponseEntity<String> response = rt.exchange(
-                    kakaoReissueUri,
+                    KAKAO_REISSUE_URI,
                     HttpMethod.POST,
                     kakaoTokenRequest,
                     String.class
@@ -143,12 +139,12 @@ public class KakaoAuthService {
                     .refreshTokenExpire(refreshTokenExpire)
                     .build();
 
-        } catch (JsonProcessingException | HttpClientErrorException e) {
+        } catch (JsonProcessingException e) {
             throw new UnAuthException(AuthCode.KAKAO_AUTH_TOKEN_FAIL);
         }
     }
 
-    public KakaoTokenInfo authAccessToken(String accessToken) throws UnAuthException {
+    public SocialTokenInfo authAccessToken(String accessToken) throws UnAuthException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", String.format("Bearer %s", accessToken));
@@ -156,7 +152,7 @@ public class KakaoAuthService {
             HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(new LinkedMultiValueMap<>(), headers);
             RestTemplate rt = new RestTemplate();
             ResponseEntity<String> response = rt.exchange(
-                    kakaoAuthUri,
+                    KAKAO_AUTH_URI,
                     HttpMethod.GET,
                     kakaoTokenRequest,
                     String.class
@@ -167,32 +163,31 @@ public class KakaoAuthService {
 
             Long id = jsonNode.get("id").asLong();
             Integer expire = jsonNode.get("expires_in").asInt();
-            Integer appId = jsonNode.get("app_id").asInt();
 
-            return KakaoTokenInfo.builder()
+            return SocialTokenInfo.builder()
                     .id(id)
                     .expire(expire)
-                    .appId(appId)
                     .build();
 
         } catch (JsonProcessingException | HttpClientErrorException e) {
+            e.printStackTrace();
             throw new UnAuthException(AuthCode.KAKAO_AUTH_TOKEN_FAIL);
         }
     }
 
-    public Long expireToken(Long kakaoUserId) throws UnAuthException {
+    public Long expireToken(String kakaoUserId) throws UnAuthException {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", String.format("KakaoAK %s", adminKey));
+            headers.add("Authorization", String.format("KakaoAK %s", ADMIN_KEY));
 
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("target_id_type", "user_id");
-            body.add("target_id", String.valueOf(kakaoUserId));
+            body.add("target_id", kakaoUserId);
 
             HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
             RestTemplate rt = new RestTemplate();
             ResponseEntity<String> response = rt.exchange(
-                    kakaoExpireUri,
+                    KAKAO_EXPIRE_URI,
                     HttpMethod.POST,
                     kakaoTokenRequest,
                     String.class
@@ -218,7 +213,7 @@ public class KakaoAuthService {
             HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(new LinkedMultiValueMap<>(), headers);
             RestTemplate rt = new RestTemplate();
             ResponseEntity<String> response = rt.exchange(
-                    KakaoInfoUri,
+                    KAKAO_INFO_URI,
                     HttpMethod.POST,
                     kakaoTokenRequest,
                     String.class
@@ -227,7 +222,7 @@ public class KakaoAuthService {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
-            Long kakaoUserId = jsonNode.get("id").asLong();
+            String kakaoUserId = String.valueOf(jsonNode.get("id").asLong());
             String name = jsonNode.get("kakao_account").get("profile").get("nickname").asText();
             String email = jsonNode.get("kakao_account").get("email").asText();
             String gender = jsonNode.get("kakao_account").get("gender").asText();
@@ -235,7 +230,7 @@ public class KakaoAuthService {
             String birthday = jsonNode.get("kakao_account").get("birthday").asText();
 
             return SocialUser.builder()
-                    .kakaoUserId(kakaoUserId)
+                    .userId(kakaoUserId)
                     .name(name)
                     .email(email)
                     .gender(gender)

@@ -18,5 +18,5 @@ public class LoginRefreshToken {
     private LocalDateTime accessExpire;
     private Long memberId;
     private String platformCode;
-    private Long platformUserId;
+    private String platformUserId;
 }

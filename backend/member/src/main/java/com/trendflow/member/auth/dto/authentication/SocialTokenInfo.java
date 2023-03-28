@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class KakaoTokenInfo {
+public class SocialTokenInfo {
     private Long id;
     private Integer expire;
-    private Integer appId;
 }

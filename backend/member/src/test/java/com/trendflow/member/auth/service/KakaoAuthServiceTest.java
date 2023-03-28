@@ -3,7 +3,7 @@ package com.trendflow.member.auth.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trendflow.member.auth.dto.authentication.SocialAccess;
-import com.trendflow.member.auth.dto.authentication.KakaoTokenInfo;
+import com.trendflow.member.auth.dto.authentication.SocialTokenInfo;
 import com.trendflow.member.auth.dto.authentication.SocialUser;
 import com.trendflow.member.global.code.CommonCode;
 import com.trendflow.member.global.exception.NotFoundException;
@@ -178,13 +178,12 @@ class KakaoAuthServiceTest {
             Integer expire = jsonNode.get("expires_in").asInt();
             Integer appId = jsonNode.get("app_id").asInt();
 
-            KakaoTokenInfo kakaoTokenInfo = KakaoTokenInfo.builder()
+            SocialTokenInfo socialTokenInfo = SocialTokenInfo.builder()
                                             .id(id)
                                             .expire(expire)
-                                            .appId(appId)
                                             .build();
 
-            System.out.println("kakaoTokenInfo = " + kakaoTokenInfo);
+            System.out.println("kakaoTokenInfo = " + socialTokenInfo);
             assertTrue(true);
         } catch (Exception e){
             e.printStackTrace();
@@ -245,7 +244,7 @@ class KakaoAuthServiceTest {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
-            Long kakaoUserId = jsonNode.get("id").asLong();
+            String kakaoUserId = String.valueOf(jsonNode.get("id").asLong());
             String name = jsonNode.get("kakao_account").get("profile").get("nickname").asText();
             String email = jsonNode.get("kakao_account").get("email").asText();
             String gender = jsonNode.get("kakao_account").get("gender").asText();
@@ -253,7 +252,7 @@ class KakaoAuthServiceTest {
             String birthday = jsonNode.get("kakao_account").get("birthday").asText();
 
             SocialUser socialUser = SocialUser.builder()
-                            .kakaoUserId(kakaoUserId)
+                            .userId(kakaoUserId)
                             .name(name)
                             .email(email)
                             .gender(gender)

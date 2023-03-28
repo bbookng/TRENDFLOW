@@ -10,7 +10,8 @@ public enum AuthCode implements BasicCode {
     FAIL("400", "인증 기능 서버 오류"),
     PLATFORM_FAIL("401", "플랫폼 입력 오류"),
     SEARCH_TOKEN_FAIL("402", "등록되지 않은 토큰"),
-    INVALID_TOKEN_FAIL("403", "유효하지 않은 토큰");
+    INVALID_TOKEN_FAIL("403", "유효하지 않은 토큰"),
+    SEARCH_REFRESH_TOKEN_FAIL("404", "리프레시 토큰 없음. 재 로그인 필요");
 
     private String code;
     private String message;

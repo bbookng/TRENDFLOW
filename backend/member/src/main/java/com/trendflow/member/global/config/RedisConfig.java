@@ -96,12 +96,12 @@ public class RedisConfig {
         return getRedisTemplate(redisConnectionFactory, serializer);
     }
 
-    @Bean
-    public RedisTemplate<?, ?> redisCacheTemplate(
-            @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
-            @Qualifier("loginRefreshTokenObjectMapper") Jackson2JsonRedisSerializer serializer) {
-        return getRedisTemplate(redisConnectionFactory, serializer);
-    }
+//    @Bean
+//    public RedisTemplate<?, ?> redisCacheTemplate(
+//            @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
+//            @Qualifier("loginRefreshTokenObjectMapper") Jackson2JsonRedisSerializer serializer) {
+//        return getRedisTemplate(redisConnectionFactory, serializer);
+//    }
 
     private static RedisTemplate<?, ?> getRedisTemplate(RedisConnectionFactory redisConnectionFactory, Jackson2JsonRedisSerializer serializer) {
         RedisTemplate<byte[], byte[]> redisSessionTemplate = new RedisTemplate<>();

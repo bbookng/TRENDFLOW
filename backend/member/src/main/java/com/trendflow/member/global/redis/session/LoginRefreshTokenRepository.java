@@ -17,7 +17,7 @@ public class LoginRefreshTokenRepository {
 
     // 리프레시 토큰이 키
     
-    public LoginRefreshTokenRepository(@Qualifier("redisSessionLoginAccessTokenTemplate") RedisTemplate redisTemplate) {
+    public LoginRefreshTokenRepository(@Qualifier("redisSessionLoginRefreshTokenTemplate") RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
@@ -52,5 +52,5 @@ public class LoginRefreshTokenRepository {
         return Optional.of(loginRefreshToken);
     }
 
-    public void delete(String refreshToken) { redisTemplate.delete(refreshToken); }
+    public void deleteById(String refreshToken) { redisTemplate.delete(refreshToken); }
 }

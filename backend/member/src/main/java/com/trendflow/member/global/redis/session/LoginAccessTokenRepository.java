@@ -16,7 +16,7 @@ public class LoginAccessTokenRepository {
 
     private RedisTemplate redisTemplate;
 
-    public LoginAccessTokenRepository(@Qualifier("redisSessionLoginMemberTemplate") RedisTemplate redisTemplate) {
+    public LoginAccessTokenRepository(@Qualifier("redisSessionLoginAccessTokenTemplate") RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

@@ -8,7 +8,7 @@ import lombok.Data;
 public class SocialUser {
     private String name;
     private String email;
-    private Long kakaoUserId;
+    private String userId;
     private String gender;
     private String age;
     private String birthday;
