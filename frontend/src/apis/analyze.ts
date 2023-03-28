@@ -3,9 +3,12 @@ import { SocialAnalysisItemInterface } from '@/types/social';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 
+const port = window.location.href.split(':', 3)[2].substring(0, 4);
 export const analyzeApi = createApi({
   reducerPath: 'analyzeApi',
-  baseQuery: fetchBaseQuery({ baseUrl: `${BASE_URL}/analyze/` }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: port === '5173' ? `${BASE_URL}/analyze/` : 'http://localhost:6006/analyze/',
+  }),
   tagTypes: ['get'],
   endpoints: (builder) => ({
     getSocialAnalysis: builder.query<Array<SocialAnalysisItemInterface>, void>({
