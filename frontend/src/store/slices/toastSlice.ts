@@ -16,7 +16,7 @@ export const toastSlice = createSlice({
   reducers: {
     showToast: (state, { payload }) => {
       const newState = {
-        msg: payload.msg,
+        msg: payload,
         isVisible: true,
       };
       return newState;
