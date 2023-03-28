@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { MOBILE_MIN_WIDTH } from '../../../../constants/media';
 import { MEDIA_QUERY } from '@/constants/media';
 import { Paper } from '@/components/atoms/Paper/index.styles';
 
@@ -6,6 +7,7 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 3rem;
+  min-width: ${MOBILE_MIN_WIDTH}px;
 `;
 
 export const TitleWrapper = styled.div`
@@ -22,11 +24,7 @@ export const ContentWrapper = styled.div`
 `;
 
 export const ChartPaper = styled(Paper)`
-  width: 360px;
-
-  @media ${MEDIA_QUERY.DESKTOP} {
-    width: 100%;
-  }
+  width: 100%;
 `;
 
 export const BadgeWrapper = styled.div`
@@ -44,7 +42,7 @@ export const BadgeWrapper = styled.div`
   }
 `;
 
-export const RelatedWrapper = styled.div`
+export const RelatedWrapper = styled.ul`
   display: flex;
   flex-direction: column;
 `;
@@ -64,8 +62,12 @@ export const RelatedItemWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  width: 45%;
+  max-width: 200px;
 
   @media ${MEDIA_QUERY.DESKTOP} {
+    width: 100%;
+    max-width: auto;
     height: 50%;
   }
 `;
