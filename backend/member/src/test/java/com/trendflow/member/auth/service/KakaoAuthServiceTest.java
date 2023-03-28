@@ -286,7 +286,7 @@ class KakaoAuthServiceTest {
                             .build();
 
         try {
-            memberService.findMember(socialUser.getEmail());
+            memberService.findMemberByEmail(socialUser.getEmail());
         } catch (NotFoundException e) {
             String platformCode = CommonCode.KAKAO.getName();
             String password = UUID.randomUUID().toString().replace("-", "");

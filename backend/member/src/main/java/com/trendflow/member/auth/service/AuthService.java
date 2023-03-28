@@ -10,17 +10,17 @@ import com.trendflow.member.global.exception.UnAuthException;
 import com.trendflow.member.global.redis.session.*;
 import com.trendflow.member.member.entity.Member;
 import com.trendflow.member.member.entity.Token;
-import com.trendflow.member.member.repository.MemberRepository;
 import com.trendflow.member.member.repository.TokenRepository;
+import com.trendflow.member.member.service.MemberService;
 import com.trendflow.member.msa.service.CommonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -31,6 +31,7 @@ public class AuthService {
     private final TokenRepository tokenRepository;
     private final KakaoAuthService kakaoAuthService;
     private final GoogleAuthService googleAuthService;
+    private final MemberService memberService;
     private final CommonService commonService;
 
     public LoginResponse login(String platformCode, String authCode) throws RuntimeException {
@@ -61,7 +62,7 @@ public class AuthService {
                 loginAccessTokenRepository.deleteById(accessToken);
                 loginRefreshTokenRepository.deleteById(refreshToken);
             } catch (NotFoundException e) {
-                log.warn("Not found Token in DB");
+                log.warn("AuthService - login - kakao");
             }
         } 
         // 구글 소셜 로그인
@@ -109,7 +110,7 @@ public class AuthService {
                     // 활성화된 리프레시 토큰 삭제
                     loginRefreshTokenRepository.deleteById(token.getRefreshToken());
                 } catch (NotFoundException e){
-                    log.warn("Not found Token in DB");
+                    log.warn("AuthService - login - google");
                 }
             }
         }
@@ -227,7 +228,7 @@ public class AuthService {
     }
 
     // 1단계 인증 (상위 인증)
-    public void authAccessTokenToKakao(String accessToken) throws RuntimeException {
+    public Member authAccessTokenToKakao(String accessToken) throws RuntimeException {
 
         String KAKAO = commonService.getLocalCode(CommonCode.KAKAO.getName()).getCode();
         String GOOGLE = commonService.getLocalCode(CommonCode.GOOGLE.getName()).getCode();
@@ -253,10 +254,12 @@ public class AuthService {
         if (!socialTokenInfo.getId().equals(loginRefreshToken.getPlatformUserId())){
             throw new UnAuthException(AuthCode.INVALID_TOKEN_FAIL);
         }
+
+        return memberService.findMemberByMemberId(loginAccessToken.getMemberId());
     }
 
     // 2단계 인증 (하위 인증)
-    public void authAccessToken(String accessToken) throws RuntimeException {
+    public Member authAccessToken(String accessToken) throws RuntimeException {
         LoginAccessToken loginAccessToken = loginAccessTokenRepository.findById(accessToken)
                 .orElseThrow(() -> new UnAuthException(AuthCode.INVALID_TOKEN_FAIL));
 
@@ -270,6 +273,8 @@ public class AuthService {
         if (LocalDateTime.now().isAfter(loginRefreshToken.getAccessExpire())){
             throw new UnAuthException(AuthCode.INVALID_TOKEN_FAIL);
         }
+
+        return memberService.findMemberByMemberId(loginAccessToken.getMemberId());
     }
 
     public void logout(String refreshToken) throws RuntimeException {

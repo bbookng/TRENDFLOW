@@ -240,7 +240,7 @@ public class KakaoAuthService {
         String KAKAO = commonService.getLocalCode(CommonCode.KAKAO.getName()).getCode();
 
         try {
-            return memberService.findMember(socialUser.getEmail());
+            return memberService.findMemberByEmail(socialUser.getEmail());
         } catch (NotFoundException e) {
             String platformCode = KAKAO;
             String password = UUID.randomUUID().toString().replace("-", "");

@@ -101,7 +101,7 @@ public class GoogleAuthService {
                     .build();
 
         } catch (JsonProcessingException | HttpClientErrorException e) {
-            throw new UnAuthException(AuthCode.KAKAO_GET_TOKEN_FAIL);
+            throw new UnAuthException(AuthCode.GOOGLE_GET_TOKEN_FAIL);
         }
     }
 
@@ -141,7 +141,7 @@ public class GoogleAuthService {
                     .build();
 
         } catch (JsonProcessingException e) {
-            throw new UnAuthException(AuthCode.KAKAO_AUTH_TOKEN_FAIL);
+            throw new UnAuthException(AuthCode.GOOGLE_AUTH_TOKEN_FAIL);
         }
     }
 
@@ -171,7 +171,7 @@ public class GoogleAuthService {
                     .build();
 
         } catch (JsonProcessingException | HttpClientErrorException e) {
-            throw new UnAuthException(AuthCode.KAKAO_AUTH_TOKEN_FAIL);
+            throw new UnAuthException(AuthCode.GOOGLE_AUTH_TOKEN_FAIL);
         }
     }
 
@@ -196,7 +196,7 @@ public class GoogleAuthService {
             e.printStackTrace();
             log.info("Expire Fail");
         } catch (RuntimeException e) {
-            throw new UnAuthException(AuthCode.KAKAO_LOGOUT_FAIL);
+            throw new UnAuthException(AuthCode.GOOGLE_LOGOUT_FAIL);
         }
     }
 
@@ -228,7 +228,7 @@ public class GoogleAuthService {
                     .build();
 
         } catch (JsonProcessingException | HttpClientErrorException e) {
-            throw new UnAuthException(AuthCode.KAKAO_GET_USER_FAIL);
+            throw new UnAuthException(AuthCode.GOOGLE_GET_USER_FAIL);
         }
     }
 
@@ -236,7 +236,7 @@ public class GoogleAuthService {
         String GOOGLE = commonService.getLocalCode(CommonCode.GOOGLE.getName()).getCode();
 
         try {
-            return memberService.findMember(socialUser.getEmail());
+            return memberService.findMemberByEmail(socialUser.getEmail());
         } catch (NotFoundException e) {
             String platformCode = GOOGLE;
             String password = UUID.randomUUID().toString().replace("-", "");
