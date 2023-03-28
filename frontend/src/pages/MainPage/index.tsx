@@ -1,16 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 import { useGetHotKeywordQuery, useGetRelatedKeywordQuery } from '@/apis/keyword';
 import { SearchBar } from '@/components/molecules';
 import { HotKeywords, NoBookmark, DailyAnalysis } from '@/components/organisms/MainPage';
 import HotKeywordsSkeleton from '@/components/organisms/MainPage/HotKeywords/Skeleton';
+import { useAppSelector } from '@/hooks/storeHook';
 import * as S from './index.styles';
 
 const MainPage = () => {
+  // 🍇 튜토리얼 구현 시 주석 해제
+  // const navi = useNavigate();
+  // const { guide } = useAppSelector((state) => state);
+
+  // useEffect(() => {
+  //   if (guide.main) {
+  //     navi('/social');
+  //   }
+  // }, []);
+
   const { data: hotKeywords, error: hotKeywordsError } = useGetHotKeywordQuery();
-
   const { data: relatedKeywords, error: relatedKeywordsError } = useGetRelatedKeywordQuery();
-
   const { data: socialAnalysis, error: socialAnalysisError } = useGetSocialAnalysisQuery();
 
   return (
