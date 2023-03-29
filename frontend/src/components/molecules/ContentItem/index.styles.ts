@@ -18,11 +18,7 @@ export const Wrapper = styled.div`
 export const ContentsWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-`;
-
-export const TitleTypoGraphy = styled(Typography)`
-  margin: 0.5rem 0;
+  justify-content: space-around;
 `;
 
 export const DescriptionTypography = styled(Typography)`

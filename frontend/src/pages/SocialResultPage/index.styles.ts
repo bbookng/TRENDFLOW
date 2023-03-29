@@ -2,9 +2,7 @@ import styled from '@emotion/styled';
 import { PALETTE } from '@/constants/palette';
 import { Img } from '@/components/atoms';
 import { Typography } from '@/components/atoms/Typography/index.styles';
-import { Paper } from '@/components/atoms/Paper/index.styles';
 import { MEDIA_QUERY } from '@/constants/media';
-import { FONT_SIZE } from '@/constants/styles';
 
 export const TitleWrapper = styled.div`
   width: 100%;
@@ -51,10 +49,6 @@ export const DateWrapper = styled.div`
 export const SpaceTypography = styled(Typography)`
   margin: 0 0.5rem;
 `;
-export const CustomDataPicker = styled.button`
-  background-color: transparent;
-  font-size: 1.25rem;
-`;
 
 // 차트 부분
 export const KeywordContentsWrapper = styled.div`
@@ -99,5 +93,17 @@ export const TrendChartContentsWrapper = styled.div`
     flex-direction: row;
     justify-content: space-between;
     height: 560px;
+  }
+`;
+
+export const RelatedPostWrapper = styled.div`
+  margin-top: 2.875rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    flex-direction: row;
   }
 `;
