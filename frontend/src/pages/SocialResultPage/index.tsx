@@ -2,26 +2,24 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import WordCloud from 'react-d3-cloud';
 import { ko } from 'date-fns/esm/locale';
 import { Typography } from '@/components/atoms';
 import { SearchBar } from '@/components/molecules';
 import * as S from './index.styles';
 import { getSevenDaysAgoDate } from '@/utils/date';
-import star from '@/assets/icons/star.svg';
 import 'react-datepicker/dist/react-datepicker.css';
 import BarChart from '@/components/molecules/BarChart';
-import { useGetHotKeywordQuery, useGetRelatedKeywordQuery } from '@/apis/keyword';
-import { useGetSocialAnalysisQuery } from '@/apis/analyze';
-import { DailyAnalysis } from '@/components/organisms/MainPage';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
-import { ROUTER_PATH } from '@/constants/path';
 
 interface CustomInputInterface {
   value?: React.ReactNode;
   onClick?: () => void;
 }
+import PostContents from '@/components/organisms/SocialResult/PostContents';
+import { useGetRelatedKeywordQuery, useGetWordCloudKeywordQuery } from '@/apis/keyword';
+import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
+import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 
 const SocialResultPage = () => {
   const [endDate, setEndDate] = useState<Date | null>(new Date());
@@ -38,6 +36,13 @@ const SocialResultPage = () => {
   const CustomDataPicker = ({ value, onClick }: CustomInputInterface) => (
     <S.CustomDataPicker onClick={onClick}>{value}</S.CustomDataPicker>
   );
+
+  const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
+    useGetWordCloudKeywordQuery();
+  const { data: relatedKeywords, isSuccess: isRelatedKeywordsSuccess } =
+    useGetRelatedKeywordQuery();
+  const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
+    useGetSocialAnalysisQuery();
 
   return (
     <>
@@ -62,7 +67,7 @@ const SocialResultPage = () => {
             dateFormat="yyyy-MM-dd"
             selected={startDate}
             onChange={(date) => setStartDate(date)}
-            customInput={<CustomDataPicker />}
+            customInput={<CustomDatePicker />}
             minDate={new Date(2022, 8, 1)}
             maxDate={endDate}
           />
@@ -74,7 +79,7 @@ const SocialResultPage = () => {
             dateFormat="yyyy-MM-dd"
             selected={endDate}
             onChange={(date) => setEndDate(date)}
-            customInput={<CustomDataPicker />}
+            customInput={<CustomDatePicker />}
             minDate={startDate}
             maxDate={new Date()}
           />
@@ -88,7 +93,12 @@ const SocialResultPage = () => {
         </S.BarChartWrapper>
         {/* 워드 클라우드 */}
         <S.RelatedKeywordContentsWrapper>
-          <RelatedKeyword />
+          {isWordCloudKeywordsSuccess && isRelatedKeywordsSuccess && (
+            <RelatedKeyword
+              wordCloudKeywords={wordCloudKeywords}
+              relatedKeywords={relatedKeywords}
+            />
+          )}
         </S.RelatedKeywordContentsWrapper>
       </S.KeywordContentsWrapper>
       {/* 긍부정, 트렌드 LineChart */}
@@ -96,6 +106,12 @@ const SocialResultPage = () => {
         <TrendLineChart text="긍부정 추이" />
         <TrendLineChart text="검색 엔진 트렌트 추이" />
       </S.TrendChartContentsWrapper>
+
+      <S.RelatedPostWrapper>
+        <PostContents />
+        <PostContents />
+        <PostContents />
+      </S.RelatedPostWrapper>
     </>
   );
 };

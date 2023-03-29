@@ -1,22 +1,33 @@
 import { rest } from 'msw';
-import { hot, relate, social } from '@/mocks/data';
+import { hot, relate, social, recommend, wordCloud } from '@/mocks/data';
+
+const { VITE_API_URL: BASE_URL } = import.meta.env;
 
 export const handlers = [
   // 키워드
-  rest.get('/keyword/hot', (req, res, ctx) => {
+  rest.get(`${BASE_URL}/keyword/hot`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(hot));
   }),
 
-  rest.get('/keyword/relate', (req, res, ctx) => {
+  rest.get(`${BASE_URL}/keyword/relate`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(relate));
   }),
 
+  rest.get(`${BASE_URL}/keyword/recommend`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(recommend));
+  }),
+
+  // 워드 클라우드
+  rest.get(`${BASE_URL}/keyword/wordcloud`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(wordCloud));
+  }),
+
   // 분석
-  rest.get('/analyze/social', (req, res, ctx) => {
+  rest.get(`${BASE_URL}/analyze/social`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(social));
   }),
 
-  rest.post('/member/login', (req, res, ctx) => {
+  rest.post(`${BASE_URL}/member/login`, (req, res, ctx) => {
     return res(ctx.status(500));
   }),
 
