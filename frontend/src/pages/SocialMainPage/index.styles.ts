@@ -28,7 +28,6 @@ export const Left = styled.div`
     display: flex;
     width: 33%;
     height: 400px;
-    background-color: ${PALETTE.BRAND300};
     border-radius: 10px;
   }
 `;
@@ -61,6 +60,7 @@ export const Box = styled.div<BoxInterface>`
 
 export const Keyword = styled(Button)`
   border-radius: 12px;
-  height: 31px;
   margin: 5px;
+  padding: 0.375rem 0.7rem;
+  font-weight: 600;
 `;
