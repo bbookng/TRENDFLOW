@@ -1,8 +1,13 @@
 package com.trendflow.keyword.global.code;
 
-public enum HotKeywordCode {
+public enum KeywordCacheCode {
     DAY_HOT_KEYWORD("DAY_HOT_KEYWORD"),
+    DAY_HOT_KEYWORD_RESULT("DAY_HOT_KEYWORD_RESULT"),
     WEEK_HOT_KEYWORD("WEEK_HOT_KEYWORD"),
+    WEEK_HOT_KEYWORD_RESULT("WEEK_HOT_KEYWORD_RESULT"),
+
+    RELATE_KEYWORD("RELATE_KEYWORD"),
+    RELATE_KEYWORD_RESULT("RELATE_KEYWORD_RESULT"),
 
     TYPE_UP("up"),
     TYPE_DOWN("down"),
@@ -12,7 +17,7 @@ public enum HotKeywordCode {
     private String code;
     public String getCode() { return this.code; }
 
-    HotKeywordCode(String code){
+    KeywordCacheCode(String code){
         this.code = code;
     }
 }

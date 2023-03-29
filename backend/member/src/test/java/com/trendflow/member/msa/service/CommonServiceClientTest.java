@@ -1,6 +1,6 @@
 package com.trendflow.member.msa.service;
 
-import com.trendflow.member.msa.dto.response.LocalCode;
+import com.trendflow.member.msa.vo.LocalCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

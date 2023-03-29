@@ -3,8 +3,11 @@ package com.trendflow.keyword.global.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.trendflow.keyword.global.redis.cache.HotKeyword;
+import com.trendflow.keyword.global.redis.cache.RelateKeyword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +19,8 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -36,7 +41,27 @@ public class RedisConfig {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .registerModules(new JavaTimeModule());
 
-        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(HotKeyword.class);
+        TypeFactory typeFactory = objectMapper.getTypeFactory();
+        CollectionType collectionType = typeFactory.constructCollectionType(List.class, HotKeyword.class);
+
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(collectionType);
+        serializer.setObjectMapper(objectMapper);
+        return serializer;
+    }
+
+    @Bean
+    public Jackson2JsonRedisSerializer relateKeywordObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .findAndRegisterModules()
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .registerModules(new JavaTimeModule());
+
+        TypeFactory typeFactory = objectMapper.getTypeFactory();
+        CollectionType collectionType = typeFactory.constructCollectionType(List.class, RelateKeyword.class);
+
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(collectionType);
         serializer.setObjectMapper(objectMapper);
         return serializer;
     }
@@ -54,6 +79,13 @@ public class RedisConfig {
     public RedisTemplate<?, ?> redisHotKeywordTemplate(
             @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
             @Qualifier("hotKeywordObjectMapper") Jackson2JsonRedisSerializer serializer) {
+        return getRedisTemplate(redisConnectionFactory, serializer);
+    }
+
+    @Bean
+    public RedisTemplate<?, ?> redisRelateKeywordTemplate(
+            @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
+            @Qualifier("relateKeywordObjectMapper") Jackson2JsonRedisSerializer serializer) {
         return getRedisTemplate(redisConnectionFactory, serializer);
     }
 

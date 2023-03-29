@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
-    List<Keyword> findTop8ByRegDtOrderByCountDesc(LocalDateTime now);
+    List<Keyword> findTop8ByRegDtBetweenOrderByCountDesc(LocalDateTime start, LocalDateTime end);
+    Optional<Keyword> findByKeyword(String keyword);
 }

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Repository
 public class HotKeywordRepository {
@@ -21,12 +23,15 @@ public class HotKeywordRepository {
         valueOperations.set(key, hotKeywordList);
     }
 
-    public List<HotKeyword> findById(String key) {
+    public void saveResult(String key, List<HotKeyword> hotKeywordList, Integer expire) {
+        ValueOperations<String, List<HotKeyword>> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(key, hotKeywordList);
+        redisTemplate.expire(key, expire, TimeUnit.SECONDS);
+    }
+
+    public Optional<List<HotKeyword>> findById(String key) {
         ValueOperations<String, List<HotKeyword>> valueOperations = redisTemplate.opsForValue();
         List<HotKeyword> hotKeywordList = valueOperations.get(key);
-
-        if (Objects.isNull(hotKeywordList)) return null;
-
-        return hotKeywordList;
+        return Optional.ofNullable(hotKeywordList);
     }
 }

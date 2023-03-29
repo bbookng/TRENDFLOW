@@ -1,4 +1,4 @@
-package com.trendflow.keyword.keyword.entity;
+package com.trendflow.analyze.analyze.entity;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -15,16 +15,20 @@ import java.time.LocalDateTime;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "keyword")
-public class Keyword {
+@Table(name = "relation")
+public class Relation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "relation_id")
+    private Long relationId;
     @Column(name = "keyword_id")
     private Long keywordId;
-    @Column(name = "source_id")
-    private Long sourceId;
     @Column(name = "keyword")
     private String keyword;
+    @Column(name = "relation_keyword_id")
+    private Long relationKeywordId;
+    @Column(name = "relation_keyword")
+    private String relationKeyword;
     @Column(name = "count")
     private Long count;
     @Column(name = "reg_dt")
