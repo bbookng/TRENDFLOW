@@ -1,5 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RankingListInterface, RankingListItemInterface } from '@/types/ranking';
+import {
+  CombineKeywordsInterface,
+  RecommendKeywordInterface,
+  WordCloudInterface,
+} from '@/types/keyword';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 const port = window.location.href.split(':', 3)[2].substring(0, 4);
@@ -9,15 +14,31 @@ export const keywordApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: port === '6006' ? 'http://localhost:6006/keyword/' : `${BASE_URL}/keyword/`,
   }),
-  tagTypes: ['get'],
+  tagTypes: ['hot', 'relate', 'recommend', 'wordcloud'],
   endpoints: (builder) => ({
-    getHotKeyword: builder.query<RankingListInterface, void>({
-      query: () => `hot`,
+    getHotKeywords: builder.query<RankingListInterface, void>({
+      query: () => 'hot',
+      providesTags: ['hot'],
     }),
-    getRelatedKeyword: builder.query<Array<RankingListItemInterface>, void>({
+    getRelatedKeywords: builder.query<Array<RankingListItemInterface>, void>({
       query: () => 'relate',
+      providesTags: ['relate'],
+    }),
+    getRecommendKeywords: builder.query<RecommendKeywordInterface[], void>({
+      query: () => 'recommend',
+      providesTags: ['recommend'],
+    }),
+    getWordCloudKeywords: builder.query<WordCloudInterface[], void>({
+      query: () => `wordcloud`,
+      providesTags: ['wordcloud'],
+      keepUnusedDataFor: 1,
     }),
   }),
 });
 
-export const { useGetHotKeywordQuery, useGetRelatedKeywordQuery } = keywordApi;
+export const {
+  useGetHotKeywordsQuery,
+  useGetRelatedKeywordsQuery,
+  useGetRecommendKeywordsQuery,
+  useGetWordCloudKeywordsQuery,
+} = keywordApi;
