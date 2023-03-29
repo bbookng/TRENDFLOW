@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { hot, relate, social, recommend, wordCloud } from '@/mocks/data';
+import { hot, pComment, relate, social, youtube,recommend,wordCloud } from '@/mocks/data';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 
@@ -32,4 +32,12 @@ export const handlers = [
   }),
 
   // 유튜브
+
+  rest.post(`/analyze/youtube`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(youtube));
+  }),
+
+  rest.post('/analyze/youtube/comment', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(pComment));
+  }),
 ];
