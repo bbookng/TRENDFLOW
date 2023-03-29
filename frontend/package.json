@@ -60,6 +60,7 @@
     "eslint-plugin-storybook": "^0.6.11",
     "faker": "^6.6.6",
     "msw": "^1.2.0",
+    "msw-storybook-addon": "^1.8.0",
     "prettier": "^2.8.4",
     "react-router-dom": "^6.8.2",
     "typescript": "^4.9.3",

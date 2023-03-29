@@ -4,6 +4,7 @@ import { RankingListInterface, RankingListItemInterface } from '@/types/ranking'
 import { RecommendKeywordInterface, WordCloudInterface } from '@/types/keyword';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
+const port = window.location.href.split(':', 3)[2].substring(0, 4);
 
 export const keywordApi = createApi({
   reducerPath: 'keywordApi',
