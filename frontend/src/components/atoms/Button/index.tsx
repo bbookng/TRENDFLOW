@@ -8,6 +8,9 @@ export interface ButtonPropsInterface {
   variant?: 'contained' | 'outlined';
   fontSize?: 'LARGE' | 'BASE' | 'SMALL' | 'X_SMALL';
   size?: 'LARGE' | 'MEDIUM' | 'SMALL';
+  borderSize?: string;
+  isDark?: boolean;
+  weight?: 'string';
   onClick?: () => void;
 }
 
