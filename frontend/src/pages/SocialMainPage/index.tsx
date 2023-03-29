@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
 import Lottie from 'lottie-react';
-import { useGetRecommendKeywordQuery } from '@/apis/keyword';
+import { useGetRecommendKeywordsQuery } from '@/apis/keyword';
 import { Divider, Paper, Typography } from '@/components/atoms';
 import { SearchBar } from '@/components/molecules';
 import { PALETTE } from '@/constants/palette';
@@ -13,7 +13,7 @@ export interface BoxInterface {
 
 const SocialMainPage = () => {
   const theme = useTheme();
-  const { data: recommendKeywords, isLoading, isError } = useGetRecommendKeywordQuery();
+  const { data: recommendKeywords, isLoading, isError } = useGetRecommendKeywordsQuery();
 
   return (
     <>

@@ -26,8 +26,7 @@ export const Wrapper = styled.li<{ width: string }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  width: 9.5rem;
+  min-width: 8rem;
   margin: 0.4rem 0;
   cursor: pointer;
 

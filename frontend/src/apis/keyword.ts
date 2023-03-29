@@ -7,30 +7,38 @@ import {
 } from '@/types/keyword';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
+const port = window.location.href.split(':', 3)[2].substring(0, 4);
 
 export const keywordApi = createApi({
   reducerPath: 'keywordApi',
-  baseQuery: fetchBaseQuery({ baseUrl: `${BASE_URL}/keyword/` }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: port === '5173' ? `${BASE_URL}/keyword/` : 'http://localhost:6006/keyword/',
+  }),
+  tagTypes: ['hot', 'relate', 'recommend', 'wordcloud'],
   endpoints: (builder) => ({
-    getHotKeyword: builder.query<RankingListInterface, void>({
-      query: () => `hot`,
+    getHotKeywords: builder.query<RankingListInterface, void>({
+      query: () => 'hot',
+      providesTags: ['hot'],
     }),
-    getRelatedKeyword: builder.query<Array<RankingListItemInterface>, void>({
+    getRelatedKeywords: builder.query<Array<RankingListItemInterface>, void>({
       query: () => 'relate',
+      providesTags: ['relate'],
     }),
-    getRecommendKeyword: builder.query<RecommendKeywordInterface[], void>({
+    getRecommendKeywords: builder.query<RecommendKeywordInterface[], void>({
       query: () => 'recommend',
+      providesTags: ['recommend'],
     }),
-    getWordCloudKeyword: builder.query<WordCloudInterface[], void>({
+    getWordCloudKeywords: builder.query<WordCloudInterface[], void>({
       query: () => `wordcloud`,
+      providesTags: ['wordcloud'],
       keepUnusedDataFor: 1,
     }),
   }),
 });
 
 export const {
-  useGetHotKeywordQuery,
-  useGetRelatedKeywordQuery,
-  useGetRecommendKeywordQuery,
-  useGetWordCloudKeywordQuery,
+  useGetHotKeywordsQuery,
+  useGetRelatedKeywordsQuery,
+  useGetRecommendKeywordsQuery,
+  useGetWordCloudKeywordsQuery,
 } = keywordApi;
