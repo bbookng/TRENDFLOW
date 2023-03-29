@@ -1,8 +1,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-unstable-nested-components */
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import DatePicker from 'react-datepicker';
-import WordCloud from 'react-d3-cloud';
 import { ko } from 'date-fns/esm/locale';
 import { Typography } from '@/components/atoms';
 import { SearchBar } from '@/components/molecules';
@@ -15,22 +14,14 @@ import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
 import PostContents from '@/components/organisms/SocialResult/PostContents';
 import { useGetWordCloudKeywordQuery } from '@/apis/keyword';
-
-interface CustomInputInterface {
-  value?: React.ReactNode;
-  onClick?: () => void;
-}
+import { CustomDataPicker } from '@/components/organisms/SocialResult/CustomDatePicker/intdex.styles';
+import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
 
 const SocialResultPage = () => {
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
 
-  const CustomDataPicker = ({ value, onClick }: CustomInputInterface) => (
-    <S.CustomDataPicker onClick={onClick}>{value}</S.CustomDataPicker>
-  );
-
   const { data: wordCloudKeywords, isSuccess } = useGetWordCloudKeywordQuery();
-  console.log(wordCloudKeywords);
 
   return (
     <>
@@ -50,7 +41,7 @@ const SocialResultPage = () => {
             dateFormat="yyyy-MM-dd"
             selected={startDate}
             onChange={(date) => setStartDate(date)}
-            customInput={<CustomDataPicker />}
+            customInput={<CustomDatePicker />}
             minDate={new Date(2022, 8, 1)}
             maxDate={endDate}
           />
@@ -62,7 +53,7 @@ const SocialResultPage = () => {
             dateFormat="yyyy-MM-dd"
             selected={endDate}
             onChange={(date) => setEndDate(date)}
-            customInput={<CustomDataPicker />}
+            customInput={<CustomDatePicker />}
             minDate={startDate}
             maxDate={new Date()}
           />

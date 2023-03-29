@@ -49,10 +49,6 @@ export const DateWrapper = styled.div`
 export const SpaceTypography = styled(Typography)`
   margin: 0 0.5rem;
 `;
-export const CustomDataPicker = styled.button`
-  background-color: transparent;
-  font-size: 1.25rem;
-`;
 
 // 차트 부분
 export const KeywordContentsWrapper = styled.div`

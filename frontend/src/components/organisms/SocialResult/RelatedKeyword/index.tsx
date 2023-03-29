@@ -1,4 +1,6 @@
 import WordCloud from 'react-d3-cloud';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Typography } from '@/components/atoms';
 import * as S from './index.styles';
 import { useGetRelatedKeywordQuery, useGetWordCloudKeywordQuery } from '@/apis/keyword';
@@ -9,8 +11,6 @@ interface Props {
   wordCloudKeywords: WordCloudInterface[];
 }
 const RelatedKeyword = ({ wordCloudKeywords }: Props) => {
-  console.log(wordCloudKeywords);
-
   const {
     data: relatedKeywords,
     error: relatedKeywordsError,
@@ -22,7 +22,7 @@ const RelatedKeyword = ({ wordCloudKeywords }: Props) => {
       <S.SpaceTypography variant="H4">연관 키워드</S.SpaceTypography>
       <S.WordCloudPaper>
         <S.WordCloudContentsWrapper>
-          {/* <WordCloud data={wordCloudKeywords} font="PRETENDARD" /> */}
+          {/* <WordCloud data={test} font="PRETENDARD" /> */}
         </S.WordCloudContentsWrapper>
         <S.RankingListWrapper>
           <S.RelatedItemWrapper>
