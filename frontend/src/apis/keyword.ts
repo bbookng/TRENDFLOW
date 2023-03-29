@@ -9,15 +9,17 @@ export const keywordApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: port === '5173' ? `${BASE_URL}/keyword/` : 'http://localhost:6006/keyword/',
   }),
-  tagTypes: ['get'],
+  tagTypes: ['hot', 'relate'],
   endpoints: (builder) => ({
-    getHotKeyword: builder.query<RankingListInterface, void>({
+    getHotKeywords: builder.query<RankingListInterface, void>({
       query: () => `hot`,
+      providesTags: ['hot'],
     }),
-    getRelatedKeyword: builder.query<Array<RankingListItemInterface>, void>({
+    getRelatedKeywords: builder.query<Array<RankingListItemInterface>, void>({
       query: () => 'relate',
+      providesTags: ['relate'],
     }),
   }),
 });
 
-export const { useGetHotKeywordQuery, useGetRelatedKeywordQuery } = keywordApi;
+export const { useGetHotKeywordsQuery, useGetRelatedKeywordsQuery } = keywordApi;
