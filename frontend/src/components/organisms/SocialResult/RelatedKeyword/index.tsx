@@ -1,28 +1,28 @@
 import WordCloud from 'react-d3-cloud';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Typography } from '@/components/atoms';
+import { useMemo, useState } from 'react';
+import _ from 'lodash';
 import * as S from './index.styles';
-import { useGetRelatedKeywordsQuery, useGetWordCloudKeywordsQuery } from '@/apis/keyword';
 import { RankingItem } from '@/components/molecules';
 import { WordCloudInterface } from '@/types/keyword';
+import { RankingListItemInterface } from '@/types/ranking';
 
 interface Props {
   wordCloudKeywords: WordCloudInterface[];
+  relatedKeywords: RankingListItemInterface[];
 }
-const RelatedKeyword = ({ wordCloudKeywords }: Props) => {
-  const {
-    data: relatedKeywords,
-    error: relatedKeywordsError,
-    isLoading: relatedKeywordsLoading,
-  } = useGetRelatedKeywordsQuery();
+const RelatedKeyword = ({ wordCloudKeywords, relatedKeywords }: Props) => {
+  // 워드클라우드 deppCopy
+
+  const wordCloudData = useMemo(() => {
+    return _.cloneDeep(wordCloudKeywords);
+  }, [wordCloudKeywords]);
 
   return (
     <>
       <S.SpaceTypography variant="H4">연관 키워드</S.SpaceTypography>
       <S.WordCloudPaper>
         <S.WordCloudContentsWrapper>
-          {/* <WordCloud data={test} font="PRETENDARD" /> */}
+          <WordCloud data={wordCloudData} font="PRETENDARD" />
         </S.WordCloudContentsWrapper>
         <S.RankingListWrapper>
           <S.RelatedItemWrapper>
