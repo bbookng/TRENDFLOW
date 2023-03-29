@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-unstable-nested-components */
-import { useState, forwardRef } from 'react';
+import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import { Typography } from '@/components/atoms';
@@ -13,15 +13,20 @@ import BarChart from '@/components/molecules/BarChart';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
 import PostContents from '@/components/organisms/SocialResult/PostContents';
-import { useGetWordCloudKeywordQuery } from '@/apis/keyword';
-import { CustomDataPicker } from '@/components/organisms/SocialResult/CustomDatePicker/intdex.styles';
+import { useGetRelatedKeywordQuery, useGetWordCloudKeywordQuery } from '@/apis/keyword';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
+import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 
 const SocialResultPage = () => {
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
 
-  const { data: wordCloudKeywords, isSuccess } = useGetWordCloudKeywordQuery();
+  const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
+    useGetWordCloudKeywordQuery();
+  const { data: relatedKeywords, isSuccess: isRelatedKeywordsSuccess } =
+    useGetRelatedKeywordQuery();
+  const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
+    useGetSocialAnalysisQuery();
 
   return (
     <>
@@ -67,7 +72,12 @@ const SocialResultPage = () => {
         </S.BarChartWrapper>
         {/* 워드 클라우드 */}
         <S.RelatedKeywordContentsWrapper>
-          {isSuccess && <RelatedKeyword wordCloudKeywords={wordCloudKeywords} />}
+          {isWordCloudKeywordsSuccess && isRelatedKeywordsSuccess && (
+            <RelatedKeyword
+              wordCloudKeywords={wordCloudKeywords}
+              relatedKeywords={relatedKeywords}
+            />
+          )}
         </S.RelatedKeywordContentsWrapper>
       </S.KeywordContentsWrapper>
       {/* 긍부정, 트렌드 LineChart */}

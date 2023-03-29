@@ -1,7 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Datum } from 'react-d3-cloud/lib/WordCloud';
 import { RankingListInterface, RankingListItemInterface } from '@/types/ranking';
-import { RecommendKeywordInterface, WordCloudInterface } from '@/types/keyword';
+import {
+  CombineKeywordsInterface,
+  RecommendKeywordInterface,
+  WordCloudInterface,
+} from '@/types/keyword';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 
@@ -18,7 +21,7 @@ export const keywordApi = createApi({
     getRecommendKeyword: builder.query<RecommendKeywordInterface[], void>({
       query: () => 'recommend',
     }),
-    getWordCloudKeyword: builder.query<Datum[], void>({
+    getWordCloudKeyword: builder.query<WordCloudInterface[], void>({
       query: () => `wordcloud`,
       keepUnusedDataFor: 1,
     }),
