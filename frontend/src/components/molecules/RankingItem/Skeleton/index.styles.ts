@@ -3,7 +3,6 @@ import { Skeleton } from '@/components/atoms/Skeleton/index.styles';
 import { MEDIA_QUERY } from '@/constants/media';
 
 export const RankingItemSkeleton = styled(Skeleton)<{ width: string }>`
-  width: 9.5rem;
   min-width: 8rem;
   height: 1rem;
   margin: 0.4rem 0;

@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
-import { useGetHotKeywordQuery, useGetRelatedKeywordQuery } from '@/apis/keyword';
+import { useGetHotKeywordsQuery, useGetRelatedKeywordsQuery } from '@/apis/keyword';
 import { SearchBar } from '@/components/molecules';
 import { HotKeywords, NoBookmark, DailyAnalysis } from '@/components/organisms/MainPage';
 import HotKeywordsSkeleton from '@/components/organisms/MainPage/HotKeywords/Skeleton';
@@ -20,9 +20,21 @@ const MainPage = () => {
   //   }
   // }, []);
 
-  const { data: hotKeywords, error: hotKeywordsError } = useGetHotKeywordQuery();
-  const { data: relatedKeywords, error: relatedKeywordsError } = useGetRelatedKeywordQuery();
-  const { data: socialAnalysis, error: socialAnalysisError } = useGetSocialAnalysisQuery();
+  const { data: hotKeywords, error: hotKeywordsError } = useGetHotKeywordsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  const { data: relatedKeywords, error: relatedKeywordsError } = useGetRelatedKeywordsQuery(
+    undefined,
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
+  const { data: socialAnalysis, error: socialAnalysisError } = useGetSocialAnalysisQuery(
+    undefined,
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   return (
     <S.Wrapper>

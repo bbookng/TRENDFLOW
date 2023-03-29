@@ -26,7 +26,7 @@ export const ChartWrapper = styled.div`
   }
 `;
 
-export const RankingWrapper = styled.ul`
+export const RankingWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -38,7 +38,7 @@ export const RankingWrapper = styled.ul`
   }
 `;
 
-export const RankingItemWrapper = styled.div`
+export const RankingItemWrapper = styled.ul`
   display: flex;
   flex-direction: column;
   width: 45%;
