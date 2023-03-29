@@ -23,6 +23,7 @@ export const BadgePaper = styled(Paper)`
   @media ${MEDIA_QUERY.DESKTOP} {
     padding: 1.5rem;
     width: 100%;
+    min-width: 168px;
     height: 100%;
   }
 `;
