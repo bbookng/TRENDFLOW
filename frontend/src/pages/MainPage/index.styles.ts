@@ -1,12 +1,16 @@
 import styled from '@emotion/styled';
+import { MOBILE_MAX_WIDTH } from '../../constants/media';
 import { MEDIA_QUERY } from '@/constants/media';
 
 export const Wrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  max-width: ${MOBILE_MAX_WIDTH}px;
+
   @media ${MEDIA_QUERY.DESKTOP} {
     width: auto;
+    max-width: 100%;
   }
 `;
 
@@ -15,7 +19,6 @@ export const HotKeywordsWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   margin: 3rem 0;
 
   & > div:nth-of-type(1) {

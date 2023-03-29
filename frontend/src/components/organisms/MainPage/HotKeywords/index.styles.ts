@@ -1,20 +1,17 @@
 import styled from '@emotion/styled';
+import { MOBILE_MIN_WIDTH, MEDIA_QUERY } from '@/constants/media';
 import { Paper } from '@/components/atoms/Paper/index.styles';
-import { MEDIA_QUERY } from '@/constants/media';
 
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 export const ContentPaper = styled(Paper)`
   display: flex;
-  width: 360px;
   padding: 2.5rem;
-
-  @media ${MEDIA_QUERY.DESKTOP} {
-    width: 100%;
-  }
+  min-width: ${MOBILE_MIN_WIDTH}px;
 `;
 
 export const ChartWrapper = styled.div`
@@ -44,4 +41,11 @@ export const RankingWrapper = styled.ul`
 export const RankingItemWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  width: 45%;
+  max-width: 200px;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    width: 100%;
+    max-width: auto;
+  }
 `;

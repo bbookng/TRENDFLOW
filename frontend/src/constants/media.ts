@@ -8,3 +8,6 @@ export const MEDIA_QUERY = {
   TABLET: `screen and (min-width:${BREAK_POINTS.MOBILE})`, // 576px ~ 1160px
   DESKTOP: `screen and (min-width:${BREAK_POINTS.DESKTOP})`, // 1160px 이상인 화면
 };
+
+export const MOBILE_MIN_WIDTH = 360;
+export const MOBILE_MAX_WIDTH = 540;
