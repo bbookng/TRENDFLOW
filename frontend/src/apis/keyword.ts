@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Datum } from 'react-d3-cloud/lib/WordCloud';
 import { RankingListInterface, RankingListItemInterface } from '@/types/ranking';
 import { RecommendKeywordInterface, WordCloudInterface } from '@/types/keyword';
 
@@ -23,19 +22,19 @@ export const keywordApi = createApi({
     }),
     getRecommendKeyword: builder.query<RecommendKeywordInterface[], void>({
       query: () => 'recommend',
-      provideTags: ['recommend'],
+      providesTags: ['recommend'],
     }),
-    getWordCloudKeyword: builder.query<Datum[], void>({
+    getWordCloudKeyword: builder.query<WordCloudInterface[], void>({
       query: () => `wordcloud`,
-      provideTags: ['wordcloud'],
+      providesTags: ['wordcloud'],
       keepUnusedDataFor: 1,
     }),
   }),
 });
 
 export const {
-  useGetHotKeywordQuery,
-  useGetRelatedKeywordQuery,
+  useGetHotKeywordsQuery,
+  useGetRelatedKeywordsQuery,
   useGetRecommendKeywordQuery,
   useGetWordCloudKeywordQuery,
 } = keywordApi;
