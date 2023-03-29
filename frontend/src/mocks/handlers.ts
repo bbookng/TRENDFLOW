@@ -13,12 +13,12 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(relate));
   }),
 
-  rest.get('/keyword/recommend', (req, res, ctx) => {
+  rest.get(`${BASE_URL}/keyword/recommend`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(recommend));
   }),
 
   // 워드 클라우드
-  rest.get('/keyword/wordcloud', (req, res, ctx) => {
+  rest.get(`${BASE_URL}/keyword/wordcloud`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(wordCloud));
   }),
 
