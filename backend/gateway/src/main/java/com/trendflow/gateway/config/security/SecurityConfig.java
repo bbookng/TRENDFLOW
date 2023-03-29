@@ -19,6 +19,7 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
 
+                .authorizeRequests()
                 .anyRequest().permitAll()
 
                 .and()
