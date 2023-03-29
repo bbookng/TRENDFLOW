@@ -8,19 +8,26 @@ const port = window.location.href.split(':', 3)[2].substring(0, 4);
 
 export const keywordApi = createApi({
   reducerPath: 'keywordApi',
-  baseQuery: fetchBaseQuery({ baseUrl: `${BASE_URL}/keyword/` }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: port === '5173' ? `${BASE_URL}/keyword/` : 'http://localhost:6006/keyword/',
+  }),
+  tagTypes: ['hot', 'relate', 'recommend', 'wordcloud'],
   endpoints: (builder) => ({
-    getHotKeyword: builder.query<RankingListInterface, void>({
-      query: () => `hot`,
+    getHotKeywords: builder.query<RankingListInterface, void>({
+      query: () => 'hot',
+      providesTags: ['hot'],
     }),
-    getRelatedKeyword: builder.query<Array<RankingListItemInterface>, void>({
+    getRelatedKeywords: builder.query<Array<RankingListItemInterface>, void>({
       query: () => 'relate',
+      providesTags: ['relate'],
     }),
     getRecommendKeyword: builder.query<RecommendKeywordInterface[], void>({
       query: () => 'recommend',
+      provideTags: ['recommend'],
     }),
     getWordCloudKeyword: builder.query<Datum[], void>({
       query: () => `wordcloud`,
+      provideTags: ['wordcloud'],
       keepUnusedDataFor: 1,
     }),
   }),
