@@ -7,7 +7,7 @@ const port = window.location.href.split(':', 3)[2].substring(0, 4);
 export const keywordApi = createApi({
   reducerPath: 'keywordApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: port === '5173' ? `${BASE_URL}/keyword/` : 'http://localhost:6006/keyword/',
+    baseUrl: port === '6006' ? 'http://localhost:6006/keyword/' : `${BASE_URL}/keyword/`,
   }),
   tagTypes: ['get'],
   endpoints: (builder) => ({

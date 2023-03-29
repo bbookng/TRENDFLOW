@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { hot, relate, social } from '@/mocks/data';
+import { hot, pComment, relate, social, youtube } from '@/mocks/data';
 
 export const handlers = [
   // 키워드
@@ -21,4 +21,12 @@ export const handlers = [
   }),
 
   // 유튜브
+
+  rest.post(`/analyze/youtube`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(youtube));
+  }),
+
+  rest.post('/analyze/youtube/comment', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(pComment));
+  }),
 ];
