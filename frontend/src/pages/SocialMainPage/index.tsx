@@ -1,6 +1,9 @@
-import { Divider, Paper, Typography } from '@/components/atoms';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Divider, Typography } from '@/components/atoms';
 import { SearchBar } from '@/components/molecules';
 import { PALETTE } from '@/constants/palette';
+import { ROUTER_PATH } from '@/constants/path';
 import * as S from './index.styles';
 
 export interface BoxInterface {
@@ -8,10 +11,25 @@ export interface BoxInterface {
 }
 
 const SocialMainPage = () => {
+  const [value, setValue] = useState('');
+  const navi = useNavigate();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    navi(`/${ROUTER_PATH.SOCIAL_RESULT_PAGE}`, { state: { keyword: value } });
+  };
   return (
     <>
       <S.SearchWrapper>
-        <SearchBar />
+        <SearchBar
+          placeholder="키워드를 입력하세요"
+          value={value}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+        />
       </S.SearchWrapper>
       <S.Contents>
         <S.Left></S.Left>

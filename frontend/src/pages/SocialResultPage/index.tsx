@@ -16,6 +16,7 @@ import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 import { DailyAnalysis } from '@/components/organisms/MainPage';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
+import { ROUTER_PATH } from '@/constants/path';
 
 interface CustomInputInterface {
   value?: React.ReactNode;
@@ -25,6 +26,15 @@ interface CustomInputInterface {
 const SocialResultPage = () => {
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
+  const [value, setValue] = useState('');
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // 페이지 이동 필요 X 새로운 키워드를 가지고 api 다시 쏴서 데이터만 받으면 될듯
+  };
   const CustomDataPicker = ({ value, onClick }: CustomInputInterface) => (
     <S.CustomDataPicker onClick={onClick}>{value}</S.CustomDataPicker>
   );
@@ -38,7 +48,12 @@ const SocialResultPage = () => {
           </Typography>
           {/* <S.Icon alt="즐겨찾기" src={star} width="27px" height="27px" /> */}
         </S.TypeWrapper>
-        <SearchBar />
+        <SearchBar
+          placeholder="키워드를 입력하세요"
+          value={value}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+        />
       </S.TitleWrapper>
       <S.DataSelectWrapper>
         <S.DateWrapper>
