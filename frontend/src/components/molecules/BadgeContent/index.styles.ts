@@ -17,7 +17,7 @@ export const BadgePaper = styled(Paper)`
   justify-content: center;
   align-items: center;
   padding: 0;
-  min-width: 140px;
+  min-width: 10.5rem;
   height: 168px;
 
   @media ${MEDIA_QUERY.DESKTOP} {
