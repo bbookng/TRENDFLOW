@@ -20,11 +20,11 @@ export const keywordApi = createApi({
       query: () => 'relate',
       providesTags: ['relate'],
     }),
-    getRecommendKeyword: builder.query<RecommendKeywordInterface[], void>({
+    getRecommendKeywords: builder.query<RecommendKeywordInterface[], void>({
       query: () => 'recommend',
       providesTags: ['recommend'],
     }),
-    getWordCloudKeyword: builder.query<WordCloudInterface[], void>({
+    getWordCloudKeywords: builder.query<WordCloudInterface[], void>({
       query: () => `wordcloud`,
       providesTags: ['wordcloud'],
       keepUnusedDataFor: 1,
@@ -35,6 +35,6 @@ export const keywordApi = createApi({
 export const {
   useGetHotKeywordsQuery,
   useGetRelatedKeywordsQuery,
-  useGetRecommendKeywordQuery,
-  useGetWordCloudKeywordQuery,
+  useGetRecommendKeywordsQuery,
+  useGetWordCloudKeywordsQuery,
 } = keywordApi;

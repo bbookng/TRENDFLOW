@@ -13,7 +13,7 @@ import BarChart from '@/components/molecules/BarChart';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
 import PostContents from '@/components/organisms/SocialResult/PostContents';
-import { useGetWordCloudKeywordQuery } from '@/apis/keyword';
+import { useGetWordCloudKeywordsQuery } from '@/apis/keyword';
 import { CustomDataPicker } from '@/components/organisms/SocialResult/CustomDatePicker/intdex.styles';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
 
@@ -21,7 +21,7 @@ const SocialResultPage = () => {
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
 
-  const { data: wordCloudKeywords, isSuccess } = useGetWordCloudKeywordQuery();
+  const { data: wordCloudKeywords, isSuccess } = useGetWordCloudKeywordsQuery();
 
   return (
     <>
