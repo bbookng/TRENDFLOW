@@ -19,4 +19,6 @@ export const handlers = [
   rest.post('/member/login', (req, res, ctx) => {
     return res(ctx.status(500));
   }),
+
+  // 유튜브
 ];
