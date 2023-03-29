@@ -42,7 +42,7 @@ export const BadgeWrapper = styled.div`
   }
 `;
 
-export const RelatedWrapper = styled.ul`
+export const RelatedWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -58,7 +58,7 @@ export const RelatedPaper = styled(Paper)`
   }
 `;
 
-export const RelatedItemWrapper = styled.div`
+export const RelatedItemWrapper = styled.ul`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
