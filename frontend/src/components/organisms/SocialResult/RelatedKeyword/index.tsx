@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Typography } from '@/components/atoms';
 import * as S from './index.styles';
-import { useGetRelatedKeywordQuery, useGetWordCloudKeywordQuery } from '@/apis/keyword';
+import { useGetRelatedKeywordsQuery, useGetWordCloudKeywordsQuery } from '@/apis/keyword';
 import { RankingItem } from '@/components/molecules';
 import { WordCloudInterface } from '@/types/keyword';
 
@@ -15,7 +15,7 @@ const RelatedKeyword = ({ wordCloudKeywords }: Props) => {
     data: relatedKeywords,
     error: relatedKeywordsError,
     isLoading: relatedKeywordsLoading,
-  } = useGetRelatedKeywordQuery();
+  } = useGetRelatedKeywordsQuery();
 
   return (
     <>
