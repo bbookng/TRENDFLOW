@@ -1,23 +1,26 @@
-import { useState } from 'react';
+import React from 'react';
 import * as S from './index.styles';
 
-const SearchBar = (): React.ReactElement => {
-  const [value, setValue] = useState('');
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
+export interface SearchBarProps {
+  placeholder: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+}
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
-
+const SearchBar = ({
+  placeholder,
+  value,
+  onChange,
+  onSubmit,
+}: SearchBarProps): React.ReactElement => {
   return (
     <S.Wrapper>
-      <S.Form onSubmit={handleSubmit}>
+      <S.Form onSubmit={onSubmit}>
         <S.FormInput
           inputName="search-input"
-          placeholder="키워드를 입력해주세요."
-          onChange={handleChange}
+          placeholder={placeholder}
+          onChange={onChange}
           value={value}
         />
         <svg

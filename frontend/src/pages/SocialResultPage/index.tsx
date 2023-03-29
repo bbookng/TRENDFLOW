@@ -7,11 +7,15 @@ import { Typography } from '@/components/atoms';
 import { SearchBar } from '@/components/molecules';
 import * as S from './index.styles';
 import { getSevenDaysAgoDate } from '@/utils/date';
-import star from '@/assets/icons/star.svg';
 import 'react-datepicker/dist/react-datepicker.css';
 import BarChart from '@/components/molecules/BarChart';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
+
+interface CustomInputInterface {
+  value?: React.ReactNode;
+  onClick?: () => void;
+}
 import PostContents from '@/components/organisms/SocialResult/PostContents';
 import { useGetRelatedKeywordQuery, useGetWordCloudKeywordQuery } from '@/apis/keyword';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
@@ -20,6 +24,18 @@ import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 const SocialResultPage = () => {
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
+  const [value, setValue] = useState('');
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // 페이지 이동 필요 X 새로운 키워드를 가지고 api 다시 쏴서 데이터만 받으면 될듯
+  };
+  const CustomDataPicker = ({ value, onClick }: CustomInputInterface) => (
+    <S.CustomDataPicker onClick={onClick}>{value}</S.CustomDataPicker>
+  );
 
   const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
     useGetWordCloudKeywordQuery();
@@ -37,7 +53,12 @@ const SocialResultPage = () => {
           </Typography>
           {/* <S.Icon alt="즐겨찾기" src={star} width="27px" height="27px" /> */}
         </S.TypeWrapper>
-        <SearchBar />
+        <SearchBar
+          placeholder="키워드를 입력하세요"
+          value={value}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+        />
       </S.TitleWrapper>
       <S.DataSelectWrapper>
         <S.DateWrapper>
