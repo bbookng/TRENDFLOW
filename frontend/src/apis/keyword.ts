@@ -1,6 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RankingListInterface, RankingListItemInterface } from '@/types/ranking';
-import { RecommendKeywordInterface, WordCloudInterface } from '@/types/keyword';
+import {
+  CombineKeywordsInterface,
+  RecommendKeywordInterface,
+  WordCloudInterface,
+} from '@/types/keyword';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 const port = window.location.href.split(':', 3)[2].substring(0, 4);
