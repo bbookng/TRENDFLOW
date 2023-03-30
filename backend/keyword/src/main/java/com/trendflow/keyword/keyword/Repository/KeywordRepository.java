@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
     List<Keyword> findTop8ByRegDtBetweenOrderByCountDesc(LocalDateTime start, LocalDateTime end);
+    List<Keyword> findTop10ByRegDtBetweenOrderByCountDesc(LocalDateTime start, LocalDateTime end);
     Optional<Keyword> findByKeyword(String keyword);
 }

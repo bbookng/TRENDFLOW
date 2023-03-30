@@ -1,6 +1,7 @@
 package com.trendflow.analyze.analyze.service;
 
 import com.trendflow.analyze.analyze.dto.response.FindRelationKeywordResponse;
+import com.trendflow.analyze.analyze.dto.response.FindWordCloudKeywordResponse;
 import com.trendflow.analyze.analyze.entity.Relation;
 import com.trendflow.analyze.analyze.repository.RelationRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,14 @@ public class AnalyzeService {
         List<Relation> relationList = relationRepository.findTop8ByKeywordIdOrderByCountDesc(keywordId);
         return relationList.stream()
                 .map(FindRelationKeywordResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<FindWordCloudKeywordResponse> findWordCloudKeyword(Long keywordId) {
+        List<Relation> relationList = relationRepository.findTop8ByKeywordIdOrderByCountDesc(keywordId);
+        return relationList.stream()
+                .map(FindWordCloudKeywordResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 }

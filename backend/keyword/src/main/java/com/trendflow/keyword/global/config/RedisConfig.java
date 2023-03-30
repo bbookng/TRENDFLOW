@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.trendflow.keyword.global.redis.cache.HotKeyword;
+import com.trendflow.keyword.global.redis.cache.RecommendKeyword;
 import com.trendflow.keyword.global.redis.cache.RelateKeyword;
+import com.trendflow.keyword.global.redis.cache.WordCloudKeyword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,12 +69,37 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisConnectionFactory redisCacheConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(cacheHost);
-        redisStandaloneConfiguration.setPort(cachePort);
-        redisStandaloneConfiguration.setPassword(cachePassword);
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
+    public Jackson2JsonRedisSerializer recommendKeywordObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .findAndRegisterModules()
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .registerModules(new JavaTimeModule());
+
+        TypeFactory typeFactory = objectMapper.getTypeFactory();
+        CollectionType collectionType = typeFactory.constructCollectionType(List.class, RecommendKeyword.class);
+
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(collectionType);
+        serializer.setObjectMapper(objectMapper);
+        return serializer;
+    }
+
+    @Bean
+    public Jackson2JsonRedisSerializer wordCloudKeywordObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .findAndRegisterModules()
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .registerModules(new JavaTimeModule());
+
+        TypeFactory typeFactory = objectMapper.getTypeFactory();
+        CollectionType collectionType = typeFactory.constructCollectionType(List.class, WordCloudKeyword.class);
+
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(collectionType);
+        serializer.setObjectMapper(objectMapper);
+        return serializer;
     }
 
     @Bean
@@ -87,6 +114,29 @@ public class RedisConfig {
             @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
             @Qualifier("relateKeywordObjectMapper") Jackson2JsonRedisSerializer serializer) {
         return getRedisTemplate(redisConnectionFactory, serializer);
+    }
+
+    @Bean
+    public RedisTemplate<?, ?> redisRecommendKeywordTemplate(
+            @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
+            @Qualifier("recommendKeywordObjectMapper") Jackson2JsonRedisSerializer serializer) {
+        return getRedisTemplate(redisConnectionFactory, serializer);
+    }
+
+    @Bean
+    public RedisTemplate<?, ?> redisWordCloudKeywordTemplate(
+            @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
+            @Qualifier("wordCloudKeywordObjectMapper") Jackson2JsonRedisSerializer serializer) {
+        return getRedisTemplate(redisConnectionFactory, serializer);
+    }
+
+    @Bean
+    public RedisConnectionFactory redisCacheConnectionFactory() {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(cacheHost);
+        redisStandaloneConfiguration.setPort(cachePort);
+        redisStandaloneConfiguration.setPassword(cachePassword);
+        return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
 
     private static RedisTemplate<?, ?> getRedisTemplate(RedisConnectionFactory redisConnectionFactory, Jackson2JsonRedisSerializer serializer) {

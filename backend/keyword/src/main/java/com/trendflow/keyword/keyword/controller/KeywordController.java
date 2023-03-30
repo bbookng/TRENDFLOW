@@ -46,8 +46,8 @@ public class KeywordController {
         log.info("findRecommendKeyword - Call");
 
         try {
-            FindRecommendKeywordResponse findRecommendKeywordResponse = keywordService.findRecommendKeyword();
-            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findRecommendKeywordResponse));
+            List<FindRecommendKeywordResponse> findRecommendKeywordResponseList = keywordService.findRecommendKeyword();
+            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findRecommendKeywordResponseList));
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(BasicResponse.Body(KeywordCode.FAIL, null));
@@ -79,8 +79,8 @@ public class KeywordController {
         log.info("findWordCloudKeyword - Call");
 
         try {
-            FindWordCloudResponse findWordCloudResponse = keywordService.findWordCloudKeyword(keyword);
-            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findWordCloudResponse));
+            List<FindWordCloudResponse> findWordCloudResponseList = keywordService.findWordCloudKeyword(keyword);
+            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findWordCloudResponseList));
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(BasicResponse.Body(KeywordCode.FAIL, null));

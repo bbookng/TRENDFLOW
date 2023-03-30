@@ -11,4 +11,6 @@ import java.util.List;
 public interface AnalyzeServiceClient {
     @GetMapping("/analyze/relate/{keywordId}")
     List<Relation> getRelation(@PathVariable Long keywordId);
+    @GetMapping("/analyze/relate/wordcloud/{keywordId}")
+    List<Relation> getRelationForWordCloud(@PathVariable Long keywordId);
 }
