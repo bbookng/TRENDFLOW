@@ -144,8 +144,10 @@ public class KeywordService {
                 .orElseThrow(() -> new NotFoundException())
                 .getKeywordId();
 
+        String key = String.format("%s_%d", KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), keywordId);
+
         AtomicInteger rank = new AtomicInteger();
-        List<RelateKeyword> relateKeywordList = relateKeywordRepository.findById(KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode())
+        List<RelateKeyword> relateKeywordList = relateKeywordRepository.findById(key)
                 .orElseGet(() -> {
                     List<RelateKeyword> now = analyzeService.getRelation(keywordId).stream()
                             .map(relation ->
@@ -162,8 +164,8 @@ public class KeywordService {
                     Optional<List<RelateKeyword>> relatePast = relateKeywordRepository.findById(KeywordCacheCode.RELATE_KEYWORD.getCode());
                     if (relatePast.isPresent()) now = rankRelateKeyword(now, relatePast.get());
 
-                    relateKeywordRepository.save(KeywordCacheCode.RELATE_KEYWORD.getCode(), now);
-                    relateKeywordRepository.saveResult(KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), now, relateExpire);
+                    relateKeywordRepository.save(key, now);
+                    relateKeywordRepository.saveResult(key, now, relateExpire);
                     return now;
                 });
 
@@ -176,7 +178,9 @@ public class KeywordService {
                 .orElseThrow(() -> new NotFoundException())
                 .getKeywordId();
 
-        List<WordCloudKeyword> wordCloudKeywordList = wordCloudKeywordRepository.findById(KeywordCacheCode.WORDCLOUD_KEYWORD.getCode())
+        String key = String.format("%s_%d", KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), keywordId);
+
+        List<WordCloudKeyword> wordCloudKeywordList = wordCloudKeywordRepository.findById(key)
                 .orElseGet(() -> {
                     List<WordCloudKeyword> now = analyzeService.getRelationForWordCloud(keywordId).stream()
                             .map(relation ->
@@ -186,7 +190,7 @@ public class KeywordService {
                                             .build())
                             .collect(Collectors.toList());
 
-                    wordCloudKeywordRepository.saveResult(KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), now, wordCloudExpire);
+                    wordCloudKeywordRepository.saveResult(key, now, wordCloudExpire);
                     return now;
 
                 });
