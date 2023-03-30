@@ -26,7 +26,7 @@ public class AnalyzeService {
 
     @Transactional
     public List<FindWordCloudKeywordResponse> findWordCloudKeyword(Long keywordId) {
-        List<Relation> relationList = relationRepository.findTop8ByKeywordIdOrderByCountDesc(keywordId);
+        List<Relation> relationList = relationRepository.findTop200ByKeywordIdOrderByCountDesc(keywordId);
         return relationList.stream()
                 .map(FindWordCloudKeywordResponse::fromEntity)
                 .collect(Collectors.toList());
