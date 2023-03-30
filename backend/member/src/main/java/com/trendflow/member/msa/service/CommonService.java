@@ -1,6 +1,6 @@
 package com.trendflow.member.msa.service;
 
-import com.trendflow.member.msa.dto.response.LocalCode;
+import com.trendflow.member.msa.vo.LocalCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
