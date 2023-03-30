@@ -42,6 +42,7 @@ public class AnalyzeController {
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(BasicResponse.Body(AnalyzeCode.DATA_FOUND_FAIL, null));
         } catch (RuntimeException e){
+            e.printStackTrace();
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().body(BasicResponse.Body(AnalyzeCode.FAIL, null));
         }

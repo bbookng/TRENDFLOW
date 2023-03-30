@@ -193,6 +193,23 @@ public class KeywordService {
         return FindWordCloudResponse.toList(wordCloudKeywordList);
     }
 
+    @Transactional
+    public List<Keyword> findKeyword(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
+        return keywordRepository.findByKeywordAndRegDtBetweenOrderBySourceId(
+                        keyword,
+                        startDate.toLocalDate().atStartOfDay(),
+                        endDate.plusDays(1).toLocalDate().atStartOfDay());
+    }
+
+    @Transactional
+    public Integer findKeywordCount(String platformCode, LocalDateTime startDate, LocalDateTime endDate) {
+        return keywordRepository.countByPlatformCodeAndRegDtBetween(
+                        platformCode,
+                        startDate.toLocalDate().atStartOfDay(),
+                        endDate.plusDays(1).toLocalDate().atStartOfDay())
+                .orElse(0);
+    }
+
     private List<HotKeyword> rankHotKeyword(List<HotKeyword> now, List<HotKeyword> past) {
         List<HotKeyword> hotKeywordList = new ArrayList<>();
 
@@ -286,4 +303,5 @@ public class KeywordService {
 
         return relateKeywordList;
     }
+
 }
