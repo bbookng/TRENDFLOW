@@ -1,4 +1,4 @@
-package com.trendflow.keyword.global.redis.cache;
+package com.trendflow.analyze.global.redis;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

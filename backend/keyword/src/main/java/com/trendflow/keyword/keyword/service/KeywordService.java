@@ -2,7 +2,7 @@ package com.trendflow.keyword.keyword.service;
 
 import com.trendflow.keyword.global.code.KeywordCacheCode;
 import com.trendflow.keyword.global.exception.NotFoundException;
-import com.trendflow.keyword.global.redis.cache.*;
+import com.trendflow.keyword.global.redis.*;
 import com.trendflow.keyword.keyword.Repository.KeywordRepository;
 import com.trendflow.keyword.keyword.dto.response.FindHotKeywordResponse;
 import com.trendflow.keyword.keyword.dto.response.FindRecommendKeywordResponse;
@@ -33,19 +33,14 @@ public class KeywordService {
     private final RelateKeywordRepository relateKeywordRepository;
     private final WordCloudKeywordRepository wordCloudKeywordRepository;
 
-
     private final AnalyzeService analyzeService;
 
     @Value("${keyword.hot.expire}")
     private Integer hotExpire;
-
     @Value("${keyword.recommend.expire}")
     private Integer recommendExpire;
-
     @Value("${keyword.relate.expire}")
     private Integer relateExpire;
-
-
     @Value("${keyword.word-cloud.expire}")
     private Integer wordCloudExpire;
 

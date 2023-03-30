@@ -2,11 +2,8 @@ package com.trendflow.analyze.analyze.controller;
 
 import com.trendflow.analyze.analyze.dto.response.FindRelationKeywordResponse;
 import com.trendflow.analyze.analyze.dto.response.FindWordCloudKeywordResponse;
-import com.trendflow.analyze.analyze.entity.Relation;
 import com.trendflow.analyze.analyze.service.AnalyzeService;
-import com.trendflow.analyze.global.code.AnalyzeCode;
 import com.trendflow.analyze.global.exception.NotFoundException;
-import com.trendflow.analyze.global.response.BasicResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

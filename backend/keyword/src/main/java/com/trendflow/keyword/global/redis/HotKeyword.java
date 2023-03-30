@@ -1,4 +1,4 @@
-package com.trendflow.keyword.global.redis.cache;
+package com.trendflow.keyword.global.redis;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class RelateKeyword {
+public class HotKeyword {
     private Integer rank;
     private String keyword;
     private String type;
     private Integer step;
-    private Long relatedCount;
+    private Long mentionCount;
 }

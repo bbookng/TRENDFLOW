@@ -1,4 +1,4 @@
-package com.trendflow.keyword.global.redis.cache;
+package com.trendflow.keyword.global.redis;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
