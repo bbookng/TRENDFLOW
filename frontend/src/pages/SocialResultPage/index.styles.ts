@@ -57,7 +57,7 @@ export const KeywordContentsWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  height: 350px;
+  height: auto;
   justify-content: space-between;
 
   @media ${MEDIA_QUERY.DESKTOP} {

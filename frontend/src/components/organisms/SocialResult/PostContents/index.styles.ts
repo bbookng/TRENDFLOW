@@ -5,10 +5,10 @@ import { PALETTE } from '@/constants/palette';
 import { MEDIA_QUERY } from '@/constants/media';
 
 export const Wrapper = styled.div`
+  margin-top: 2.875rem;
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 460px;
 
   @media ${MEDIA_QUERY.DESKTOP} {
     width: 30%;
@@ -31,6 +31,18 @@ export const PostWrapper = styled(Paper)`
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
+
+  & > div:last-of-type {
+    display: none;
+  }
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    flex-direction: column;
+    justify-content: space-between;
+    & > div:last-of-type {
+      display: flex;
+    }
+  }
 `;
