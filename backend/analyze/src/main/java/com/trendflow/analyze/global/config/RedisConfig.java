@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.trendflow.analyze.global.redis.HotKeyword;
+import com.trendflow.analyze.global.redis.YoutubeComment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +41,7 @@ public class RedisConfig {
                 .registerModules(new JavaTimeModule());
 
         TypeFactory typeFactory = objectMapper.getTypeFactory();
-        CollectionType collectionType = typeFactory.constructCollectionType(List.class, HotKeyword.class);
+        CollectionType collectionType = typeFactory.constructCollectionType(List.class, YoutubeComment.class);
 
         Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(collectionType);
         serializer.setObjectMapper(objectMapper);
