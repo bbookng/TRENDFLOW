@@ -3,11 +3,19 @@ export const FONT_SIZE = {
   H2: '2rem',
   H3: '1.75rem',
   H4: '1.5rem',
-
+  TITLE: '1.5rem',
   LARGE: '1.25rem',
   BASE: '1rem',
   SMALL: '0.875rem',
   X_SMALL: '0.75rem',
+};
+
+export const FONT_WEIGHT = {
+  BOLD: '900',
+  SEMIBOLD: '700',
+  TITLE: '600',
+  NORMAL: '500',
+  LIGHT: '300',
 };
 
 export const BOX_SHADOW = {

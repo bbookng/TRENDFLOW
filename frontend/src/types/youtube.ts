@@ -25,3 +25,10 @@ export interface YoutubeCommentInterface {
   downCount: number;
   comment: string;
 }
+
+export interface YoutubeCommentQueryProps {
+  link: string;
+  code: number;
+  page: number;
+  perPage: number;
+}
