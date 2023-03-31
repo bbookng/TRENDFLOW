@@ -143,7 +143,7 @@ public class AnalyzeController {
     }
 
     // feign
-    @GetMapping("/relate")
+    @PostMapping("/relate")
     public ResponseEntity<List<FindRelationKeywordResponse>> findRelationKeyword(@RequestBody List<Long> keywordIdList){
         log.info("findRelationKeyword - Call");
 
@@ -157,7 +157,7 @@ public class AnalyzeController {
         }
     }
 
-    @GetMapping("/relate/wordcloud")
+    @PostMapping("/relate/wordcloud")
     public ResponseEntity<List<FindWordCloudKeywordResponse>> findWordCloudKeyword(@RequestBody List<Long> keywordIdList){
         log.info("findWordCloudKeyword - Call");
 
