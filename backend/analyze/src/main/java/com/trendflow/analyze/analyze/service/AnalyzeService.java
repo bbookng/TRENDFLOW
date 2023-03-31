@@ -2,15 +2,13 @@ package com.trendflow.analyze.analyze.service;
 
 import com.trendflow.analyze.analyze.dto.request.*;
 import com.trendflow.analyze.analyze.dto.response.*;
-import com.trendflow.analyze.analyze.dto.vo.CompareInfo;
-import com.trendflow.analyze.analyze.dto.vo.CompareInfoVo;
-import com.trendflow.analyze.analyze.dto.vo.GrapeQuotientInfo;
-import com.trendflow.analyze.analyze.dto.vo.MentionCountInfo;
+import com.trendflow.analyze.analyze.dto.vo.*;
 import com.trendflow.analyze.analyze.entity.Relation;
 import com.trendflow.analyze.analyze.entity.Sentiment;
 import com.trendflow.analyze.analyze.entity.SentimentCount;
 import com.trendflow.analyze.analyze.repository.RelationRepository;
 import com.trendflow.analyze.analyze.repository.SentimentRepository;
+import com.trendflow.analyze.global.code.AnalyzeCode;
 import com.trendflow.analyze.global.code.CommonCode;
 import com.trendflow.analyze.global.code.SocialCacheCode;
 import com.trendflow.analyze.global.exception.NotFoundException;
@@ -46,109 +44,14 @@ public class AnalyzeService {
         LocalDateTime startDate = findSocialRequest.getStartDate();
         LocalDateTime endDate = findSocialRequest.getEndDate();
 
-        List<Social> socialList = getSocialData(keyword, startDate, endDate);
+        SocialMap socialMap = getSocialMap(keyword, startDate, endDate);
 
-        return FindSocialResponse.toList(socialList);
-    }
-
-    public List<FindRelationContentResponse> findRelationContent(FindRelationContentRequest findRelationContentRequest) {
-        System.out.println("findRelationContentRequest = " + findRelationContentRequest);
-        return null;
-    }
-
-    public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {
-        System.out.println("findYoutubeRequest = " + findYoutubeRequest);
-        return null;
-    }
-
-    public List<FindYoutubeCommentResponse> findYoutubeComment(FindYoutubeCommentRequest findYoutubeCommentRequest) {
-        System.out.println("findYoutubeCommentRequest = " + findYoutubeCommentRequest);
-        return null;
-    }
-
-    public List<FindCompareKeywordResponse> findCompareKeyword(FindCompareKeywordRequest findCompareKeywordRequest) {
-
-        List<FindCompareKeywordResponse> findCompareKeywordResponseList = new ArrayList<>();
-
-        String keywordA = findCompareKeywordRequest.getKeywordA();
-        String keywordB = findCompareKeywordRequest.getKeywordB();
-
-        LocalDateTime startDate = findCompareKeywordRequest.getStartDate();
-        LocalDateTime endDate = findCompareKeywordRequest.getEndDate();
-
-        List<Social> socialAList = getSocialData(keywordA, startDate, endDate);
-        List<Social> socialBList = getSocialData(keywordB, startDate, endDate);
-
-
-
-        return findCompareKeywordResponseList;
-    }
-
-    @Transactional
-    public List<FindRelationKeywordResponse> findRelationKeyword(Long keywordId) {
-        List<Relation> relationList = relationRepository.findTop8ByKeywordIdOrderByCountDesc(keywordId);
-        return relationList.stream()
-                .map(FindRelationKeywordResponse::fromEntity)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public List<FindWordCloudKeywordResponse> findWordCloudKeyword(Long keywordId) {
-        List<Relation> relationList = relationRepository.findTop200ByKeywordIdOrderByCountDesc(keywordId);
-        return relationList.stream()
-                .map(FindWordCloudKeywordResponse::fromEntity)
-                .collect(Collectors.toList());
-    }
-
-    private List<Social> getSocialData(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
         List<Social> socialList = new ArrayList<>();
-
-        // 플랫폼 별 언급량
-        List<KeywordCount> keywordCountList = keywordService.getKeywordCount(keyword, startDate.minusDays(1), endDate);
-
-        // 키워드와 일치하는 키워드 객체 응답
-        List<Keyword> keywordList = keywordService.getKeyword(keyword, startDate.minusDays(1), endDate);
-        // 키워드의 일자별, 소스별 긍정, 중립, 부정 지수
-        List<SentimentCount> sentimentList = sentimentRepository.findBySourceIdIn(keywordList.stream()
-                .map(Keyword::getSourceId)
-                .collect(Collectors.toList()), startDate, endDate);
-
-        // 맵 생성
-        Map<LocalDate, MentionCountInfo> keywordCountMap = new HashMap<>();
-        for (KeywordCount keywordCount : keywordCountList) {
-            LocalDate now = keywordCount.getRegDt();
-            String platformCode = keywordCount.getPlatformCode();
-            Long count = keywordCount.getCount();
-
-            if (!keywordCountMap.containsKey(now))
-                keywordCountMap.put(now, setMentionCountInfo(MentionCountInfo.builder()
-                        .daum(0)
-                        .naver(0)
-                        .twitter(0)
-                        .total(0)
-                        .build(), platformCode, count));
-            else keywordCountMap.put(now, setMentionCountInfo(keywordCountMap.get(now), platformCode, count));
-        }
-
-        Map<LocalDate, GrapeQuotientInfo> sentimentCountMap = new HashMap<>();
-        for (SentimentCount sentimentCount : sentimentList) {
-            LocalDate now = sentimentCount.getRegDt();
-            Double score = sentimentCount.getScore();
-            Long count = sentimentCount.getCount();
-
-            if (!sentimentCountMap.containsKey(now))
-                sentimentCountMap.put(now, setGrapeQuotientInfo(GrapeQuotientInfo.builder()
-                        .positive(0)
-                        .negative(0)
-                        .neutral(0)
-                        .build(), score, count));
-            else sentimentCountMap.put(now, setGrapeQuotientInfo(sentimentCountMap.get(now), score, count));
-        }
-
+        Map<LocalDate, MentionCountInfo> keywordCountMap = socialMap.getKeywordCountMap();
+        Map<LocalDate, GrapeQuotientInfo> sentimentCountMap = socialMap.getSentimentCountMap();
 
         LocalDate now = startDate.toLocalDate();
         LocalDate end = endDate.toLocalDate();
-
         // 전날 데이터 확인 후 삽입
         if (!keywordCountMap.containsKey(now.minusDays(1))) {
             keywordCountMap.put(now.minusDays(1), MentionCountInfo.builder()
@@ -219,15 +122,188 @@ public class AnalyzeService {
                     .date(now)
                     .mentionCountInfo(mentionCountInfo)
                     .grapeQuotientInfo(grapeQuotientInfo)
-                            .compareInfo(CompareInfo.builder()
-                                    .mention(mention)
-                                    .grapeQuotient(grapeQuotient)
-                                    .build())
+                    .compareInfo(CompareInfo.builder()
+                            .mention(mention)
+                            .grapeQuotient(grapeQuotient)
+                            .build())
                     .build());
 
             now = now.plusDays(1);
         }
-        return socialList;
+
+        return FindSocialResponse.toList(socialList);
+    }
+
+    public List<FindRelationContentResponse> findRelationContent(FindRelationContentRequest findRelationContentRequest) {
+        System.out.println("findRelationContentRequest = " + findRelationContentRequest);
+        return null;
+    }
+
+    public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {
+        System.out.println("findYoutubeRequest = " + findYoutubeRequest);
+        return null;
+    }
+
+    public List<FindYoutubeCommentResponse> findYoutubeComment(FindYoutubeCommentRequest findYoutubeCommentRequest) {
+        System.out.println("findYoutubeCommentRequest = " + findYoutubeCommentRequest);
+        return null;
+    }
+
+    public FindCompareKeywordResponse findCompareKeyword(FindCompareKeywordRequest findCompareKeywordRequest) {
+        String keywordA = findCompareKeywordRequest.getKeywordA();
+        String keywordB = findCompareKeywordRequest.getKeywordB();
+
+        LocalDateTime startDate = findCompareKeywordRequest.getStartDate();
+        LocalDateTime endDate = findCompareKeywordRequest.getEndDate();
+
+        SocialMap socialMapA = getSocialMap(keywordA, startDate, endDate);
+        SocialMap socialMapB = getSocialMap(keywordB, startDate, endDate);
+
+        FindCompareKeywordResponse findCompareKeywordResponse = FindCompareKeywordResponse.builder()
+                .grapeQuotientCompare(new ArrayList<>())
+                .mentionCountCompare(new ArrayList<>())
+                .build();
+
+        Map<LocalDate, MentionCountInfo> keywordCountMapA = socialMapA.getKeywordCountMap();
+        Map<LocalDate, GrapeQuotientInfo> sentimentCountMapA = socialMapA.getSentimentCountMap();
+        Map<LocalDate, MentionCountInfo> keywordCountMapB = socialMapB.getKeywordCountMap();
+        Map<LocalDate, GrapeQuotientInfo> sentimentCountMapB = socialMapB.getSentimentCountMap();
+
+        LocalDate now = startDate.toLocalDate();
+        LocalDate end = endDate.toLocalDate();
+        // 일자별 확인
+        while (now.isBefore(end) || now.isEqual(end)) {
+            CountCompare mentionCountCompare = CountCompare.builder()
+                    .date(now)
+                    .keyword1(keywordA)
+                    .keyword2(keywordB)
+                    .build();
+            CountCompare grapeQuotientCompare = CountCompare.builder()
+                    .date(now)
+                    .keyword1(keywordA)
+                    .keyword2(keywordB)
+                    .build();
+
+            Integer countA = 0;
+            Integer countB = 0;
+            if (keywordCountMapA.containsKey(now)){
+                MentionCountInfo nowMentionCount = keywordCountMapA.get(now);
+                countA = nowMentionCount.getTotal();
+            }
+            if (keywordCountMapB.containsKey(now)){
+                MentionCountInfo nowMentionCount = keywordCountMapB.get(now);
+                countB = nowMentionCount.getTotal();
+            }
+            
+            // 비교
+            if (countA > countB) {
+                mentionCountCompare.setType(SocialCacheCode.TYPE_UP.getCode());
+                mentionCountCompare.setDifference(countA - countB);
+            } else if (countA == countB) {
+                mentionCountCompare.setType(SocialCacheCode.TYPE_SAME.getCode());
+                mentionCountCompare.setDifference(0);
+            } else {
+                mentionCountCompare.setType(SocialCacheCode.TYPE_DOWN.getCode());
+                mentionCountCompare.setDifference(countB - countA);
+            }
+
+            countA = 0;
+            countB = 0;
+            if (sentimentCountMapA.containsKey(now)){
+                GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapA.get(now);
+                countA = nowGrapeQuotient.getPositive() - nowGrapeQuotient.getNegative();
+            }
+            if (sentimentCountMapB.containsKey(now)){
+                GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapB.get(now);
+                countB = nowGrapeQuotient.getPositive() - nowGrapeQuotient.getNegative();
+            }
+
+            // 비교
+            if (countA > countB) {
+                grapeQuotientCompare.setType(SocialCacheCode.TYPE_UP.getCode());
+                grapeQuotientCompare.setDifference(countA - countB);
+            } else if (countA == countB) {
+                grapeQuotientCompare.setType(SocialCacheCode.TYPE_SAME.getCode());
+                grapeQuotientCompare.setDifference(0);
+            } else {
+                grapeQuotientCompare.setType(SocialCacheCode.TYPE_DOWN.getCode());
+                grapeQuotientCompare.setDifference(countB - countA);
+            }
+
+            findCompareKeywordResponse.getMentionCountCompare().add(mentionCountCompare);
+            findCompareKeywordResponse.getGrapeQuotientCompare().add(grapeQuotientCompare);
+
+            now = now.plusDays(1);
+        }
+
+        return findCompareKeywordResponse;
+    }
+
+    @Transactional
+    public List<FindRelationKeywordResponse> findRelationKeyword(Long keywordId) {
+        List<Relation> relationList = relationRepository.findTop8ByKeywordIdOrderByCountDesc(keywordId);
+        return relationList.stream()
+                .map(FindRelationKeywordResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<FindWordCloudKeywordResponse> findWordCloudKeyword(Long keywordId) {
+        List<Relation> relationList = relationRepository.findTop200ByKeywordIdOrderByCountDesc(keywordId);
+        return relationList.stream()
+                .map(FindWordCloudKeywordResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    private SocialMap getSocialMap(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
+        // 플랫폼 별 언급량
+        List<KeywordCount> keywordCountList = keywordService.getKeywordCount(keyword, startDate.minusDays(1), endDate);
+
+        // 키워드와 일치하는 키워드 객체 응답
+        List<Keyword> keywordList = keywordService.getKeyword(keyword, startDate.minusDays(1), endDate);
+        // 키워드의 일자별, 소스별 긍정, 중립, 부정 지수
+        List<SentimentCount> sentimentList = sentimentRepository.findBySourceIdIn(keywordList.stream()
+                .map(Keyword::getSourceId)
+                .collect(Collectors.toList()), startDate, endDate);
+
+        // 맵 생성
+        Map<LocalDate, MentionCountInfo> keywordCountMap = new HashMap<>();
+        for (KeywordCount keywordCount : keywordCountList) {
+            LocalDate now = keywordCount.getRegDt();
+            String platformCode = keywordCount.getPlatformCode();
+            Long count = keywordCount.getCount();
+
+            if (!keywordCountMap.containsKey(now))
+                keywordCountMap.put(now, setMentionCountInfo(MentionCountInfo.builder()
+                        .daum(0)
+                        .naver(0)
+                        .twitter(0)
+                        .total(0)
+                        .build(), platformCode, count));
+            else keywordCountMap.put(now, setMentionCountInfo(keywordCountMap.get(now), platformCode, count));
+        }
+
+        Map<LocalDate, GrapeQuotientInfo> sentimentCountMap = new HashMap<>();
+        for (SentimentCount sentimentCount : sentimentList) {
+            LocalDate now = sentimentCount.getRegDt();
+            Double score = sentimentCount.getScore();
+            Long count = sentimentCount.getCount();
+
+            if (!sentimentCountMap.containsKey(now))
+                sentimentCountMap.put(now, setGrapeQuotientInfo(GrapeQuotientInfo.builder()
+                        .positive(0)
+                        .negative(0)
+                        .neutral(0)
+                        .build(), score, count));
+            else sentimentCountMap.put(now, setGrapeQuotientInfo(sentimentCountMap.get(now), score, count));
+        }
+
+
+
+        return SocialMap.builder()
+                .keywordCountMap(keywordCountMap)
+                .sentimentCountMap(sentimentCountMap)
+                .build();
     }
 
     private CompareInfoVo compareKeywrodCount(MentionCountInfo past, MentionCountInfo now) {

@@ -125,14 +125,14 @@ public class AnalyzeController {
         log.info("findYoutubeComment - Call");
 
         try {
-            List<FindCompareKeywordResponse> findCompareKeywordResponseList
+            FindCompareKeywordResponse findCompareKeywordResponse
                     = analyzeService.findCompareKeyword(FindCompareKeywordRequest.builder()
                                                             .keywordA(keyword1)
                                                             .keywordB(keyword2)
                                                             .startDate(startDate.atStartOfDay())
                                                             .endDate(endDate.atTime(23,59, 59))
                                                             .build());
-            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findCompareKeywordResponseList));
+            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findCompareKeywordResponse));
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(BasicResponse.Body(AnalyzeCode.DATA_FOUND_FAIL, null));
