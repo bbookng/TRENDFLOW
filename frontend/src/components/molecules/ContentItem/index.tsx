@@ -1,6 +1,5 @@
 import * as S from './index.styles';
 import testImg from '@/assets/images/test.jpg';
-import { Img, Typography } from '@/components/atoms';
 
 const ContentItem = () => {
   return (
