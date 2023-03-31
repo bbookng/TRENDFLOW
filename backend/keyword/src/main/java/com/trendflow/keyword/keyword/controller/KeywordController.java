@@ -11,10 +11,7 @@ import com.trendflow.keyword.keyword.service.KeywordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,8 +54,8 @@ public class KeywordController {
         }
     }
 
-    @GetMapping("/relate/{keyword}")
-    public ResponseEntity<BasicResponse> findRelateKeyword(@PathVariable String keyword){
+    @GetMapping("/relate")
+    public ResponseEntity<BasicResponse> findRelateKeyword(@RequestParam String keyword){
         log.info("findRelateKeyword - Call");
 
         try {
@@ -74,8 +71,8 @@ public class KeywordController {
         }
     }
 
-    @GetMapping("/wordcloud/{keyword}")
-    public ResponseEntity<BasicResponse> findWordCloudKeyword(@PathVariable String keyword){
+    @GetMapping("/wordcloud")
+    public ResponseEntity<BasicResponse> findWordCloudKeyword(@RequestParam String keyword){
         log.info("findWordCloudKeyword - Call");
 
         try {
