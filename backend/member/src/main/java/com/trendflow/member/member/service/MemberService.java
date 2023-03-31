@@ -6,7 +6,7 @@ import com.trendflow.member.member.entity.Member;
 import com.trendflow.member.member.entity.Role;
 import com.trendflow.member.member.repository.MemberRepository;
 import com.trendflow.member.member.repository.RoleRepository;
-import com.trendflow.member.msa.vo.LocalCode;
+import com.trendflow.member.msa.dto.vo.LocalCode;
 import com.trendflow.member.msa.service.CommonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
