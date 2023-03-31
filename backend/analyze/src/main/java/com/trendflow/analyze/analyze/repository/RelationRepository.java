@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface RelationRepository extends JpaRepository<Relation, Long> {
     List<Relation> findTop8ByKeywordIdOrderByCountDesc(Long keywordId);
+    List<Relation> findTop200ByKeywordIdOrderByCountDesc(Long keywordId);
 }

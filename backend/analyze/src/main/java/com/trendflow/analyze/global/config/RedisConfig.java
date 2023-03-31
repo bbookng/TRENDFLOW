@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.trendflow.analyze.global.redis.HotKeyword;
+import com.trendflow.analyze.global.redis.Social;
+import com.trendflow.analyze.global.redis.YoutubeComment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,7 @@ public class RedisConfig {
     private String cachePassword;
 
     @Bean
-    public Jackson2JsonRedisSerializer hotKeywordObjectMapper() {
+    public Jackson2JsonRedisSerializer youtubeCommentObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper()
                 .findAndRegisterModules()
                 .enable(SerializationFeature.INDENT_OUTPUT)
@@ -41,7 +42,7 @@ public class RedisConfig {
                 .registerModules(new JavaTimeModule());
 
         TypeFactory typeFactory = objectMapper.getTypeFactory();
-        CollectionType collectionType = typeFactory.constructCollectionType(List.class, HotKeyword.class);
+        CollectionType collectionType = typeFactory.constructCollectionType(List.class, YoutubeComment.class);
 
         Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(collectionType);
         serializer.setObjectMapper(objectMapper);
@@ -49,9 +50,33 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisHotKeywordTemplate(
+    public Jackson2JsonRedisSerializer socialObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .findAndRegisterModules()
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .registerModules(new JavaTimeModule());
+
+        TypeFactory typeFactory = objectMapper.getTypeFactory();
+        CollectionType collectionType = typeFactory.constructCollectionType(List.class, Social.class);
+
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(collectionType);
+        serializer.setObjectMapper(objectMapper);
+        return serializer;
+    }
+
+    @Bean
+    public RedisTemplate<?, ?> redisYoutubeCommentTemplate(
             @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
-            @Qualifier("hotKeywordObjectMapper") Jackson2JsonRedisSerializer serializer) {
+            @Qualifier("youtubeCommentObjectMapper") Jackson2JsonRedisSerializer serializer) {
+        return getRedisTemplate(redisConnectionFactory, serializer);
+    }
+
+    @Bean
+    public RedisTemplate<?, ?> redisSocialTemplate(
+            @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
+            @Qualifier("socialObjectMapper") Jackson2JsonRedisSerializer serializer) {
         return getRedisTemplate(redisConnectionFactory, serializer);
     }
 
