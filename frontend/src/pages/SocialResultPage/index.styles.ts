@@ -30,7 +30,7 @@ export const HighLight = styled.span`
   font-weight: bold;
 `;
 
-export const DataSelectWrapper = styled.div`
+export const DateSelectWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;

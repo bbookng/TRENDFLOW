@@ -54,7 +54,7 @@ const SocialResultPage = () => {
           onSubmit={handleSubmit}
         />
       </S.TitleWrapper>
-      <S.DataSelectWrapper>
+      <S.DateSelectWrapper>
         <S.DateWrapper>
           <DatePicker
             locale={ko}
@@ -78,7 +78,7 @@ const SocialResultPage = () => {
             maxDate={new Date()}
           />
         </S.DateWrapper>
-      </S.DataSelectWrapper>
+      </S.DateSelectWrapper>
 
       <S.KeywordContentsWrapper>
         {/* 막대기 차트 */}
