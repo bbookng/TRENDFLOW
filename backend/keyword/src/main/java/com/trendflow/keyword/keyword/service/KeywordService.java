@@ -133,16 +133,17 @@ public class KeywordService {
 
     @Transactional
     public List<FindRelateKeywordResponse> findRelateKeyword(String keyword) throws RuntimeException {
-        Long keywordId = keywordRepository.findByKeyword(keyword)
-                .orElseThrow(() -> new NotFoundException())
-                .getKeywordId();
+        List<Keyword> keywordIdList = keywordRepository.findByKeyword(keyword);
 
-        String key = String.format("%s_%d", KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), keywordId);
+        String key = String.format("%s_%s", KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), keyword);
 
         AtomicInteger rank = new AtomicInteger();
         List<RelateKeyword> relateKeywordList = relateKeywordRepository.findById(key)
                 .orElseGet(() -> {
-                    List<RelateKeyword> now = analyzeService.getRelation(keywordId).stream()
+                    List<RelateKeyword> now = analyzeService.getRelation(keywordIdList.stream()
+                                    .map(Keyword::getKeywordId)
+                                    .collect(Collectors.toList())
+                            ).stream()
                             .map(relation ->
                                     RelateKeyword.builder()
                                         .rank(rank.getAndIncrement() + 1)
@@ -167,15 +168,16 @@ public class KeywordService {
 
     @Transactional
     public List<FindWordCloudResponse> findWordCloudKeyword(String keyword) throws RuntimeException {
-        Long keywordId = keywordRepository.findByKeyword(keyword)
-                .orElseThrow(() -> new NotFoundException())
-                .getKeywordId();
+        List<Keyword> keywordIdList = keywordRepository.findByKeyword(keyword);
 
-        String key = String.format("%s_%d", KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), keywordId);
+        String key = String.format("%s_%d", KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), keyword);
 
         List<WordCloudKeyword> wordCloudKeywordList = wordCloudKeywordRepository.findById(key)
                 .orElseGet(() -> {
-                    List<WordCloudKeyword> now = analyzeService.getRelationForWordCloud(keywordId).stream()
+                    List<WordCloudKeyword> now = analyzeService.getRelationForWordCloud(keywordIdList.stream()
+                                .map(Keyword::getKeywordId)
+                                .collect(Collectors.toList())
+                            ).stream()
                             .map(relation ->
                                     WordCloudKeyword.builder()
                                             .text(relation.getRelationKeyword())
