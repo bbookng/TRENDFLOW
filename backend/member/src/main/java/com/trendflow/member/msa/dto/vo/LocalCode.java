@@ -1,4 +1,4 @@
-package com.trendflow.member.msa.vo;
+package com.trendflow.member.msa.dto.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,10 +1,11 @@
-package com.trendflow.keyword.keyword.entity;
+package com.trendflow.analyze.analyze.entity;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,20 +16,16 @@ import java.time.LocalDateTime;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "keyword")
-public class Keyword {
+@Table(name = "sentiment")
+public class Sentiment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "keyword_id")
-    private Long keywordId;
+    @Column(name = "sentiment_id")
+    private Long sentimentId;
     @Column(name = "source_id")
     private Long sourceId;
-    @Column(name = "platform_code")
-    private String platformCode;
-    @Column(name = "keyword")
-    private String keyword;
-    @Column(name = "count")
-    private Long count;
+    @Column(name = "score")
+    private Double score;
     @Column(name = "reg_dt")
-    private LocalDateTime regDt;
+    private LocalDate regDt;
 }

@@ -4,11 +4,9 @@ import com.trendflow.keyword.global.code.KeywordCacheCode;
 import com.trendflow.keyword.global.exception.NotFoundException;
 import com.trendflow.keyword.global.redis.*;
 import com.trendflow.keyword.keyword.Repository.KeywordRepository;
-import com.trendflow.keyword.keyword.dto.response.FindHotKeywordResponse;
-import com.trendflow.keyword.keyword.dto.response.FindRecommendKeywordResponse;
-import com.trendflow.keyword.keyword.dto.response.FindRelateKeywordResponse;
-import com.trendflow.keyword.keyword.dto.response.FindWordCloudResponse;
+import com.trendflow.keyword.keyword.dto.response.*;
 import com.trendflow.keyword.keyword.entity.Keyword;
+import com.trendflow.keyword.keyword.entity.KeywordCount;
 import com.trendflow.keyword.msa.service.AnalyzeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -193,6 +191,24 @@ public class KeywordService {
         return FindWordCloudResponse.toList(wordCloudKeywordList);
     }
 
+    @Transactional
+    public List<Keyword> findKeyword(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
+        return keywordRepository.findByKeywordAndRegDtBetweenOrderBySourceId(
+                        keyword,
+                        startDate.toLocalDate().atStartOfDay(),
+                        endDate.toLocalDate().atTime(23, 59, 59));
+    }
+
+    @Transactional
+    public List<KeywordCount> findKeywordCount(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
+        List<KeywordCount> keywordCountList =
+                keywordRepository.countByPlatformCodeAndRegDtBetween(
+                        keyword,
+                        startDate.toLocalDate().atStartOfDay(),
+                        endDate.plusDays(1).toLocalDate().atStartOfDay());
+        return keywordCountList;
+    }
+
     private List<HotKeyword> rankHotKeyword(List<HotKeyword> now, List<HotKeyword> past) {
         List<HotKeyword> hotKeywordList = new ArrayList<>();
 
@@ -286,4 +302,5 @@ public class KeywordService {
 
         return relateKeywordList;
     }
+
 }
