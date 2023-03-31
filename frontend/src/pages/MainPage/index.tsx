@@ -10,16 +10,6 @@ import { ROUTER_PATH } from '@/constants/path';
 import * as S from './index.styles';
 
 const MainPage = () => {
-  // 🍇 튜토리얼 구현 시 주석 해제
-  // const navi = useNavigate();
-  // const { guide } = useAppSelector((state) => state);
-
-  // useEffect(() => {
-  //   if (guide.main) {
-  //     navi('/social');
-  //   }
-  // }, []);
-
   const [value, setValue] = useState('');
   const navi = useNavigate();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

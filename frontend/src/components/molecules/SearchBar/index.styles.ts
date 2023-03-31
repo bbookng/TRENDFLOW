@@ -31,5 +31,3 @@ export const FormInput = styled(Input)`
   height: 100%;
   flex: 1;
 `;
-
-export const FormBtn = styled.button``;
