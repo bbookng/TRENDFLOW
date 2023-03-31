@@ -14,6 +14,4 @@ export default {
 const Template: ComponentStory<typeof LineChart> = (args) => <LineChart />;
 
 export const Primary = Template.bind({});
-Primary.args = {
-  width: '120px',
-};
+Primary.args = {};
