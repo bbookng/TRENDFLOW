@@ -54,7 +54,7 @@ public class KeywordService {
         List<HotKeyword> dayNow = hotKeywordRepository.findById(KeywordCacheCode.DAY_HOT_KEYWORD_RESULT.getCode())
                 .orElseGet(() -> {
                     // 새로운 결과를 가져와 리스트 생성 (현재 기준 값)
-                    List<Keyword> dayKeywordList = keywordRepository.findDistinctTop8ByRegDtBetweenOrderByCountDesc(LocalDate.now().atStartOfDay(), LocalDateTime.now());
+                    List<Keyword> dayKeywordList = keywordRepository.findDistinctKeywordTop8ByRegDtBetweenOrderByCountDesc(LocalDate.now().atStartOfDay(), LocalDateTime.now());
 
                     AtomicInteger rank = new AtomicInteger();
                     List<HotKeyword> now = dayKeywordList.stream()
@@ -82,7 +82,7 @@ public class KeywordService {
         // 이미 계산된 결과가 없으면 (만료시간이 되서 결과가 사라져 갱신해야되는 경우) 계산 시작
         List<HotKeyword> weekNow = hotKeywordRepository.findById(KeywordCacheCode.WEEK_HOT_KEYWORD_RESULT.getCode())
                 .orElseGet(() -> {
-                    List<Keyword> weekKeywordList = keywordRepository.findDistinctTop8ByRegDtBetweenOrderByCountDesc(LocalDateTime.now().minusDays(7), LocalDateTime.now());
+                    List<Keyword> weekKeywordList = keywordRepository.findDistinctKeywordTop8ByRegDtBetweenOrderByCountDesc(LocalDateTime.now().minusDays(7), LocalDateTime.now());
 
                     AtomicInteger rank = new AtomicInteger();
                     List<HotKeyword> now = weekKeywordList.stream()
@@ -114,7 +114,7 @@ public class KeywordService {
     public List<FindRecommendKeywordResponse> findRecommendKeyword() throws RuntimeException {
         List<RecommendKeyword> recommendKeywordList = recommendKeywordRepository.findById(KeywordCacheCode.RECOMMEND_KEYWORD.getCode())
                 .orElseGet(() -> {
-                    List<Keyword> keywordList = keywordRepository.findDistinctTop10ByRegDtBetweenOrderByCountDesc(LocalDate.now().atStartOfDay(), LocalDateTime.now());
+                    List<Keyword> keywordList = keywordRepository.findDistinctKeywordTop10ByRegDtBetweenOrderByCountDesc(LocalDate.now().atStartOfDay(), LocalDateTime.now());
 
                     List<RecommendKeyword> now = keywordList.stream()
                             .map(keyword ->
