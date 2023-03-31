@@ -170,7 +170,7 @@ public class KeywordService {
     public List<FindWordCloudResponse> findWordCloudKeyword(String keyword) throws RuntimeException {
         List<Keyword> keywordIdList = keywordRepository.findByKeyword(keyword);
 
-        String key = String.format("%s_%d", KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), keyword);
+        String key = String.format("%s_%s", KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), keyword);
 
         List<WordCloudKeyword> wordCloudKeywordList = wordCloudKeywordRepository.findById(key)
                 .orElseGet(() -> {
