@@ -28,7 +28,12 @@ Chart.register(
 
 const labels = ['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24'];
 
-const BarChart = () => {
+interface BarChartPropsInterface {
+  desktopWidth?: string;
+  barColor?: string;
+}
+
+const BarChart = ({ desktopWidth, barColor }: BarChartPropsInterface) => {
   const theme = useTheme();
   const data: any = {
     labels,
@@ -46,7 +51,7 @@ const BarChart = () => {
         yAxisID: 'mention',
         type: 'bar',
         data: [193, 10, 300, 124, 284, 84, 400],
-        backgroundColor: PALETTE.BRAND400,
+        backgroundColor: barColor || PALETTE.BRAND400,
       },
     ],
   };
@@ -131,7 +136,7 @@ const BarChart = () => {
   };
 
   return (
-    <S.Wrapper>
+    <S.Wrapper desktopWidth={desktopWidth}>
       <S.BarPaper>
         <Bar data={data} options={options} />
       </S.BarPaper>

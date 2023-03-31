@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { MOBILE_MAX_WIDTH } from '../../constants/media';
-import { MEDIA_QUERY } from '@/constants/media';
+import { MEDIA_QUERY, MOBILE_MAX_WIDTH } from '@/constants/media';
 
 export const Wrapper = styled.div`
   width: 100%;
