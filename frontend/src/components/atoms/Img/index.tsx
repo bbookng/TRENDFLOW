@@ -3,8 +3,8 @@ import * as S from './index.styles';
 export interface ImgPropsInterface {
   alt?: string;
   src?: string;
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
 }
 
 /**

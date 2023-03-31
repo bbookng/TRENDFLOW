@@ -11,7 +11,7 @@ const PostContents = () => {
         </Typography>
         <S.Link to="/">더보기</S.Link>
       </S.TitleWrapper>
-      <S.PostWrapper>
+      <S.PostWrapper className="post">
         <ContentItem />
         <ContentItem />
         <ContentItem />
