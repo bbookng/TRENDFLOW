@@ -54,7 +54,23 @@ export const Wrapper = styled.div`
   text-align: left;
 `;
 
-export const Box = styled.div<BoxInterface>`
+export const TypoBox = styled.div<BoxInterface>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: ${({ marginTopBottom }) => marginTopBottom}rem 0;
+
+  & > h2,
+  & > p {
+    line-height: 1.4;
+  }
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    flex-direction: row;
+  }
+`;
+
+export const KeywordBox = styled.div<BoxInterface>`
   margin: ${({ marginTopBottom }) => marginTopBottom}rem 0;
 `;
 

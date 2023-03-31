@@ -9,7 +9,6 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-
   @media ${MEDIA_QUERY.DESKTOP} {
     width: 30%;
   }
@@ -33,12 +32,14 @@ export const PostWrapper = styled(Paper)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 1rem;
 
   & > div:last-of-type {
     display: none;
   }
 
   @media ${MEDIA_QUERY.DESKTOP} {
+    padding: 2rem;
     flex-direction: column;
     justify-content: space-between;
     & > div:last-of-type {
