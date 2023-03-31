@@ -40,6 +40,8 @@ public class YoutubeService {
             HttpHeaders headers = new HttpHeaders();
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
+            System.out.println("keyword = " + keyword);
+
             UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(YOUTUBE_URI)
                     .queryParam("part", "snippet")
                     .queryParam("maxResults", 20)
@@ -47,8 +49,6 @@ public class YoutubeService {
                     .queryParam("type", "video")
                     .queryParam("key", YOUTUBE_KEY)
                     .build(true);
-
-            System.out.println("uriBuilder.toString() = " + uriBuilder.toString());
 
             HttpEntity<MultiValueMap<String, String>> youtubeRequest = new HttpEntity<>(body, headers);
             RestTemplate rt = new RestTemplate();
