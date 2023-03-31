@@ -9,5 +9,22 @@ import { ReactComponent as Kakao } from '@/assets/icons/kakao.svg';
 import { ReactComponent as Google } from '@/assets/icons/google.svg';
 import { ReactComponent as Up } from '@/assets/icons/up.svg';
 import { ReactComponent as Down } from '@/assets/icons/down.svg';
+import { ReactComponent as Like } from '@/assets/icons/like.svg';
+import { ReactComponent as Video } from '@/assets/icons/video.svg';
+import { ReactComponent as Message } from '@/assets/icons/message.svg';
 
-export { Logo, DarkLogo, PlusCircle, Social, Youtube, Compare, Kakao, Google, Up, Down };
+export {
+  Logo,
+  DarkLogo,
+  PlusCircle,
+  Social,
+  Youtube,
+  Compare,
+  Kakao,
+  Google,
+  Up,
+  Down,
+  Like,
+  Video,
+  Message,
+};

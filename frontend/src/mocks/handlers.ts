@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { hot, pComment, relate, social, youtube,recommend,wordCloud } from '@/mocks/data';
+import { hot, pComment, relate, social, youtube, recommend, wordCloud } from '@/mocks/data';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 
@@ -33,11 +33,19 @@ export const handlers = [
 
   // 유튜브
 
-  rest.post(`/analyze/youtube`, (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(youtube));
-  }),
+  rest.get(
+    `${BASE_URL}/analyze/youtube?link=${encodeURIComponent(
+      'https://www.youtube.com/watch?v=N7kvgJvxcsw'
+    )}`,
+    (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json(youtube));
+    }
+  ),
 
-  rest.post('/analyze/youtube/comment', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(pComment));
+  rest.get(`${BASE_URL}/analyze/youtube/comment`, (req, res, ctx) => {
+    const page: number = parseInt(req.url.searchParams.get('page') as string, 10);
+    const perPage: number = parseInt(req.url.searchParams.get('perPage') as string, 10);
+
+    return res(ctx.status(200), ctx.json(pComment.slice(page * perPage, page * perPage + perPage)));
   }),
 ];
