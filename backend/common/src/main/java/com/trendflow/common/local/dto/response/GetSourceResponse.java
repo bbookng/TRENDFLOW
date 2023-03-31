@@ -15,7 +15,6 @@ public class GetSourceResponse {
     private String thumbnail;
     private String title;
     private String content;
-    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDateTime date;
     private String link;
 
