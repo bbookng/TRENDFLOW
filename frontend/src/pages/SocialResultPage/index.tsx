@@ -106,9 +106,9 @@ const SocialResultPage = () => {
       </S.TrendChartContentsWrapper>
 
       <S.RelatedPostWrapper>
-        <PostContents />
-        <PostContents />
-        <PostContents />
+        <PostContents title="관련기사" />
+        <PostContents title="관련 블로그" />
+        <PostContents title="관련 유투브" />
       </S.RelatedPostWrapper>
     </>
   );

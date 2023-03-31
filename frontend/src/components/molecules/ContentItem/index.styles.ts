@@ -6,7 +6,7 @@ import { MEDIA_QUERY } from '@/constants/media';
 import { Img } from '@/components/atoms/Img/index.styles';
 
 export const Wrapper = styled.div`
-  background-color: transparent;
+  cursor: pointer;
   border-radius: ${BORDER_RADIUS.MD};
   border: 1px solid ${PALETTE.WHITE300};
   padding: 1rem;
@@ -17,8 +17,10 @@ export const Wrapper = styled.div`
   height: 168px;
   margin: 0.5rem 0;
   width: 47%;
+  background-color: ${PALETTE.WHITE200};
 
   @media ${MEDIA_QUERY.DESKTOP} {
+    background-color: transparent;
     width: 100%;
     flex-direction: row;
     max-height: 112px;
