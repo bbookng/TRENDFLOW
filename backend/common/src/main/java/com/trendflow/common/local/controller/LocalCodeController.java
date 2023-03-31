@@ -49,7 +49,7 @@ public class LocalCodeController {
         }
     }
 
-    @GetMapping("/source")
+    @PostMapping("/source")
     public ResponseEntity<List<GetSourceResponse>> getSource(@RequestBody GetSourceRequest getSourceRequest){
         log.info("getSource - Call");
 
