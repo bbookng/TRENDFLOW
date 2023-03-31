@@ -79,6 +79,8 @@ public class AnalyzeService {
         List<Social> socialAList = getSocialData(keywordA, startDate, endDate);
         List<Social> socialBList = getSocialData(keywordB, startDate, endDate);
 
+
+
         return findCompareKeywordResponseList;
     }
 
@@ -277,14 +279,25 @@ public class AnalyzeService {
     }
 
     private MentionCountInfo setMentionCountInfo(MentionCountInfo mentionCountInfo, String platformCode, Long count) {
-        String DAUM = commonService.getLocalCode(CommonCode.DAUM.getName()).getCode();
-        String NAVER = commonService.getLocalCode(CommonCode.NAVER.getName()).getCode();
+        String DAUM_NEWS = commonService.getLocalCode(CommonCode.DAUM_NEWS.getName()).getCode();
+        String NAVER_NEWS = commonService.getLocalCode(CommonCode.NAVER_NEWS.getName()).getCode();
+        String NAVER_BLOG = commonService.getLocalCode(CommonCode.NAVER_BLOG.getName()).getCode();
         String TWITTER = commonService.getLocalCode(CommonCode.TWITTER.getName()).getCode();
 
-        if (platformCode.equals(DAUM)) mentionCountInfo.setDaum(count.intValue());
-        else if (platformCode.equals(NAVER)) mentionCountInfo.setNaver(count.intValue());
-        else if (platformCode.equals(TWITTER)) mentionCountInfo.setTwitter(count.intValue());
-        mentionCountInfo.setTotal(mentionCountInfo.getDaum() + mentionCountInfo.getNaver() + mentionCountInfo.getTwitter());
+        Integer daumNews = 0;
+        Integer naverNews = 0;
+        Integer naverBlog = 0;
+        Integer twitter = 0;
+
+        if (platformCode.equals(DAUM_NEWS)) daumNews = count.intValue();
+        else if (platformCode.equals(NAVER_NEWS)) naverNews = count.intValue();
+        else if (platformCode.equals(NAVER_BLOG)) naverBlog = count.intValue();
+        else if (platformCode.equals(TWITTER)) twitter = count.intValue();
+
+        mentionCountInfo.setDaum(daumNews);
+        mentionCountInfo.setNaver(naverNews + naverBlog);
+        mentionCountInfo.setTwitter(twitter);
+        mentionCountInfo.setTotal(daumNews + naverNews + naverBlog + twitter);
 
         return mentionCountInfo;
     }
