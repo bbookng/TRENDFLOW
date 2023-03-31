@@ -1,6 +1,7 @@
 package com.trendflow.analyze.msa.service;
 
 import com.trendflow.analyze.msa.dto.vo.Keyword;
+import com.trendflow.analyze.msa.dto.vo.KeywordCount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class KeywordService {
         return keywordServiceClient.getKeyword(keyword, startDate, endDate);
     }
 
-    public List<Keyword> getKeywordCount(String platformCode, LocalDateTime startDate, LocalDateTime endDate) {
-        return keywordServiceClient.getKeywordCount(platformCode, startDate, endDate);
+    public List<KeywordCount> getKeywordCount(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
+        return keywordServiceClient.getKeywordCount(keyword, startDate, endDate);
     }
 }

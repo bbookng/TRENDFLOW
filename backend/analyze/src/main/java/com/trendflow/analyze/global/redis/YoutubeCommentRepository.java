@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class YoutubeCommentRepository {
     private RedisTemplate redisTemplate;
 
-    public YoutubeCommentRepository(@Qualifier("redisHotKeywordTemplate") RedisTemplate redisTemplate){
+    public YoutubeCommentRepository(@Qualifier("redisYoutubeCommentTemplate") RedisTemplate redisTemplate){
         this.redisTemplate = redisTemplate;
     }
 

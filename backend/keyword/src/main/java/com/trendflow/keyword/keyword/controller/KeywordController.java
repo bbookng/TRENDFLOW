@@ -8,6 +8,7 @@ import com.trendflow.keyword.keyword.dto.response.FindRecommendKeywordResponse;
 import com.trendflow.keyword.keyword.dto.response.FindRelateKeywordResponse;
 import com.trendflow.keyword.keyword.dto.response.FindWordCloudResponse;
 import com.trendflow.keyword.keyword.entity.Keyword;
+import com.trendflow.keyword.keyword.entity.KeywordCount;
 import com.trendflow.keyword.keyword.service.KeywordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -93,8 +94,8 @@ public class KeywordController {
 
     @GetMapping("")
     public ResponseEntity<List<Keyword>> findKeyword(@RequestParam String keyword,
-                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate){
+                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate){
         log.info("findKeyword - Call");
 
         try {
@@ -110,14 +111,14 @@ public class KeywordController {
     }
 
     @GetMapping("/platform")
-    public ResponseEntity<Integer> findKeywordCount(@RequestParam String platformCode,
-                                                    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                                                    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate){
+    public ResponseEntity<List<KeywordCount>> findKeywordCount(@RequestParam String keyword,
+                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate){
         log.info("findKeywordCount - Call");
 
         try {
-            Integer keywordCount = keywordService.findKeywordCount(platformCode, startDate, endDate);
-            return ResponseEntity.ok().body(keywordCount);
+            List<KeywordCount> keywordCountList = keywordService.findKeywordCount(keyword, startDate, endDate);
+            return ResponseEntity.ok().body(keywordCountList);
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);

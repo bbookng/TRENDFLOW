@@ -1,6 +1,7 @@
 package com.trendflow.analyze.msa.service;
 
 import com.trendflow.analyze.msa.dto.vo.Keyword;
+import com.trendflow.analyze.msa.dto.vo.KeywordCount;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ public interface KeywordServiceClient {
                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate);
     @GetMapping("/keyword/platform")
-    List<Keyword> getKeywordCount(@RequestParam String platformCode,
-                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate);
+    List<KeywordCount> getKeywordCount(@RequestParam String keyword,
+                                       @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+                                       @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate);
 }

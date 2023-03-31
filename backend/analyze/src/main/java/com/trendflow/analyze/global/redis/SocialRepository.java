@@ -15,20 +15,20 @@ public class SocialRepository {
         this.redisTemplate = redisTemplate;
     }
 
-    public void save(String key, List<Social> youtubeCommentList) {
-        ValueOperations<String, List<Social>> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(key, youtubeCommentList);
+    public void save(String key, Social social) {
+        ValueOperations<String, Social> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(key, social);
     }
 
-    public void saveResult(String key, List<Social> socialList, Integer expire) {
-        ValueOperations<String, List<Social>> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(key, socialList);
+    public void saveResult(String key, Social social, Integer expire) {
+        ValueOperations<String, Social> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(key, social);
         redisTemplate.expire(key, expire, TimeUnit.SECONDS);
     }
 
-    public Optional<List<Social>> findById(String key) {
-        ValueOperations<String, List<Social>> valueOperations = redisTemplate.opsForValue();
-        List<Social> socialList = valueOperations.get(key);
-        return Optional.ofNullable(socialList);
+    public Optional<Social> findById(String key) {
+        ValueOperations<String, Social> valueOperations = redisTemplate.opsForValue();
+        Social social = valueOperations.get(key);
+        return Optional.ofNullable(social);
     }
 }

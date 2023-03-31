@@ -96,7 +96,7 @@ public class AnalyzeController {
     public ResponseEntity<BasicResponse> findYoutubeComment(@RequestParam String link,
                                                             @RequestParam Integer code,
                                                             @RequestParam Integer page,
-                                                            @RequestParam("per_page") Integer perPage){
+                                                            @RequestParam Integer perPage){
         log.info("findYoutubeComment - Call");
 
         try {
@@ -119,7 +119,9 @@ public class AnalyzeController {
     }
     @GetMapping("/compare")
     public ResponseEntity<BasicResponse> findCompareKeyword(@RequestParam String keyword1,
-                                                            @RequestParam String keyword2){
+                                                            @RequestParam String keyword2,
+                                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
         log.info("findYoutubeComment - Call");
 
         try {
@@ -127,6 +129,8 @@ public class AnalyzeController {
                     = analyzeService.findCompareKeyword(FindCompareKeywordRequest.builder()
                                                             .keywordA(keyword1)
                                                             .keywordB(keyword2)
+                                                            .startDate(startDate.atStartOfDay())
+                                                            .endDate(endDate.atTime(23,59, 59))
                                                             .build());
             return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findCompareKeywordResponseList));
         } catch (NotFoundException e){

@@ -7,10 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
 public class Social {
+    private LocalDate date;
     private MentionCountInfo mentionCountInfo;
     private GrapeQuotientInfo grapeQuotientInfo;
     private CompareInfo compareInfo;
