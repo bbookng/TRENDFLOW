@@ -144,7 +144,7 @@ public class AnalyzeController {
 
     // feign
     @GetMapping("/relate")
-    public ResponseEntity<List<FindRelationKeywordResponse>> findRelationKeyword(@RequestParam List<Long> keywordIdList){
+    public ResponseEntity<List<FindRelationKeywordResponse>> findRelationKeyword(@RequestBody List<Long> keywordIdList){
         log.info("findRelationKeyword - Call");
 
         try {
@@ -158,7 +158,7 @@ public class AnalyzeController {
     }
 
     @GetMapping("/relate/wordcloud")
-    public ResponseEntity<List<FindWordCloudKeywordResponse>> findWordCloudKeyword(@RequestParam List<Long> keywordIdList){
+    public ResponseEntity<List<FindWordCloudKeywordResponse>> findWordCloudKeyword(@RequestBody List<Long> keywordIdList){
         log.info("findWordCloudKeyword - Call");
 
         try {
