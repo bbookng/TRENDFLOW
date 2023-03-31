@@ -12,13 +12,11 @@ const defaultStyle = css`
   justify-content: center;
   align-items: center;
   line-height: 1;
-  border-radius: ${BORDER_RADIUS.XS};
-  font-weight: 900;
-  color: #000;
+  border-radius: ${BORDER_RADIUS.SM};
   font-size: 1rem;
-  transition: all 0.3s;
   padding: 0.5rem 1rem;
 `;
+
 const background = (props: ButtonPropsInterface) =>
   css`
     background-color: ${props.variant === 'contained' ? PALETTE.BRAND400 : 'transparent'};
