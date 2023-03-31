@@ -55,14 +55,14 @@ public class AnalyzeController {
         log.info("findRelationContent - Call");
 
         try {
-            List<FindRelationContentResponse> findRelationContentResponseList
+            FindRelationContentResponse findRelationContentResponse
                     = analyzeService.findRelationContent(FindRelationContentRequest.builder()
                                                         .keyword(keyword)
                                                         .startDate(startDate.atStartOfDay())
                                                         .endDate(endDate.atTime(23,59, 59))
                                                         .build());
 
-            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findRelationContentResponseList));
+            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findRelationContentResponse));
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(BasicResponse.Body(AnalyzeCode.DATA_FOUND_FAIL, null));

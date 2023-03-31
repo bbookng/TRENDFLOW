@@ -15,6 +15,7 @@ import com.trendflow.analyze.global.exception.NotFoundException;
 import com.trendflow.analyze.global.redis.Social;
 import com.trendflow.analyze.msa.dto.vo.Keyword;
 import com.trendflow.analyze.msa.dto.vo.KeywordCount;
+import com.trendflow.analyze.msa.dto.vo.Source;
 import com.trendflow.analyze.msa.service.CommonService;
 import com.trendflow.analyze.msa.service.KeywordService;
 import lombok.RequiredArgsConstructor;
@@ -134,9 +135,38 @@ public class AnalyzeService {
         return FindSocialResponse.toList(socialList);
     }
 
-    public List<FindRelationContentResponse> findRelationContent(FindRelationContentRequest findRelationContentRequest) {
-        System.out.println("findRelationContentRequest = " + findRelationContentRequest);
-        return null;
+    public FindRelationContentResponse findRelationContent(FindRelationContentRequest findRelationContentRequest) {
+        String keyword = findRelationContentRequest.getKeyword();
+        LocalDateTime startDate = findRelationContentRequest.getStartDate();
+        LocalDateTime endDate = findRelationContentRequest.getEndDate();
+
+        String ARTICLE = commonService.getLocalCode(CommonCode.ARTICLE.getName()).getCode();
+        String BLOG = commonService.getLocalCode(CommonCode.BLOG.getName()).getCode();
+        String YOUTUBE = commonService.getLocalCode(CommonCode.YOUTUBE.getName()).getCode();
+
+        List<Keyword> keywordList = keywordService.getKeyword(keyword, startDate.minusDays(1), endDate);
+
+
+        List<Source> article = commonService.getSource(keywordList.stream()
+                .map(Keyword::getSourceId)
+                .distinct()
+                .collect(Collectors.toList()), startDate, endDate, ARTICLE);
+
+        List<Source> blog = commonService.getSource(keywordList.stream()
+                .map(Keyword::getSourceId)
+                .distinct()
+                .collect(Collectors.toList()), startDate, endDate, BLOG);
+
+        List<Source> youtube = commonService.getSource(keywordList.stream()
+                .map(Keyword::getSourceId)
+                .distinct()
+                .collect(Collectors.toList()), startDate, endDate, YOUTUBE);
+
+        return FindRelationContentResponse.builder()
+                .article(article)
+                .blog(blog)
+                .youtube(youtube)
+                .build();
     }
 
     public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {
