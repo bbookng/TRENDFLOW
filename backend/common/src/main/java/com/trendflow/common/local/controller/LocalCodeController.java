@@ -1,6 +1,7 @@
 package com.trendflow.common.local.controller;
 
 import com.trendflow.common.global.exception.NotFoundException;
+import com.trendflow.common.local.dto.request.GetSourceRequest;
 import com.trendflow.common.local.dto.response.FindLocalCodeResponse;
 import com.trendflow.common.local.dto.response.GetSourceResponse;
 import com.trendflow.common.local.service.LocalCodeService;
@@ -49,13 +50,11 @@ public class LocalCodeController {
     }
 
     @GetMapping("/source")
-    public ResponseEntity<List<GetSourceResponse>> getSource(@RequestParam(required = false) String keyword,
-                                                             @RequestParam(required = false) List<Long> sourceIdList,
-                                                             @RequestParam String sourceCode){
+    public ResponseEntity<List<GetSourceResponse>> getSource(@RequestBody GetSourceRequest getSourceRequest){
         log.info("getSource - Call");
 
         try {
-            List<GetSourceResponse> getSourceResponseList = localCodeService.getSource(keyword, sourceIdList, sourceCode);
+            List<GetSourceResponse> getSourceResponseList = localCodeService.getSource(getSourceRequest);
             return ResponseEntity.ok().body(getSourceResponseList);
         } catch (NotFoundException e){
             e.printStackTrace();

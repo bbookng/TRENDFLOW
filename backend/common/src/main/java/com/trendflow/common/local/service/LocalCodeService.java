@@ -2,6 +2,7 @@ package com.trendflow.common.local.service;
 
 import com.trendflow.common.global.code.PlatformCode;
 import com.trendflow.common.global.exception.NotFoundException;
+import com.trendflow.common.local.dto.request.GetSourceRequest;
 import com.trendflow.common.local.dto.response.FindLocalCodeResponse;
 import com.trendflow.common.local.dto.response.GetSourceResponse;
 import com.trendflow.common.local.entity.LocalCode;
@@ -35,7 +36,11 @@ public class LocalCodeService {
 
     }
 
-    public List<GetSourceResponse> getSource(String keyword, List<Long> sourceIdList, String sourceCode) throws RuntimeException {
+    public List<GetSourceResponse> getSource(GetSourceRequest getSourceRequest) throws RuntimeException {
+        String keyword = getSourceRequest.getKeyword();
+        List<Long> sourceIdList = getSourceRequest.getSourceIdList();
+        String sourceCode = getSourceRequest.getSourceCode();
+
         String ARTICLE = findLocalCode(PlatformCode.ARTICLE.getCode()).getCode();
         String BLOG = findLocalCode(PlatformCode.BLOG.getCode()).getCode();
         String YOUTUBE = findLocalCode(PlatformCode.YOUTUBE.getCode()).getCode();
