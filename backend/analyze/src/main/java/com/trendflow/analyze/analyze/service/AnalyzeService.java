@@ -144,23 +144,25 @@ public class AnalyzeService {
         String BLOG = commonService.getLocalCode(CommonCode.BLOG.getName()).getCode();
         String YOUTUBE = commonService.getLocalCode(CommonCode.YOUTUBE.getName()).getCode();
 
-        List<Keyword> keywordList = keywordService.getKeyword(keyword, startDate.minusDays(1), endDate);
+        List<Keyword> keywordList = keywordService.getKeyword(keyword, startDate, endDate);
 
-
-        List<Source> article = commonService.getSource(keywordList.stream()
+        List<Source> article = commonService.getSource(keyword,
+                keywordList.stream()
                 .map(Keyword::getSourceId)
                 .distinct()
-                .collect(Collectors.toList()), startDate, endDate, ARTICLE);
+                .collect(Collectors.toList()), ARTICLE);
 
-        List<Source> blog = commonService.getSource(keywordList.stream()
+        List<Source> blog = commonService.getSource(keyword,
+                keywordList.stream()
                 .map(Keyword::getSourceId)
                 .distinct()
-                .collect(Collectors.toList()), startDate, endDate, BLOG);
+                .collect(Collectors.toList()), BLOG);
 
-        List<Source> youtube = commonService.getSource(keywordList.stream()
+        List<Source> youtube = commonService.getSource(keyword,
+                keywordList.stream()
                 .map(Keyword::getSourceId)
                 .distinct()
-                .collect(Collectors.toList()), startDate, endDate, YOUTUBE);
+                .collect(Collectors.toList()), YOUTUBE);
 
         return FindRelationContentResponse.builder()
                 .article(article)

@@ -16,8 +16,7 @@ public interface CommonServiceClient {
     @GetMapping("/common/local/{name}")
     LocalCode getLocalCode(@PathVariable String name);
     @GetMapping("/common/source")
-    List<Source> getSource(@RequestParam List<Long> sourceIdList,
-                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate,
+    List<Source> getSource(@RequestParam String keyword,
+                           @RequestParam List<Long> sourceIdList,
                            @RequestParam String sourceCode);
 }

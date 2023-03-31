@@ -16,7 +16,7 @@ public class CommonService {
     public LocalCode getLocalCode(String name){
         return commonServiceClient.getLocalCode(name);
     }
-    public List<Source> getSource(List<Long> sourceIdList, LocalDateTime startDate, LocalDateTime endDate, String sourceCode){
-        return commonServiceClient.getSource(sourceIdList, startDate, endDate, sourceCode);
+    public List<Source> getSource(String keyword, List<Long> sourceIdList, String sourceCode){
+        return commonServiceClient.getSource(keyword, sourceIdList, sourceCode);
     }
 }
