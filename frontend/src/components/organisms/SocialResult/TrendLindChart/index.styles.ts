@@ -3,6 +3,7 @@ import { Typography } from '@/components/atoms/Typography/index.styles';
 import { MEDIA_QUERY } from '@/constants/media';
 
 export const Container = styled.div`
+  margin-top: 2.875rem;
   display: flex;
   flex-direction: column;
   width: 100%;

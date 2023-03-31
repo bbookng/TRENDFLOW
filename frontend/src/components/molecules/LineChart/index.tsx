@@ -9,15 +9,21 @@ import {
   Legend,
 } from 'chart.js';
 import { useTheme } from '@emotion/react';
+import { useEffect } from 'react';
 import * as S from './index.styles';
 import { PALETTE } from '@/constants/palette';
+import { SocialAnalysisItemInterface } from '@/types/social';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
-const LineChart = () => {
+interface LineChartPropsInterface {
+  socialAnalysisData: SocialAnalysisItemInterface[];
+}
+
+const LineChart = ({ socialAnalysisData }: Partial<LineChartPropsInterface>) => {
   const theme = useTheme();
 
-  const labels = ['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24', '3/25', '3/26', '3/27'];
+  const labels = socialAnalysisData?.map((data) => data.date);
 
   const options = {
     responsive: true,
@@ -77,7 +83,7 @@ const LineChart = () => {
     datasets: [
       {
         label: '긍정',
-        data: [20, 100, 150, 80, 50, 300, 245, 300, 110, 80],
+        data: socialAnalysisData?.map((data) => data.grapeQuotientInfo.positive),
         borderColor: theme.positive,
         backgroundColor: theme.positive,
         pointBorderColor: theme.positive,
@@ -85,7 +91,7 @@ const LineChart = () => {
       },
       {
         label: '중립',
-        data: [0, 35, 78, 145, 245, 211, 178, 190, 44, 20, 65],
+        data: socialAnalysisData?.map((data) => data.grapeQuotientInfo.neutral),
         borderColor: theme.neutrality,
         backgroundColor: theme.neutrality,
         pointBorderColor: theme.neutrality,
@@ -93,7 +99,7 @@ const LineChart = () => {
       },
       {
         label: '부정',
-        data: [100, 50, 89, 98, 150, 200, 50, 100, 156, 200],
+        data: socialAnalysisData?.map((data) => data.grapeQuotientInfo.negative),
         borderColor: theme.negative,
         backgroundColor: theme.negative,
         pointBorderColor: theme.negative,
@@ -101,6 +107,7 @@ const LineChart = () => {
       },
     ],
   };
+
   return (
     <S.Container>
       <Line options={options} data={data} style={{ height: '100%', width: '100%' }} />

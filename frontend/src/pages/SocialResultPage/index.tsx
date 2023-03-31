@@ -11,13 +11,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import BarChart from '@/components/molecules/BarChart';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
-
-interface CustomInputInterface {
-  value?: React.ReactNode;
-  onClick?: () => void;
-}
 import PostContents from '@/components/organisms/SocialResult/PostContents';
-import { useGetRelatedKeywordQuery, useGetWordCloudKeywordQuery } from '@/apis/keyword';
+import { useGetRelatedKeywordsQuery, useGetWordCloudKeywordsQuery } from '@/apis/keyword';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 
@@ -33,16 +28,15 @@ const SocialResultPage = () => {
     e.preventDefault();
     // 페이지 이동 필요 X 새로운 키워드를 가지고 api 다시 쏴서 데이터만 받으면 될듯
   };
-  const CustomDataPicker = ({ value, onClick }: CustomInputInterface) => (
-    <S.CustomDataPicker onClick={onClick}>{value}</S.CustomDataPicker>
-  );
 
   const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
-    useGetWordCloudKeywordQuery();
+    useGetWordCloudKeywordsQuery();
   const { data: relatedKeywords, isSuccess: isRelatedKeywordsSuccess } =
-    useGetRelatedKeywordQuery();
+    useGetRelatedKeywordsQuery();
   const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
     useGetSocialAnalysisQuery();
+
+  console.log(socialAnalysisData);
 
   return (
     <>
@@ -103,8 +97,12 @@ const SocialResultPage = () => {
       </S.KeywordContentsWrapper>
       {/* 긍부정, 트렌드 LineChart */}
       <S.TrendChartContentsWrapper>
-        <TrendLineChart text="긍부정 추이" />
-        <TrendLineChart text="검색 엔진 트렌트 추이" />
+        {isSocialAnalysisDataSuccess && (
+          <>
+            <TrendLineChart text="긍부정 추이" socialAnalysisData={socialAnalysisData} />
+            <TrendLineChart text="검색 엔진 트렌트 추이" socialAnalysisData={socialAnalysisData} />
+          </>
+        )}
       </S.TrendChartContentsWrapper>
 
       <S.RelatedPostWrapper>
