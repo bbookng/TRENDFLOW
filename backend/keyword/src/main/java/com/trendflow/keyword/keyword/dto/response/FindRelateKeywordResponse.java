@@ -1,6 +1,6 @@
 package com.trendflow.keyword.keyword.dto.response;
 
-import com.trendflow.keyword.global.redis.cache.RelateKeyword;
+import com.trendflow.keyword.global.redis.RelateKeyword;
 import lombok.Builder;
 import lombok.Data;
 

@@ -2,18 +2,12 @@ package com.trendflow.keyword.keyword.service;
 
 import com.trendflow.keyword.global.code.KeywordCacheCode;
 import com.trendflow.keyword.global.exception.NotFoundException;
-import com.trendflow.keyword.global.redis.cache.HotKeyword;
-import com.trendflow.keyword.global.redis.cache.HotKeywordRepository;
-import com.trendflow.keyword.global.redis.cache.RelateKeyword;
-import com.trendflow.keyword.global.redis.cache.RelateKeywordRepository;
+import com.trendflow.keyword.global.redis.*;
 import com.trendflow.keyword.keyword.Repository.KeywordRepository;
-import com.trendflow.keyword.keyword.dto.response.FindHotKeywordResponse;
-import com.trendflow.keyword.keyword.dto.response.FindRecommendKeywordResponse;
-import com.trendflow.keyword.keyword.dto.response.FindRelateKeywordResponse;
-import com.trendflow.keyword.keyword.dto.response.FindWordCloudResponse;
+import com.trendflow.keyword.keyword.dto.response.*;
 import com.trendflow.keyword.keyword.entity.Keyword;
+import com.trendflow.keyword.keyword.entity.KeywordCount;
 import com.trendflow.keyword.msa.service.AnalyzeService;
-import com.trendflow.keyword.msa.vo.Relation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,18 +18,30 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class KeywordService {
     private final KeywordRepository keywordRepository;
+
     private final HotKeywordRepository hotKeywordRepository;
+    private final RecommendKeywordRepository recommendKeywordRepository;
     private final RelateKeywordRepository relateKeywordRepository;
+    private final WordCloudKeywordRepository wordCloudKeywordRepository;
 
     private final AnalyzeService analyzeService;
 
-    @Value("${keyword.result.expire}")
-    private Integer resultExpire;
+    @Value("${keyword.hot.expire}")
+    private Integer hotExpire;
+    @Value("${keyword.recommend.expire}")
+    private Integer recommendExpire;
+    @Value("${keyword.relate.expire}")
+    private Integer relateExpire;
+    @Value("${keyword.word-cloud.expire}")
+    private Integer wordCloudExpire;
+
 
     @Transactional
     public FindHotKeywordResponse findHotKeyword() throws RuntimeException {
@@ -49,24 +55,26 @@ public class KeywordService {
                 .orElseGet(() -> {
                     // 새로운 결과를 가져와 리스트 생성 (현재 기준 값)
                     List<Keyword> dayKeywordList = keywordRepository.findTop8ByRegDtBetweenOrderByCountDesc(LocalDate.now().atStartOfDay(), LocalDateTime.now());
-                    List<HotKeyword> now = new ArrayList<>();
-                    for (Integer rank = 0; rank < dayKeywordList.size(); rank++) {
-                        Keyword keyword = dayKeywordList.get(rank);
-                        now.add(HotKeyword.builder()
-                                .rank(rank + 1)
-                                .keyword(keyword.getKeyword())
-                                .type(KeywordCacheCode.TYPE_NEW.getCode())
-                                .step(0)
-                                .mentionCount(keyword.getCount())
-                                .build());
-                    }
+
+                    AtomicInteger rank = new AtomicInteger();
+                    List<HotKeyword> now = dayKeywordList.stream()
+                            .map(keyword ->
+                                HotKeyword.builder()
+                                    .rank(rank.getAndIncrement() + 1)
+                                    .keyword(keyword.getKeyword())
+                                    .type(KeywordCacheCode.TYPE_NEW.getCode())
+                                    .step(0)
+                                    .mentionCount(keyword.getCount())
+                                    .build())
+                            .collect(Collectors.toList());
+
                     // 과거 결과를 가져옴
                     Optional<List<HotKeyword>> dayPast = hotKeywordRepository.findById(KeywordCacheCode.DAY_HOT_KEYWORD.getCode());
                     // 과거 결과가 있으면 비교 로직 수행
                     if (dayPast.isPresent()) now = rankHotKeyword(now, dayPast.get());
 
                     hotKeywordRepository.save(KeywordCacheCode.DAY_HOT_KEYWORD.getCode(), now);
-                    hotKeywordRepository.saveResult(KeywordCacheCode.DAY_HOT_KEYWORD_RESULT.getCode(), now, resultExpire);
+                    hotKeywordRepository.saveResult(KeywordCacheCode.DAY_HOT_KEYWORD_RESULT.getCode(), now, hotExpire);
                     return now;
                 });
 
@@ -75,23 +83,24 @@ public class KeywordService {
         List<HotKeyword> weekNow = hotKeywordRepository.findById(KeywordCacheCode.WEEK_HOT_KEYWORD_RESULT.getCode())
                 .orElseGet(() -> {
                     List<Keyword> weekKeywordList = keywordRepository.findTop8ByRegDtBetweenOrderByCountDesc(LocalDateTime.now().minusDays(7), LocalDateTime.now());
-                    List<HotKeyword> now = new ArrayList<>();
-                    for (Integer rank = 0; rank < weekKeywordList.size(); rank++) {
-                        Keyword keyword = weekKeywordList.get(rank);
-                        now.add(HotKeyword.builder()
-                                .rank(rank + 1)
-                                .keyword(keyword.getKeyword())
-                                .type(KeywordCacheCode.TYPE_NEW.getCode())
-                                .step(0)
-                                .mentionCount(keyword.getCount())
-                                .build());
-                    }
+
+                    AtomicInteger rank = new AtomicInteger();
+                    List<HotKeyword> now = weekKeywordList.stream()
+                            .map(keyword ->
+                                    HotKeyword.builder()
+                                            .rank(rank.getAndIncrement() + 1)
+                                            .keyword(keyword.getKeyword())
+                                            .type(KeywordCacheCode.TYPE_NEW.getCode())
+                                            .step(0)
+                                            .mentionCount(keyword.getCount())
+                                            .build())
+                            .collect(Collectors.toList());
                     // 기존 데이터가 있으면 비교해서 리스트 변경
                     Optional<List<HotKeyword>> weekPast = hotKeywordRepository.findById(KeywordCacheCode.WEEK_HOT_KEYWORD.getCode());
                     if (weekPast.isPresent()) now = rankHotKeyword(now, weekPast.get());
 
                     hotKeywordRepository.save(KeywordCacheCode.WEEK_HOT_KEYWORD.getCode(), now);
-                    hotKeywordRepository.saveResult(KeywordCacheCode.WEEK_HOT_KEYWORD_RESULT.getCode(), now, resultExpire);
+                    hotKeywordRepository.saveResult(KeywordCacheCode.WEEK_HOT_KEYWORD_RESULT.getCode(), now, hotExpire);
                     return now;
                 });
 
@@ -101,48 +110,103 @@ public class KeywordService {
                 .build();
     }
 
-    public FindRecommendKeywordResponse findRecommendKeyword() throws RuntimeException {
+    @Transactional
+    public List<FindRecommendKeywordResponse> findRecommendKeyword() throws RuntimeException {
+        List<RecommendKeyword> recommendKeywordList = recommendKeywordRepository.findById(KeywordCacheCode.RECOMMEND_KEYWORD.getCode())
+                .orElseGet(() -> {
+                    List<Keyword> keywordList = keywordRepository.findTop10ByRegDtBetweenOrderByCountDesc(LocalDate.now().atStartOfDay(), LocalDateTime.now());
 
+                    List<RecommendKeyword> now = keywordList.stream()
+                            .map(keyword ->
+                                    RecommendKeyword.builder()
+                                            .id(keyword.getKeywordId())
+                                            .keyword(keyword.getKeyword())
+                                            .build())
+                            .collect(Collectors.toList());
 
-        return FindRecommendKeywordResponse.builder()
+                    recommendKeywordRepository.saveResult(KeywordCacheCode.RECOMMEND_KEYWORD.getCode(), now, recommendExpire);
+                    return now;
+                });
 
-                .build();
+        return FindRecommendKeywordResponse.toList(recommendKeywordList);
     }
 
+    @Transactional
     public List<FindRelateKeywordResponse> findRelateKeyword(String keyword) throws RuntimeException {
         Long keywordId = keywordRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException())
                 .getKeywordId();
 
-        List<RelateKeyword> relateNow = relateKeywordRepository.findById(KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode())
+        String key = String.format("%s_%d", KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), keywordId);
+
+        AtomicInteger rank = new AtomicInteger();
+        List<RelateKeyword> relateKeywordList = relateKeywordRepository.findById(key)
                 .orElseGet(() -> {
-                    List<Relation> relationList = analyzeService.getRelation(keywordId);
-                    List<RelateKeyword> now = new ArrayList<>();
-                    for (Integer rank = 0; rank < relationList.size(); rank++) {
-                        Relation relation = relationList.get(rank);
-                        now.add(RelateKeyword.builder()
-                                .rank(rank + 1)
-                                .keyword(relation.getRelationKeyword())
-                                .type(KeywordCacheCode.TYPE_NEW.getCode())
-                                .step(0)
-                                .relatedCount(relation.getCount())
-                                .build());
-                    }
+                    List<RelateKeyword> now = analyzeService.getRelation(keywordId).stream()
+                            .map(relation ->
+                                    RelateKeyword.builder()
+                                        .rank(rank.getAndIncrement() + 1)
+                                        .keyword(relation.getRelationKeyword())
+                                        .type(KeywordCacheCode.TYPE_NEW.getCode())
+                                        .step(0)
+                                        .relatedCount(relation.getCount())
+                                        .build())
+                            .collect(Collectors.toList());
+
                     // 기존 데이터가 있으면 비교해서 리스트 변경
                     Optional<List<RelateKeyword>> relatePast = relateKeywordRepository.findById(KeywordCacheCode.RELATE_KEYWORD.getCode());
                     if (relatePast.isPresent()) now = rankRelateKeyword(now, relatePast.get());
 
-                    relateKeywordRepository.save(KeywordCacheCode.RELATE_KEYWORD.getCode(), now);
-                    relateKeywordRepository.saveResult(KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), now, resultExpire);
+                    relateKeywordRepository.save(key, now);
+                    relateKeywordRepository.saveResult(key, now, relateExpire);
                     return now;
                 });
 
-        return FindRelateKeywordResponse.toList(relateNow);
+        return FindRelateKeywordResponse.toList(relateKeywordList);
     }
 
-    public FindWordCloudResponse findWordCloudKeyword(String keyword) throws RuntimeException {
+    @Transactional
+    public List<FindWordCloudResponse> findWordCloudKeyword(String keyword) throws RuntimeException {
+        Long keywordId = keywordRepository.findByKeyword(keyword)
+                .orElseThrow(() -> new NotFoundException())
+                .getKeywordId();
 
-        return null;
+        String key = String.format("%s_%d", KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), keywordId);
+
+        List<WordCloudKeyword> wordCloudKeywordList = wordCloudKeywordRepository.findById(key)
+                .orElseGet(() -> {
+                    List<WordCloudKeyword> now = analyzeService.getRelationForWordCloud(keywordId).stream()
+                            .map(relation ->
+                                    WordCloudKeyword.builder()
+                                            .text(relation.getRelationKeyword())
+                                            .value(relation.getCount().intValue())
+                                            .build())
+                            .collect(Collectors.toList());
+
+                    wordCloudKeywordRepository.saveResult(key, now, wordCloudExpire);
+                    return now;
+
+                });
+
+        return FindWordCloudResponse.toList(wordCloudKeywordList);
+    }
+
+    @Transactional
+    public List<Keyword> findKeyword(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
+        return keywordRepository.findByKeywordAndRegDtBetweenOrderBySourceId(
+                        keyword,
+                        startDate.toLocalDate().atStartOfDay(),
+                        endDate.toLocalDate().atTime(23, 59, 59));
+    }
+
+    @Transactional
+    public List<KeywordCount> findKeywordCount(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
+        List<KeywordCount> keywordCountList =
+                keywordRepository.countByPlatformCodeAndRegDtBetween(
+                        keyword,
+                        startDate.toLocalDate().atStartOfDay(),
+                        endDate.plusDays(1).toLocalDate().atStartOfDay());
+        return keywordCountList;
     }
 
     private List<HotKeyword> rankHotKeyword(List<HotKeyword> now, List<HotKeyword> past) {
@@ -238,4 +302,5 @@ public class KeywordService {
 
         return relateKeywordList;
     }
+
 }

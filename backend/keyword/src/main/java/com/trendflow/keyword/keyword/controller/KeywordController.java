@@ -7,12 +7,16 @@ import com.trendflow.keyword.keyword.dto.response.FindHotKeywordResponse;
 import com.trendflow.keyword.keyword.dto.response.FindRecommendKeywordResponse;
 import com.trendflow.keyword.keyword.dto.response.FindRelateKeywordResponse;
 import com.trendflow.keyword.keyword.dto.response.FindWordCloudResponse;
+import com.trendflow.keyword.keyword.entity.Keyword;
+import com.trendflow.keyword.keyword.entity.KeywordCount;
 import com.trendflow.keyword.keyword.service.KeywordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -43,8 +47,8 @@ public class KeywordController {
         log.info("findRecommendKeyword - Call");
 
         try {
-            FindRecommendKeywordResponse findRecommendKeywordResponse = keywordService.findRecommendKeyword();
-            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findRecommendKeywordResponse));
+            List<FindRecommendKeywordResponse> findRecommendKeywordResponseList = keywordService.findRecommendKeyword();
+            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findRecommendKeywordResponseList));
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(BasicResponse.Body(KeywordCode.FAIL, null));
@@ -76,14 +80,51 @@ public class KeywordController {
         log.info("findWordCloudKeyword - Call");
 
         try {
-            FindWordCloudResponse findWordCloudResponse = keywordService.findWordCloudKeyword(keyword);
-            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findWordCloudResponse));
+            List<FindWordCloudResponse> findWordCloudResponseList = keywordService.findWordCloudKeyword(keyword);
+            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findWordCloudResponseList));
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(BasicResponse.Body(KeywordCode.FAIL, null));
         } catch (RuntimeException e){
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().body(BasicResponse.Body(KeywordCode.FAIL, null));
+        }
+    }
+
+
+    @GetMapping("")
+    public ResponseEntity<List<Keyword>> findKeyword(@RequestParam String keyword,
+                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate){
+        log.info("findKeyword - Call");
+
+        try {
+            List<Keyword> keywordList = keywordService.findKeyword(keyword, startDate, endDate);
+            return ResponseEntity.ok().body(keywordList);
+        } catch (NotFoundException e){
+            log.error(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e){
+            log.error(e.getMessage());
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
+    @GetMapping("/platform")
+    public ResponseEntity<List<KeywordCount>> findKeywordCount(@RequestParam String keyword,
+                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate){
+        log.info("findKeywordCount - Call");
+
+        try {
+            List<KeywordCount> keywordCountList = keywordService.findKeywordCount(keyword, startDate, endDate);
+            return ResponseEntity.ok().body(keywordCountList);
+        } catch (NotFoundException e){
+            log.error(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e){
+            log.error(e.getMessage());
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 }

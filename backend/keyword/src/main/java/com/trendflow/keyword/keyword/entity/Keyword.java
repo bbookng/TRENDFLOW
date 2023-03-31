@@ -23,6 +23,8 @@ public class Keyword {
     private Long keywordId;
     @Column(name = "source_id")
     private Long sourceId;
+    @Column(name = "platform_code")
+    private String platformCode;
     @Column(name = "keyword")
     private String keyword;
     @Column(name = "count")
