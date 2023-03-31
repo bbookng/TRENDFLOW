@@ -143,12 +143,12 @@ public class AnalyzeController {
     }
 
     // feign
-    @GetMapping("/relate/{keywordId}")
-    public ResponseEntity<List<FindRelationKeywordResponse>> findRelationKeyword(@PathVariable Long keywordId){
+    @GetMapping("/relate")
+    public ResponseEntity<List<FindRelationKeywordResponse>> findRelationKeyword(@RequestParam List<Long> keywordIdList){
         log.info("findRelationKeyword - Call");
 
         try {
-            List<FindRelationKeywordResponse> findLocalCodeResponseList = analyzeService.findRelationKeyword(keywordId);
+            List<FindRelationKeywordResponse> findLocalCodeResponseList = analyzeService.findRelationKeyword(keywordIdList);
             return ResponseEntity.ok().body(findLocalCodeResponseList);
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(null);
@@ -157,12 +157,12 @@ public class AnalyzeController {
         }
     }
 
-    @GetMapping("/relate/wordcloud/{keywordId}")
-    public ResponseEntity<List<FindWordCloudKeywordResponse>> findWordCloudKeyword(@PathVariable Long keywordId){
+    @GetMapping("/relate/wordcloud")
+    public ResponseEntity<List<FindWordCloudKeywordResponse>> findWordCloudKeyword(@RequestParam List<Long> keywordIdList){
         log.info("findWordCloudKeyword - Call");
 
         try {
-            List<FindWordCloudKeywordResponse> findWordCloudKeywordResponseList = analyzeService.findWordCloudKeyword(keywordId);
+            List<FindWordCloudKeywordResponse> findWordCloudKeywordResponseList = analyzeService.findWordCloudKeyword(keywordIdList);
             return ResponseEntity.ok().body(findWordCloudKeywordResponseList);
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(null);

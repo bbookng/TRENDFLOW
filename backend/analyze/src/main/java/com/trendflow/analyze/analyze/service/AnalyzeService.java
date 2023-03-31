@@ -272,16 +272,16 @@ public class AnalyzeService {
     }
 
     @Transactional
-    public List<FindRelationKeywordResponse> findRelationKeyword(Long keywordId) {
-        List<Relation> relationList = relationRepository.findTop8ByKeywordIdOrderByCountDesc(keywordId);
+    public List<FindRelationKeywordResponse> findRelationKeyword(List<Long> keywordIdList) {
+        List<Relation> relationList = relationRepository.findTop8ByKeywordIdInOrderByCountDesc(keywordIdList);
         return relationList.stream()
                 .map(FindRelationKeywordResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public List<FindWordCloudKeywordResponse> findWordCloudKeyword(Long keywordId) {
-        List<Relation> relationList = relationRepository.findTop200ByKeywordIdOrderByCountDesc(keywordId);
+    public List<FindWordCloudKeywordResponse> findWordCloudKeyword(List<Long> keywordIdList) {
+        List<Relation> relationList = relationRepository.findTop200ByKeywordIdInOrderByCountDesc(keywordIdList);
         return relationList.stream()
                 .map(FindWordCloudKeywordResponse::fromEntity)
                 .collect(Collectors.toList());
