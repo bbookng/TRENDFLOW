@@ -37,10 +37,14 @@ export const WordCloudContentsWrapper = styled.div`
 export const RankingListWrapper = styled.div`
   width: 100%;
   height: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 
   @media ${MEDIA_QUERY.DESKTOP} {
     width: 40%;
     height: 100%;
+    flex-direction: column;
   }
 `;
 export const RelatedItemWrapper = styled.div`
