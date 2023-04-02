@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from './index.styles';
 import { useGetYoutubeAnalysisQuery, useGetYoutubeCommentAnalysisQuery } from '@/apis/analyze';
 import IFrame from '@/components/atoms/Iframe';
@@ -8,11 +8,15 @@ import { SearchBar } from '@/components/molecules';
 import { convertCount } from '@/utils/convert';
 import { Paper, Typography } from '@/components/atoms';
 import { TitleWrapper, TypeWrapper } from '@/pages/SocialResultPage/index.styles';
+import CommentAffinity from '@/components/organisms/YoutubeResult/CommentAffinity';
+import CommentAnalysis from '@/components/organisms/YoutubeResult/CommentAnalysis';
+import { YoutubeCommentInterface } from '@/types/youtube';
 
 const YoutubeResultPage = () => {
   const {
     state: { link },
   } = useLocation();
+  const [items, setItems] = useState<Array<YoutubeCommentInterface>>([]);
   const [page, setPage] = useState(0);
   const [value, setValue] = useState('');
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,8 +34,14 @@ const YoutubeResultPage = () => {
     page,
     perPage: 10,
   });
+  useEffect(() => {
+    setItems((prev) => [...prev, ...(commentData ?? [])]);
+  }, [commentData, page]);
   return (
     <S.Wrapper>
+      <button type="button" onClick={() => setPage((prev) => prev + 1)}>
+        클릭
+      </button>
       <TitleWrapper>
         <S.TitleWrapper>
           <Typography variant="H3">유튜브 분석 레포트</Typography>
@@ -61,6 +71,12 @@ const YoutubeResultPage = () => {
           likeCount={youtubeData?.video.reaction.likeCount}
           commentCount={youtubeData?.video.reaction.commentCount}
         />
+        <CommentAffinity
+          positive={youtubeData?.video.affinityInfo.positive}
+          negative={youtubeData?.video.affinityInfo.negative}
+          neutral={youtubeData?.video.affinityInfo.neutral}
+        />
+        <CommentAnalysis comments={items ?? []} />
       </S.YoutubeInfo>
     </S.Wrapper>
   );
