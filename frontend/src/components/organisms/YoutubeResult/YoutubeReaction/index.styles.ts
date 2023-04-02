@@ -15,7 +15,7 @@ export const Wrapper = styled.div`
 export const Title = styled.div`
   font-size: ${FONT_SIZE.TITLE};
   font-weight: ${FONT_WEIGHT.TITLE};
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 `;
 
 export const ReactionPaper = styled(Paper)`

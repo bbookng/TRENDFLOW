@@ -4,9 +4,9 @@ import { convertCount } from '@/utils/convert';
 import * as S from './index.styles';
 
 export interface YoutubeReactionProps {
-  viewCount: number;
-  likeCount: number;
-  commentCount: number;
+  viewCount: number | undefined;
+  likeCount: number | undefined;
+  commentCount: number | undefined;
 }
 
 const YoutubeReaction = ({
