@@ -55,14 +55,14 @@ public class AnalyzeController {
         log.info("findRelationContent - Call");
 
         try {
-            List<FindRelationContentResponse> findRelationContentResponseList
+            FindRelationContentResponse findRelationContentResponse
                     = analyzeService.findRelationContent(FindRelationContentRequest.builder()
                                                         .keyword(keyword)
                                                         .startDate(startDate.atStartOfDay())
                                                         .endDate(endDate.atTime(23,59, 59))
                                                         .build());
 
-            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findRelationContentResponseList));
+            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findRelationContentResponse));
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(BasicResponse.Body(AnalyzeCode.DATA_FOUND_FAIL, null));
@@ -125,14 +125,14 @@ public class AnalyzeController {
         log.info("findYoutubeComment - Call");
 
         try {
-            List<FindCompareKeywordResponse> findCompareKeywordResponseList
+            FindCompareKeywordResponse findCompareKeywordResponse
                     = analyzeService.findCompareKeyword(FindCompareKeywordRequest.builder()
                                                             .keywordA(keyword1)
                                                             .keywordB(keyword2)
                                                             .startDate(startDate.atStartOfDay())
                                                             .endDate(endDate.atTime(23,59, 59))
                                                             .build());
-            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findCompareKeywordResponseList));
+            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findCompareKeywordResponse));
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(BasicResponse.Body(AnalyzeCode.DATA_FOUND_FAIL, null));
@@ -143,12 +143,12 @@ public class AnalyzeController {
     }
 
     // feign
-    @GetMapping("/relate/{keywordId}")
-    public ResponseEntity<List<FindRelationKeywordResponse>> findRelationKeyword(@PathVariable Long keywordId){
+    @PostMapping("/relate")
+    public ResponseEntity<List<FindRelationKeywordResponse>> findRelationKeyword(@RequestBody List<Long> keywordIdList){
         log.info("findRelationKeyword - Call");
 
         try {
-            List<FindRelationKeywordResponse> findLocalCodeResponseList = analyzeService.findRelationKeyword(keywordId);
+            List<FindRelationKeywordResponse> findLocalCodeResponseList = analyzeService.findRelationKeyword(keywordIdList);
             return ResponseEntity.ok().body(findLocalCodeResponseList);
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(null);
@@ -157,12 +157,12 @@ public class AnalyzeController {
         }
     }
 
-    @GetMapping("/relate/wordcloud/{keywordId}")
-    public ResponseEntity<List<FindWordCloudKeywordResponse>> findWordCloudKeyword(@PathVariable Long keywordId){
+    @PostMapping("/relate/wordcloud")
+    public ResponseEntity<List<FindWordCloudKeywordResponse>> findWordCloudKeyword(@RequestBody List<Long> keywordIdList){
         log.info("findWordCloudKeyword - Call");
 
         try {
-            List<FindWordCloudKeywordResponse> findWordCloudKeywordResponseList = analyzeService.findWordCloudKeyword(keywordId);
+            List<FindWordCloudKeywordResponse> findWordCloudKeywordResponseList = analyzeService.findWordCloudKeyword(keywordIdList);
             return ResponseEntity.ok().body(findWordCloudKeywordResponseList);
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(null);

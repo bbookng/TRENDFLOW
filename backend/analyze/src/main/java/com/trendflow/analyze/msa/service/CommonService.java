@@ -1,11 +1,11 @@
 package com.trendflow.analyze.msa.service;
 
+import com.trendflow.analyze.msa.dto.request.GetSourceRequest;
 import com.trendflow.analyze.msa.dto.vo.LocalCode;
 import com.trendflow.analyze.msa.dto.vo.Source;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -16,7 +16,11 @@ public class CommonService {
     public LocalCode getLocalCode(String name){
         return commonServiceClient.getLocalCode(name);
     }
-    public List<Source> getSource(String keyword, LocalDateTime startDate, LocalDateTime endDate){
-        return commonServiceClient.getSource(keyword, startDate, endDate);
+    public List<Source> getSource(String keyword, List<Long> sourceIdList, String sourceCode){
+        return commonServiceClient.getSource(GetSourceRequest.builder()
+                        .keyword(keyword)
+                        .sourceIdList(sourceIdList)
+                        .sourceCode(sourceCode)
+                        .build());
     }
 }
