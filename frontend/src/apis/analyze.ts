@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { EntityAdapter, createEntityAdapter } from '@reduxjs/toolkit';
 import { SocialAnalysisItemInterface } from '@/types/social';
 import {
   YoutubeAnalysisInterface,
@@ -22,7 +23,10 @@ export const analyzeApi = createApi({
     getYoutubeAnalysis: builder.query<YoutubeAnalysisInterface, string>({
       query: (link) => `youtube?link=${encodeURIComponent(link)}`,
     }),
-    getYoutubeCommentAnalysis: builder.query<YoutubeCommentInterface, YoutubeCommentQueryProps>({
+    getYoutubeCommentAnalysis: builder.query<
+      Array<YoutubeCommentInterface>,
+      YoutubeCommentQueryProps
+    >({
       query: (data) => {
         const { link, code, page, perPage } = data;
         return `youtube/comment?link=${encodeURIComponent(

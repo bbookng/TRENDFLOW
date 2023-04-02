@@ -1,8 +1,8 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import CommentAnalysis from '@/components/organisms/CommentAnalysis';
+import CommentAnalysis from '@/components/organisms/YoutubeResult/CommentAnalysis';
 
 export default {
-  title: 'organisms/CommentAnalysis',
+  title: 'organisms/YoutubeResult/CommentAnalysis',
   component: CommentAnalysis,
 } as ComponentMeta<typeof CommentAnalysis>;
 
