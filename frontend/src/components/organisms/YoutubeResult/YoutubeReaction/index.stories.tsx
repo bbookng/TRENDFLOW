@@ -5,7 +5,7 @@ import YoutubeReaction, {
 import ThemeComponent from '@/components/@shared/Storybook/ThemeComponent';
 
 export default {
-  title: 'organisms/YoutubeReaction',
+  title: 'organisms/YoutubeResult/YoutubeReaction',
   component: YoutubeReaction,
   argTypes: {
     viewCount: {

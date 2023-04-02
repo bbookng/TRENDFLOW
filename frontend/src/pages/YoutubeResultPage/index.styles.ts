@@ -26,7 +26,7 @@ export const YoutubeInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  margin-top: 3rem;
+  margin-top: 5rem;
   @media ${MEDIA_QUERY.DESKTOP} {
     flex-direction: row;
     justify-content: space-between;
