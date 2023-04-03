@@ -43,20 +43,18 @@ public class KafkaService {
 		consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 		consumerProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
 
-		DefaultKafkaConsumerFactory<String, Object> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProps);
-		JsonDeserializer<Object> deserializer = new JsonDeserializer<>();
-		deserializer.addTrustedPackages("*");
-		consumerFactory.setValueDeserializer(deserializer);
-
-		KafkaConsumer<String, Object> kafkaConsumer = (KafkaConsumer<String, Object>)consumerFactory.createConsumer();
+		DefaultKafkaConsumerFactory<String, Payload> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProps,
+			new StringDeserializer(), new JsonDeserializer<>(Payload.class, false));
+		consumerFactory.setValueDeserializer(new JsonDeserializer<>(Payload.class, false));
+		KafkaConsumer<String, Payload> kafkaConsumer = consumerFactory.createConsumer();
 		kafkaConsumer.subscribe(Collections.singletonList("youtube_analyze"));
 
 		while (true) {
-			ConsumerRecords<String, Object> records = kafkaConsumer.poll(Duration.ofSeconds(1));
+			ConsumerRecords<String, Payload> records = kafkaConsumer.poll(Duration.ofSeconds(1));
 			if (records.isEmpty()) {
 				continue;
 			}
-			for (ConsumerRecord<String, Object> record : records) {
+			for (ConsumerRecord<String, Payload> record : records) {
 				// 메시지 처리
 				System.out.println(record.value());
 			}
