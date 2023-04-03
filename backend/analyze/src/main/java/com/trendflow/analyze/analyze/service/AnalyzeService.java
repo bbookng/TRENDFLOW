@@ -18,6 +18,7 @@ import com.trendflow.analyze.msa.dto.vo.KeywordCount;
 import com.trendflow.analyze.msa.dto.vo.Source;
 import com.trendflow.analyze.msa.service.CommonService;
 import com.trendflow.analyze.msa.service.KeywordService;
+import com.trendflow.analyze.service.KafkaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
