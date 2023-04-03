@@ -1,5 +1,14 @@
 import { rest } from 'msw';
-import { hot, pComment, relate, social, youtube, recommend, wordCloud } from '@/mocks/data';
+import {
+  hot,
+  pComment,
+  relate,
+  social,
+  youtube,
+  recommend,
+  wordCloud,
+  bookmark,
+} from '@/mocks/data';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 
@@ -47,5 +56,10 @@ export const handlers = [
     const perPage: number = parseInt(req.url.searchParams.get('perPage') as string, 10);
 
     return res(ctx.status(200), ctx.json(pComment.slice(page * perPage, page * perPage + perPage)));
+  }),
+
+  // 멤버
+  rest.get(`${BASE_URL}/member/bookmark`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(bookmark));
   }),
 ];

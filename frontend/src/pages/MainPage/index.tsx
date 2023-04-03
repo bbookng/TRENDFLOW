@@ -7,11 +7,48 @@ import { SearchBar } from '@/components/molecules';
 import { HotKeywords, NoBookmark, DailyAnalysis } from '@/components/organisms/MainPage';
 import HotKeywordsSkeleton from '@/components/organisms/MainPage/HotKeywords/Skeleton';
 import { ROUTER_PATH } from '@/constants/path';
+import { useGetBookmarkQuery } from '@/apis/member';
+import { getToken } from '@/utils/token';
 import * as S from './index.styles';
 
 const MainPage = () => {
+  const token = getToken();
+  const {
+    data: bookmark,
+    error: bookmarkError,
+    isLoading: bookmarkLoading,
+  } = useGetBookmarkQuery({ header: token! }, { skip: !token });
+
+  const {
+    data: hotKeywords,
+    error: hotKeywordsError,
+    isLoading: hotKeywordsLoading,
+  } = useGetHotKeywordsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const {
+    data: socialAnalysis,
+    error: socialAnalysisError,
+    isLoading: socialAnalysisLoading,
+  } = useGetSocialAnalysisQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    skip: !bookmark,
+  });
+
+  const {
+    data: relatedKeywords,
+    error: relatedKeywordsError,
+    isLoading: relatedKeywordsLoading,
+  } = useGetRelatedKeywordsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    skip: !bookmark,
+  });
+
+  // 서치바
   const [value, setValue] = useState('');
   const navi = useNavigate();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
@@ -20,22 +57,6 @@ const MainPage = () => {
     e.preventDefault();
     navi(`/${ROUTER_PATH.SOCIAL_RESULT_PAGE}`, { state: { keyword: value } });
   };
-
-  const { data: hotKeywords, error: hotKeywordsError } = useGetHotKeywordsQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
-  const { data: relatedKeywords, error: relatedKeywordsError } = useGetRelatedKeywordsQuery(
-    undefined,
-    {
-      refetchOnMountOrArgChange: true,
-    }
-  );
-  const { data: socialAnalysis, error: socialAnalysisError } = useGetSocialAnalysisQuery(
-    undefined,
-    {
-      refetchOnMountOrArgChange: true,
-    }
-  );
 
   return (
     <S.Wrapper>
@@ -46,7 +67,7 @@ const MainPage = () => {
         onSubmit={handleSubmit}
       />
 
-      {!hotKeywords && (
+      {hotKeywordsLoading && (
         <S.HotKeywordsWrapper>
           <HotKeywordsSkeleton />
           <HotKeywordsSkeleton />
@@ -60,12 +81,12 @@ const MainPage = () => {
         </S.HotKeywordsWrapper>
       )}
 
-      <NoBookmark />
+      {!token && !bookmark && <NoBookmark />}
 
       {socialAnalysis && relatedKeywords && (
         <DailyAnalysis
-          keyword="싸피"
-          socialAnaysis={socialAnalysis!}
+          keyword={bookmark!}
+          socialAnalysis={socialAnalysis!}
           relatedKeywords={relatedKeywords!}
         />
       )}
