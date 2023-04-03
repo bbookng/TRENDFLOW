@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import YoutubeMainPage from '@/pages/YoutubeMainPage';
 import ThemeComponent from '@/components/@shared/Storybook/ThemeComponent';
-import BaseLayout from '@/Layout/BaseLayout';
+import BaseLayout from '@/layouts/BaseLayout';
 
 export default {
   title: 'Pages/YoutubeMainPage',

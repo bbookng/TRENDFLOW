@@ -6,7 +6,9 @@ export default {
   component: PostContents,
 } as ComponentMeta<typeof PostContents>;
 
-const Template: ComponentStory<typeof PostContents> = () => <PostContents></PostContents>;
+const Template: ComponentStory<typeof PostContents> = () => (
+  <PostContents title="하이"></PostContents>
+);
 
 export const ContentItemTemplate = Template.bind({});
 ContentItemTemplate.args = {};

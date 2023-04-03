@@ -6,7 +6,9 @@ export default {
   component: CommentAnalysis,
 } as ComponentMeta<typeof CommentAnalysis>;
 
-const Template: ComponentStory<typeof CommentAnalysis> = () => <CommentAnalysis />;
+const Template: ComponentStory<typeof CommentAnalysis> = () => (
+  <CommentAnalysis link="https://..." />
+);
 
 export const Primary = Template.bind({});
 Primary.args = {};
