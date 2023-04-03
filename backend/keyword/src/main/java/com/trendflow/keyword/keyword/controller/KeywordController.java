@@ -16,6 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -94,8 +95,8 @@ public class KeywordController {
 
     @GetMapping("")
     public ResponseEntity<List<Keyword>> findKeyword(@RequestParam String keyword,
-                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate){
+                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
         log.info("findKeyword - Call");
 
         try {
@@ -112,8 +113,8 @@ public class KeywordController {
 
     @GetMapping("/platform")
     public ResponseEntity<List<KeywordCount>> findKeywordCount(@RequestParam String keyword,
-                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate){
+                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
         log.info("findKeywordCount - Call");
 
         try {

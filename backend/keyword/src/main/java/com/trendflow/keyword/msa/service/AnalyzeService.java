@@ -2,7 +2,6 @@ package com.trendflow.keyword.msa.service;
 
 import com.trendflow.keyword.msa.vo.Relation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.PropertyValues;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
