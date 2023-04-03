@@ -7,6 +7,7 @@ import com.trendflow.keyword.keyword.Repository.KeywordRepository;
 import com.trendflow.keyword.keyword.dto.response.*;
 import com.trendflow.keyword.keyword.entity.Keyword;
 import com.trendflow.keyword.keyword.entity.KeywordCount;
+import com.trendflow.keyword.keyword.entity.KeywordDistinct;
 import com.trendflow.keyword.msa.service.AnalyzeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,7 +56,7 @@ public class KeywordService {
         List<HotKeyword> dayNow = hotKeywordRepository.findById(KeywordCacheCode.DAY_HOT_KEYWORD_RESULT.getCode())
                 .orElseGet(() -> {
                     // 새로운 결과를 가져와 리스트 생성 (현재 기준 값)
-                    List<Keyword> dayKeywordList = keywordRepository.findTop8ByRegDtBetweenOrderByCountDesc(LocalDate.now().atStartOfDay(), LocalDateTime.now());
+                    List<KeywordDistinct> dayKeywordList = keywordRepository.findByRegDt(LocalDate.now().atStartOfDay(), LocalDateTime.now(), 8);
 
                     AtomicInteger rank = new AtomicInteger();
                     List<HotKeyword> now = dayKeywordList.stream()
@@ -82,7 +84,7 @@ public class KeywordService {
         // 이미 계산된 결과가 없으면 (만료시간이 되서 결과가 사라져 갱신해야되는 경우) 계산 시작
         List<HotKeyword> weekNow = hotKeywordRepository.findById(KeywordCacheCode.WEEK_HOT_KEYWORD_RESULT.getCode())
                 .orElseGet(() -> {
-                    List<Keyword> weekKeywordList = keywordRepository.findTop8ByRegDtBetweenOrderByCountDesc(LocalDateTime.now().minusDays(7), LocalDateTime.now());
+                    List<KeywordDistinct> weekKeywordList = keywordRepository.findByRegDt(LocalDateTime.now().minusDays(7), LocalDateTime.now(), 8);
 
                     AtomicInteger rank = new AtomicInteger();
                     List<HotKeyword> now = weekKeywordList.stream()
@@ -114,12 +116,13 @@ public class KeywordService {
     public List<FindRecommendKeywordResponse> findRecommendKeyword() throws RuntimeException {
         List<RecommendKeyword> recommendKeywordList = recommendKeywordRepository.findById(KeywordCacheCode.RECOMMEND_KEYWORD.getCode())
                 .orElseGet(() -> {
-                    List<Keyword> keywordList = keywordRepository.findTop10ByRegDtBetweenOrderByCountDesc(LocalDate.now().atStartOfDay(), LocalDateTime.now());
+                    List<KeywordDistinct> keywordList = keywordRepository.findByRegDt(LocalDate.now().atStartOfDay(), LocalDateTime.now(), 10);
 
+                    AtomicLong id = new AtomicLong();
                     List<RecommendKeyword> now = keywordList.stream()
                             .map(keyword ->
                                     RecommendKeyword.builder()
-                                            .id(keyword.getKeywordId())
+                                            .id(id.getAndIncrement())
                                             .keyword(keyword.getKeyword())
                                             .build())
                             .collect(Collectors.toList());
@@ -133,16 +136,17 @@ public class KeywordService {
 
     @Transactional
     public List<FindRelateKeywordResponse> findRelateKeyword(String keyword) throws RuntimeException {
-        Long keywordId = keywordRepository.findByKeyword(keyword)
-                .orElseThrow(() -> new NotFoundException())
-                .getKeywordId();
+        List<Keyword> keywordIdList = keywordRepository.findByKeyword(keyword);
 
-        String key = String.format("%s_%d", KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), keywordId);
+        String key = String.format("%s_%s", KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), keyword);
 
         AtomicInteger rank = new AtomicInteger();
         List<RelateKeyword> relateKeywordList = relateKeywordRepository.findById(key)
                 .orElseGet(() -> {
-                    List<RelateKeyword> now = analyzeService.getRelation(keywordId).stream()
+                    List<RelateKeyword> now = analyzeService.getRelation(keywordIdList.stream()
+                                    .map(Keyword::getKeywordId)
+                                    .collect(Collectors.toList())
+                            ).stream()
                             .map(relation ->
                                     RelateKeyword.builder()
                                         .rank(rank.getAndIncrement() + 1)
@@ -167,15 +171,16 @@ public class KeywordService {
 
     @Transactional
     public List<FindWordCloudResponse> findWordCloudKeyword(String keyword) throws RuntimeException {
-        Long keywordId = keywordRepository.findByKeyword(keyword)
-                .orElseThrow(() -> new NotFoundException())
-                .getKeywordId();
+        List<Keyword> keywordIdList = keywordRepository.findByKeyword(keyword);
 
-        String key = String.format("%s_%d", KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), keywordId);
+        String key = String.format("%s_%s", KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), keyword);
 
         List<WordCloudKeyword> wordCloudKeywordList = wordCloudKeywordRepository.findById(key)
                 .orElseGet(() -> {
-                    List<WordCloudKeyword> now = analyzeService.getRelationForWordCloud(keywordId).stream()
+                    List<WordCloudKeyword> now = analyzeService.getRelationForWordCloud(keywordIdList.stream()
+                                .map(Keyword::getKeywordId)
+                                .collect(Collectors.toList())
+                            ).stream()
                             .map(relation ->
                                     WordCloudKeyword.builder()
                                             .text(relation.getRelationKeyword())
