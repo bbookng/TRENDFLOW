@@ -23,7 +23,7 @@ export const TitleWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 15%;
+  margin-top: 12%;
 
   & > div:first-of-type {
     margin-bottom: 1rem;

@@ -1,12 +1,17 @@
 import styled from '@emotion/styled';
 import { BoxInterface } from '@/pages/SocialMainPage';
 import { Button } from '@/components/atoms/Button/index.styles';
-import { PALETTE } from '@/constants/palette';
 import { MEDIA_QUERY } from '@/constants/media';
 
 export const SearchWrapper = styled.div`
   display: flex;
   justify-content: center;
+  width: 100%;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    width: auto;
+    margin-top: 2rem;
+  }
 `;
 
 export const Contents = styled.div`
@@ -15,11 +20,11 @@ export const Contents = styled.div`
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  margin-top: 4rem;
+  margin-top: 5rem;
   max-width: 1082px;
 
   @media ${MEDIA_QUERY.DESKTOP} {
-    margin-top: 163px;
+    margin-top: 8%;
   }
 `;
 export const Left = styled.div`
@@ -38,13 +43,20 @@ export const Right = styled.div`
   flex-direction: column;
   justify-content: center;
 
+  & > hr {
+    margin: 3rem 0;
+  }
+
   @media ${MEDIA_QUERY.DESKTOP} {
-    width: 67%;
-    height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 67%;
     padding-left: 53px;
+
+    & > hr {
+      margin: 1rem 0 1.5rem;
+    }
   }
 `;
 
@@ -58,20 +70,42 @@ export const TypoBox = styled.div<BoxInterface>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: ${({ marginTopBottom }) => marginTopBottom}rem 0;
+  margin-bottom: 1rem;
 
-  & > h2,
-  & > p {
-    line-height: 1.4;
+  & > h4:first-of-type {
+    margin-bottom: 0.2rem;
+  }
+
+  & > p:first-of-type {
+    margin-bottom: 0.15rem;
   }
 
   @media ${MEDIA_QUERY.DESKTOP} {
     flex-direction: row;
+
+    & > h4:first-of-type {
+      margin-bottom: 0;
+      margin-right: 0.375rem;
+    }
+
+    & > p:first-of-type {
+      margin-bottom: 0;
+      margin-right: 0.25rem;
+    }
   }
 `;
 
 export const KeywordBox = styled.div<BoxInterface>`
-  margin: ${({ marginTopBottom }) => marginTopBottom}rem 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    justify-content: flex-start;
+    flex-wrap: auto;
+    margin-top: 1.5rem;
+  }
 `;
 
 export const Keyword = styled(Button)`
