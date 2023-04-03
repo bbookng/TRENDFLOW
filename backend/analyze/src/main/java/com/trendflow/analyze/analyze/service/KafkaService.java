@@ -1,63 +1,77 @@
-package com.trendflow.analyze.analyze.service;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.kafka.support.serializer.JsonSerializer;
-import org.springframework.stereotype.Service;
+import java.util.Collections;
+import java.util.Properties;
+import java.time.Duration;
+import com.google.gson.JsonParser;
 
-import lombok.RequiredArgsConstructor;
-
-@Service
-@RequiredArgsConstructor
 public class KafkaService {
+	private final String bootstrapServers = "cluster.p.ssafy.io:9092";
+	private final String youtubeUrlTopic = "youtube_url";
+	private final String youtubeAnalyzeTopic = "youtube_analyze";
+	private final JsonParser jsonParser = new JsonParser();
 
-	private final KafkaTemplate<String, Object> kafkaTemplate;
+	// Kafka producer 설정
+	private KafkaProducer<String, String> createKafkaProducer() {
+		Properties props = new Properties();
+		props.put("bootstrap.servers", bootstrapServers);
+		props.put("acks", "all");
+		props.put("retries", 0);
+		props.put("batch.size", 16384);
+		props.put("linger.ms", 1);
+		props.put("buffer.memory", 33554432);
+		props.put("key.serializer", StringSerializer.class.getName());
+		props.put("value.serializer", StringSerializer.class.getName());
+		return new KafkaProducer<>(props);
+	}
 
-	public void sendYoutubeUrl(String url) {
-		ProducerRecord<String, Object> producerRecord = new ProducerRecord<>("youtube_url", url);
-		kafkaTemplate.send(producerRecord);
+	// Kafka consumer 설정
+	private KafkaConsumer<String, String> createKafkaConsumer() {
+		Properties props = new Properties();
+		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+		props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+		props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+		KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+		consumer.subscribe(Collections.singletonList(youtubeAnalyzeTopic));
+		return consumer;
+	}
+
+	public void produceYoutubeUrl() {
+		try (KafkaProducer<String, String> kafkaProducer = createKafkaProducer()) {
+			String url = "https://www.youtube.com/watch?v=wMRvCP6y0Ys";
+			ProducerRecord<String, String> record = new ProducerRecord<>(youtubeUrlTopic, url);
+			RecordMetadata metadata = kafkaProducer.send(record).get();
+			System.out.printf("Produced record (key=%s, value=%s) meta(partition=%d, offset=%d)%n",
+				record.key(), record.value(), metadata.partition(), metadata.offset());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void consumeYoutubeAnalyze() {
-		// Kafka consumer 설정
-		Map<String, Object> consumerProps = new HashMap<>();
-		consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "cluster.p.ssafy.io:9092");
-		consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "my-group");
-		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-		consumerProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
-
-		JsonDeserializer<Object> deserializer = new JsonDeserializer<>();
-		deserializer.addTrustedPackages("*");
-
-		DefaultKafkaConsumerFactory<String, Object> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProps, new StringDeserializer(), deserializer);
-		KafkaConsumer<String, Object> kafkaConsumer = consumerFactory.createConsumer();
-		kafkaConsumer.subscribe(Collections.singletonList("youtube_analyze"));
-
-		while (true) {
-			ConsumerRecords<String, Object> records = kafkaConsumer.poll(Duration.ofSeconds(1));
-			for (ConsumerRecord<String, Object> record : records) {
-				// 메시지 처리
-				System.out.println(record.value());
+		try (KafkaConsumer<String, String> kafkaConsumer = createKafkaConsumer()) {
+			while (true) {
+				ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofMillis(100));
+				for (ConsumerRecord<String, String> record : records) {
+					String value = record.value();
+					System.out.printf("Received record (key=%s, value=%s, partition=%d, offset=%d)%n",
+						record.key(), value, record.partition(), record.offset());
+					// 메시지 처리
+					String analyzeResult = jsonParser.parse(value).getAsJsonObject().get("analyze_result").getAsString();
+					System.out.println(analyzeResult);
+				}
 			}
-			kafkaConsumer.commitSync();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
