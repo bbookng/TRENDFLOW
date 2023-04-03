@@ -19,7 +19,10 @@ import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 const SocialResultPage = () => {
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
+
+  // 서치바
   const [value, setValue] = useState('');
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
@@ -35,8 +38,6 @@ const SocialResultPage = () => {
     useGetRelatedKeywordsQuery();
   const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
     useGetSocialAnalysisQuery();
-
-  console.log(socialAnalysisData);
 
   return (
     <>

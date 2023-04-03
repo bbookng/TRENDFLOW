@@ -44,19 +44,19 @@ const SocialMainPage = () => {
         <S.Right>
           <S.Wrapper>
             <S.TypoBox marginTopBottom="2">
-              <Typography variant="H2" color={theme.text} weight="bold">
+              <Typography variant="H4" color={theme.text} weight="bold">
                 분석하고 싶은 키워드를
               </Typography>
-              <Typography variant="H2" color={theme.text} weight="bold">
+              <Typography variant="H4" color={theme.text} weight="bold">
                 검색해보세요.
               </Typography>
             </S.TypoBox>
 
             <S.TypoBox marginTopBottom="1">
-              <Typography variant="LARGE" color={theme.text}>
+              <Typography variant="BASE" color={theme.text}>
                 여러 소셜 미디어를 종합하여 분석한{' '}
               </Typography>
-              <Typography variant="LARGE" color={theme.text}>
+              <Typography variant="BASE" color={theme.text}>
                 언급량, 긍정 지수 등등 알려드랴용
               </Typography>
             </S.TypoBox>
@@ -66,8 +66,8 @@ const SocialMainPage = () => {
 
           <S.Wrapper>
             <S.TypoBox marginTopBottom="2">
-              <Typography variant="H3" color={theme.text} weight="bold">
-                이런 키워드는 어떠세요 ?
+              <Typography variant="H4" color={theme.text}>
+                이런 키워드는 어떠세요?
               </Typography>
             </S.TypoBox>
 
