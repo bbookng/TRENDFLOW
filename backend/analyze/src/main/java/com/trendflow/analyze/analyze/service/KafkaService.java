@@ -45,9 +45,8 @@ public class KafkaService {
 		return consumer;
 	}
 
-	public void produceYoutubeUrl() {
+	public void sendYoutubeUrl(url) {
 		try (KafkaProducer<String, String> kafkaProducer = createKafkaProducer()) {
-			String url = "https://www.youtube.com/watch?v=wMRvCP6y0Ys";
 			ProducerRecord<String, String> record = new ProducerRecord<>(youtubeUrlTopic, url);
 			RecordMetadata metadata = kafkaProducer.send(record).get();
 			System.out.printf("Produced record (key=%s, value=%s) meta(partition=%d, offset=%d)%n",
