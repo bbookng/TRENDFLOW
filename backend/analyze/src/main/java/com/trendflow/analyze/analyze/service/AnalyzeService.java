@@ -38,6 +38,7 @@ public class AnalyzeService {
 
     private final CommonService commonService;
     private final KeywordService keywordService;
+    private final KafkaService kafkaService;
 
     @Transactional
     public List<FindSocialResponse> findSocial(FindSocialRequest findSocialRequest) {
@@ -173,6 +174,8 @@ public class AnalyzeService {
 
     public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {
         System.out.println("findYoutubeRequest = " + findYoutubeRequest);
+        kafkaService.sendYoutubeUrl("https://www.youtube.com/watch?v=wMRvCP6y0Ys");
+        kafkaService.consumeYoutubeAnalyze();
         return null;
     }
 
