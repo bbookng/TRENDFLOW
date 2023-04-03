@@ -54,9 +54,10 @@ export const ThumbItem = styled.div`
   display: flex;
   gap: 0.4rem;
   align-items: center;
+  font-size: 0.8rem;
   & > svg {
-    width: 16px;
-    height: 16px;
+    width: 0.8rem;
+    height: 0.8rem;
   }
   & > svg > g {
     stroke: ${({ theme }) => theme.text};
