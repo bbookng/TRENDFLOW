@@ -76,8 +76,8 @@ const MainPage = () => {
 
       {hotKeywords && (
         <S.HotKeywordsWrapper>
-          <HotKeywords type="day" ranking={hotKeywords!.day} />
-          <HotKeywords type="week" ranking={hotKeywords!.week} />
+          <HotKeywords type="day" ranking={hotKeywords?.day} />
+          <HotKeywords type="week" ranking={hotKeywords?.week} />
         </S.HotKeywordsWrapper>
       )}
 

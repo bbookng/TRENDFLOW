@@ -10,5 +10,9 @@ export const Wrapper = styled.div`
   @media ${MEDIA_QUERY.DESKTOP} {
     width: auto;
     max-width: 100%;
+
+    & > div {
+      margin-top: 2rem;
+    }
   }
 `;
