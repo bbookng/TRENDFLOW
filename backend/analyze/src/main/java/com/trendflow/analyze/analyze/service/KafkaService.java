@@ -41,11 +41,10 @@ public class KafkaService {
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+		consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "kr.co.sys4u.app.dto.Payload");
 		consumerProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
 
-		DefaultKafkaConsumerFactory<String, Payload> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProps,
-			new StringDeserializer(), new JsonDeserializer<>(Payload.class, false));
-		consumerFactory.setValueDeserializer(new JsonDeserializer<>(Payload.class, false));
+		DefaultKafkaConsumerFactory<String, Payload> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProps);
 		KafkaConsumer<String, Payload> kafkaConsumer = consumerFactory.createConsumer();
 		kafkaConsumer.subscribe(Collections.singletonList("youtube_analyze"));
 
