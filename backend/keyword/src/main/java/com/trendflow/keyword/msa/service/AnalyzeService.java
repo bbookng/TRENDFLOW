@@ -12,11 +12,11 @@ import java.util.List;
 public class AnalyzeService {
     private final AnalyzeServiceClient analyzeServiceClient;
 
-    public List<Relation> getRelation(Long keywordId){
-        return analyzeServiceClient.getRelation(keywordId);
+    public List<Relation> getRelation(List<Long> keywordIdList){
+        return analyzeServiceClient.getRelation(keywordIdList);
     }
 
-    public List<Relation> getRelationForWordCloud(Long keywordId) {
-        return analyzeServiceClient.getRelationForWordCloud(keywordId);
+    public List<Relation> getRelationForWordCloud(List<Long> keywordIdList) {
+        return analyzeServiceClient.getRelationForWordCloud(keywordIdList);
     }
 }

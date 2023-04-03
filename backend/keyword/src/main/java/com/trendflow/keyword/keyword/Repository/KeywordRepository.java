@@ -2,8 +2,10 @@ package com.trendflow.keyword.keyword.Repository;
 
 import com.trendflow.keyword.keyword.entity.Keyword;
 import com.trendflow.keyword.keyword.entity.KeywordCount;
+import com.trendflow.keyword.keyword.entity.KeywordDistinct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -12,9 +14,13 @@ import java.util.Optional;
 
 @Repository
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
-    List<Keyword> findTop8ByRegDtBetweenOrderByCountDesc(LocalDateTime start, LocalDateTime end);
-    List<Keyword> findTop10ByRegDtBetweenOrderByCountDesc(LocalDateTime start, LocalDateTime end);
-    Optional<Keyword> findByKeyword(String keyword);
+    @Query(value = "SELECT k.keyword, SUM(k.count) as count " +
+            "FROM keyword k " +
+            "WHERE k.reg_dt BETWEEN :startDate AND :endDate " +
+            "GROUP BY k.keyword " +
+            "ORDER BY count DESC LIMIT :limit", nativeQuery = true)
+    List<KeywordDistinct> findByRegDt(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate, @Param("limit") Integer limit);
+    List<Keyword> findByKeyword(String keyword);
     List<Keyword> findByKeywordAndRegDtBetweenOrderBySourceId(String keyword, LocalDateTime atStartOfDay, LocalDateTime atStartOfDay1);
 
     @Query(value =
