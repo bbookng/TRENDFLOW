@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { Paper } from '@/components/atoms';
-import CommentItem from '@/components/molecules/CommentItem';
+import CommentItem, { CommentItemProps } from '@/components/molecules/CommentItem';
 import ThemeComponent from '@/components/@shared/Storybook/ThemeComponent';
 
 export default {
@@ -8,10 +8,16 @@ export default {
   component: CommentItem,
 } as ComponentMeta<typeof CommentItem>;
 
-const Template: ComponentStory<typeof CommentItem> = () => (
+const Template: ComponentStory<typeof CommentItem> = ({
+  comment,
+  upCount,
+  downCount,
+  isLast,
+  nextPage,
+}: CommentItemProps) => (
   <ThemeComponent>
     <Paper>
-      <CommentItem />
+      <CommentItem comment="하이요!" upCount={54} downCount={10} isLast nextPage={() => {}} />
     </Paper>
   </ThemeComponent>
 );
