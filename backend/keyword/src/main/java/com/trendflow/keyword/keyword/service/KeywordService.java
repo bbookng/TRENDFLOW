@@ -1,7 +1,6 @@
 package com.trendflow.keyword.keyword.service;
 
 import com.trendflow.keyword.global.code.KeywordCacheCode;
-import com.trendflow.keyword.global.exception.NotFoundException;
 import com.trendflow.keyword.global.redis.*;
 import com.trendflow.keyword.keyword.Repository.KeywordRepository;
 import com.trendflow.keyword.keyword.dto.response.*;
@@ -51,12 +50,14 @@ public class KeywordService {
             60 분마다 갱신
          */
 
+        Integer today = Integer.parseInt(LocalDate.now().toString().replace("-", ""));
+
         // 일간 HOT Keyword
         // 이미 계산된 결과가 없으면 (만료시간이 되서 결과가 사라져 갱신해야되는 경우) 계산 시작
         List<HotKeyword> dayNow = hotKeywordRepository.findById(KeywordCacheCode.DAY_HOT_KEYWORD_RESULT.getCode())
                 .orElseGet(() -> {
                     // 새로운 결과를 가져와 리스트 생성 (현재 기준 값)
-                    List<KeywordDistinct> dayKeywordList = keywordRepository.findByRegDt(LocalDate.now().atStartOfDay(), LocalDateTime.now(), 8);
+                    List<KeywordDistinct> dayKeywordList = keywordRepository.findByRegDt(today, today, 8);
 
                     AtomicInteger rank = new AtomicInteger();
                     List<HotKeyword> now = dayKeywordList.stream()
@@ -84,7 +85,10 @@ public class KeywordService {
         // 이미 계산된 결과가 없으면 (만료시간이 되서 결과가 사라져 갱신해야되는 경우) 계산 시작
         List<HotKeyword> weekNow = hotKeywordRepository.findById(KeywordCacheCode.WEEK_HOT_KEYWORD_RESULT.getCode())
                 .orElseGet(() -> {
-                    List<KeywordDistinct> weekKeywordList = keywordRepository.findByRegDt(LocalDateTime.now().minusDays(7), LocalDateTime.now(), 8);
+
+                    Integer startDate = Integer.parseInt(LocalDate.now().minusDays(7).toString().replace("-", ""));
+
+                    List<KeywordDistinct> weekKeywordList = keywordRepository.findByRegDt(startDate, today, 8);
 
                     AtomicInteger rank = new AtomicInteger();
                     List<HotKeyword> now = weekKeywordList.stream()
@@ -116,7 +120,10 @@ public class KeywordService {
     public List<FindRecommendKeywordResponse> findRecommendKeyword() throws RuntimeException {
         List<RecommendKeyword> recommendKeywordList = recommendKeywordRepository.findById(KeywordCacheCode.RECOMMEND_KEYWORD.getCode())
                 .orElseGet(() -> {
-                    List<KeywordDistinct> keywordList = keywordRepository.findByRegDt(LocalDate.now().atStartOfDay(), LocalDateTime.now(), 10);
+
+                    Integer today = Integer.parseInt(LocalDate.now().toString().replace("-", ""));
+
+                    List<KeywordDistinct> keywordList = keywordRepository.findByRegDt(today, today, 10);
 
                     AtomicLong id = new AtomicLong();
                     List<RecommendKeyword> now = keywordList.stream()
@@ -197,20 +204,22 @@ public class KeywordService {
     }
 
     @Transactional
-    public List<Keyword> findKeyword(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
-        return keywordRepository.findByKeywordAndRegDtBetweenOrderBySourceId(
-                        keyword,
-                        startDate.toLocalDate().atStartOfDay(),
-                        endDate.toLocalDate().atTime(23, 59, 59));
+    public List<Keyword> findKeyword(String keyword, LocalDate startDate, LocalDate endDate) {
+
+        Integer start = Integer.parseInt(startDate.toString().replace("-", ""));
+        Integer today = Integer.parseInt(LocalDate.now().toString().replace("-", ""));
+
+        return keywordRepository.findByKeywordAndRegDtBetweenOrderBySourceId(keyword, start, today);
     }
 
     @Transactional
-    public List<KeywordCount> findKeywordCount(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<KeywordCount> findKeywordCount(String keyword, LocalDate startDate, LocalDate endDate) {
+
+        Integer start = Integer.parseInt(startDate.toString().replace("-", ""));
+        Integer today = Integer.parseInt(LocalDate.now().toString().replace("-", ""));
+
         List<KeywordCount> keywordCountList =
-                keywordRepository.countByPlatformCodeAndRegDtBetween(
-                        keyword,
-                        startDate.toLocalDate().atStartOfDay(),
-                        endDate.plusDays(1).toLocalDate().atStartOfDay());
+                keywordRepository.countByPlatformCodeAndRegDt(keyword, start, today);
         return keywordCountList;
     }
 
