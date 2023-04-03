@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
+import { useLocation } from 'react-router-dom';
 import { Typography } from '@/components/atoms';
 import { SearchBar } from '@/components/molecules';
-import * as S from './index.styles';
 import { getSevenDaysAgoDate } from '@/utils/date';
 import 'react-datepicker/dist/react-datepicker.css';
 import BarChart from '@/components/molecules/BarChart';
@@ -15,13 +15,18 @@ import PostContents from '@/components/organisms/SocialResult/PostContents';
 import { useGetRelatedKeywordsQuery, useGetWordCloudKeywordsQuery } from '@/apis/keyword';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
+import * as S from './index.styles';
 
 const SocialResultPage = () => {
+  const {
+    state: { keyword },
+  } = useLocation();
+
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
 
   // 서치바
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(keyword);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -40,11 +45,11 @@ const SocialResultPage = () => {
     useGetSocialAnalysisQuery();
 
   return (
-    <>
+    <S.Wrapper>
       <S.TitleWrapper>
         <S.TypeWrapper>
           <Typography variant="H3">
-            <S.HighLight>삼성전자</S.HighLight> 소셜 분석 리포트{' '}
+            <S.HighLight>{keyword}</S.HighLight> 소셜 분석 리포트{' '}
           </Typography>
           {/* <S.Icon alt="즐겨찾기" src={star} width="27px" height="27px" /> */}
         </S.TypeWrapper>
@@ -55,6 +60,7 @@ const SocialResultPage = () => {
           onSubmit={handleSubmit}
         />
       </S.TitleWrapper>
+
       <S.DateSelectWrapper>
         <S.DateWrapper>
           <DatePicker
@@ -83,9 +89,8 @@ const SocialResultPage = () => {
 
       <S.KeywordContentsWrapper>
         {/* 막대기 차트 */}
-        <S.BarChartWrapper>
-          <BarChart />
-        </S.BarChartWrapper>
+        <BarChart />
+
         {/* 워드 클라우드 */}
         <S.RelatedKeywordContentsWrapper>
           {isWordCloudKeywordsSuccess && isRelatedKeywordsSuccess && (
@@ -99,10 +104,7 @@ const SocialResultPage = () => {
       {/* 긍부정, 트렌드 LineChart */}
       <S.TrendChartContentsWrapper>
         {isSocialAnalysisDataSuccess && (
-          <>
-            <TrendLineChart text="긍부정 추이" socialAnalysisData={socialAnalysisData} />
-            <TrendLineChart text="검색 엔진 트렌트 추이" socialAnalysisData={socialAnalysisData} />
-          </>
+          <TrendLineChart text="긍부정 추이" socialAnalysisData={socialAnalysisData} />
         )}
       </S.TrendChartContentsWrapper>
 
@@ -111,7 +113,7 @@ const SocialResultPage = () => {
         <PostContents title="관련 블로그" />
         <PostContents title="관련 유투브" />
       </S.RelatedPostWrapper>
-    </>
+    </S.Wrapper>
   );
 };
 
