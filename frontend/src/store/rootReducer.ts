@@ -1,4 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
+import { memberApi } from '../apis/member';
 import themeReducer from '@/store/slices/themeSlice';
 import testReducer from '@/store/slices/testSlice';
 import navbarReducer from '@/store/slices/navbarSlice';
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   guide: guideReducer,
   [keywordApi.reducerPath]: keywordApi.reducer,
   [analyzeApi.reducerPath]: analyzeApi.reducer,
+  [memberApi.reducerPath]: memberApi.reducer,
 });
 
 export default rootReducer;
