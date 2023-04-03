@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import MainPage from '@/pages/MainPage';
-import BaseLayout from '@/Layout/BaseLayout';
+import BaseLayout from '@/layouts/BaseLayout';
 import ThemeComponent from '@/components/@shared/Storybook/ThemeComponent';
 import { handlers } from '@/mocks/handlers';
 
