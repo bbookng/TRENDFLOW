@@ -24,8 +24,16 @@ const SocialMainPage = () => {
     e.preventDefault();
     navi(`/${ROUTER_PATH.SOCIAL_RESULT_PAGE}`, { state: { keyword: value } });
   };
+
   const theme = useTheme();
-  const { data: recommendKeywords, isLoading, isError } = useGetRecommendKeywordsQuery();
+
+  const {
+    data: recommendKeywords,
+    isLoading,
+    isError,
+  } = useGetRecommendKeywordsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   return (
     <>
@@ -79,6 +87,11 @@ const SocialMainPage = () => {
                   size="SMALL"
                   borderSize="2"
                   key={keyword.id}
+                  onClick={() =>
+                    navi(`/${ROUTER_PATH.SOCIAL_RESULT_PAGE}`, {
+                      state: { keyword: keyword.keyword },
+                    })
+                  }
                 >
                   {keyword.keyword}
                 </S.Keyword>
