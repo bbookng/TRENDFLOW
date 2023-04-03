@@ -1,3 +1,5 @@
+import { CircleChart } from '@/components/molecules';
+import { POSITIVE_CHART_PALLETE } from '@/constants/palette';
 import * as S from './index.styles';
 
 export interface AffinityProps {

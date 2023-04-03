@@ -6,7 +6,7 @@ import { MEDIA_QUERY } from '@/constants/media';
 export const Wrapper = styled.div`
   width: 100%;
   @media ${MEDIA_QUERY.DESKTOP} {
-    width: 500px;
+    min-width: 500px;
     display: flex;
     flex-direction: column;
   }
@@ -16,6 +16,7 @@ export const Title = styled.div`
   font-size: ${FONT_SIZE.TITLE};
   font-weight: ${FONT_WEIGHT.TITLE};
   margin-bottom: 1rem;
+  color: ${({ theme }) => theme.text};
 `;
 
 export const ReactionPaper = styled(Paper)`
