@@ -29,16 +29,17 @@ export const YoutubeInfo = styled.div`
   margin-top: 5rem;
   @media ${MEDIA_QUERY.DESKTOP} {
     flex-direction: row;
-    justify-content: space-between;
   }
 `;
 
 export const VideoInfo = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   color: ${({ theme }) => theme.text};
+  @media ${MEDIA_QUERY.DESKTOP} {
+    width: 630px;
+  }
 `;
 
 export const Title = styled.div`
@@ -56,6 +57,15 @@ export const OwnerInfo = styled.div`
   gap: 0.5rem;
   font-size: ${FONT_SIZE.BASE};
   margin-top: 1rem;
+`;
+
+export const FlexBox = styled.div`
+  @media ${MEDIA_QUERY.DESKTOP} {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
 `;
 
 export const OwnerName = styled.div``;
