@@ -85,14 +85,23 @@ export const RelatedKeywordContentsWrapper = styled.div`
 `;
 
 export const TrendChartContentsWrapper = styled.div`
-  margin-top: 2.875rem;
   display: flex;
   flex-direction: column;
+
+  & > div:first-of-type {
+    margin-bottom: 4rem;
+  }
+
   @media ${MEDIA_QUERY.DESKTOP} {
-    width: 100%;
     flex-direction: row;
     justify-content: space-between;
+    width: 100%;
     height: 560px;
+
+    & > div:first-of-type {
+      margin-right: 2.5rem;
+      margin-bottom: 0;
+    }
   }
 `;
 
