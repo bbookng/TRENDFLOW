@@ -18,12 +18,13 @@ const RelatedKeyword = ({ wordCloudKeywords, relatedKeywords }: Props) => {
   }, [wordCloudKeywords]);
 
   return (
-    <>
+    <S.Wrapper>
       <S.SpaceTypography variant="H4">연관 키워드</S.SpaceTypography>
       <S.WordCloudPaper>
         <S.WordCloudContentsWrapper>
           <WordCloud data={wordCloudData} font="PRETENDARD" />
         </S.WordCloudContentsWrapper>
+
         <S.RankingListWrapper>
           <S.RelatedItemWrapper>
             {relatedKeywords &&
@@ -40,7 +41,7 @@ const RelatedKeyword = ({ wordCloudKeywords, relatedKeywords }: Props) => {
           </S.RelatedItemWrapper>
         </S.RankingListWrapper>
       </S.WordCloudPaper>
-    </>
+    </S.Wrapper>
   );
 };
 

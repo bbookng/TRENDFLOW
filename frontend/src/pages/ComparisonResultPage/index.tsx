@@ -15,9 +15,9 @@ import {
   TrendChartContentsWrapper,
 } from '@/pages/SocialResultPage/index.styles';
 import { getSevenDaysAgoDate } from '@/utils/date';
-import * as S from './index.styles';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
+import * as S from './index.styles';
 
 const ComparisonResultPage = () => {
   // 키워드

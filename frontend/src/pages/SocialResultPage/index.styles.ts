@@ -2,10 +2,22 @@ import styled from '@emotion/styled';
 import { PALETTE } from '@/constants/palette';
 import { Img } from '@/components/atoms';
 import { Typography } from '@/components/atoms/Typography/index.styles';
-import { MEDIA_QUERY } from '@/constants/media';
+import { MEDIA_QUERY, BREAK_POINTS, MOBILE_MIN_WIDTH, MOBILE_MAX_WIDTH } from '@/constants/media';
+
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: ${MOBILE_MIN_WIDTH}px;
+  max-width: ${MOBILE_MAX_WIDTH}px;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    width: ${BREAK_POINTS.DESKTOP};
+    max-width: 100%;
+  }
+`;
 
 export const TitleWrapper = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
@@ -17,12 +29,7 @@ export const TitleWrapper = styled.div`
 `;
 
 export const TypeWrapper = styled.div`
-  margin-top: 3.18rem;
   width: 100%;
-
-  @media ${MEDIA_QUERY.DESKTOP} {
-    margin-top: 0;
-  }
 `;
 
 export const HighLight = styled.span`
@@ -52,33 +59,27 @@ export const SpaceTypography = styled(Typography)`
 
 // 차트 부분
 export const KeywordContentsWrapper = styled.div`
-  margin-top: 2.875rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  height: auto;
   justify-content: space-between;
+  width: 100%;
+  margin-top: 2.875rem;
 
   @media ${MEDIA_QUERY.DESKTOP} {
     flex-direction: row;
-    height: 510px;
+
+    & > div:first-of-type {
+      margin-right: 2.5rem;
+    }
   }
 `;
 
-export const BarChartWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-
-  @media ${MEDIA_QUERY.DESKTOP} {
-    width: 50%;
-  }
-`;
 export const RelatedKeywordContentsWrapper = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
+
   @media ${MEDIA_QUERY.DESKTOP} {
     width: 45%;
   }
@@ -96,7 +97,6 @@ export const TrendChartContentsWrapper = styled.div`
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    height: 560px;
 
     & > div:first-of-type {
       margin-right: 2.5rem;

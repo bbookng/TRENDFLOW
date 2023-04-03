@@ -1,8 +1,16 @@
 import styled from '@emotion/styled';
-import { PALETTE } from '@/constants/palette';
 import { Paper } from '@/components/atoms/Paper/index.styles';
 import { MEDIA_QUERY } from '@/constants/media';
 import { Typography } from '@/components/atoms/Typography/index.styles';
+
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  @media ${MEDIA_QUERY.DESKTOP} {
+    height: 448px;
+  }
+`;
 
 export const SpaceTypography = styled(Typography)`
   margin-top: 2.875rem;
@@ -35,24 +43,25 @@ export const WordCloudContentsWrapper = styled.div`
 `;
 
 export const RankingListWrapper = styled.div`
-  width: 100%;
-  height: 50%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 
   @media ${MEDIA_QUERY.DESKTOP} {
-    width: 40%;
-    height: 100%;
     flex-direction: column;
+    margin-left: 2rem;
   }
 `;
 export const RelatedItemWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  width: 45%;
+  max-width: 200px;
 
   @media ${MEDIA_QUERY.DESKTOP} {
+    justify-content: space-around;
+    width: 100%;
     height: 50%;
+    max-width: auto;
   }
 `;
