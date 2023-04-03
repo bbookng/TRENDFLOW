@@ -9,16 +9,16 @@ import * as S from './index.styles';
 
 interface DailyAnalysisPropsInterface {
   keyword: string;
-  socialAnaysis: Array<SocialAnalysisItemInterface>;
+  socialAnalysis: Array<SocialAnalysisItemInterface>;
   relatedKeywords: Array<RankingListItemInterface>;
 }
 
 const DailyAnalysis = ({
   keyword,
-  socialAnaysis,
+  socialAnalysis,
   relatedKeywords,
 }: DailyAnalysisPropsInterface) => {
-  const todayInfo = socialAnaysis[6];
+  const todayInfo = socialAnalysis[6];
   const grapeBadgeProps = {
     count: `${todayInfo?.grapeQuotientInfo?.positive}%`,
     changed: `${todayInfo?.compareInfo?.grape?.changed}%p`,
