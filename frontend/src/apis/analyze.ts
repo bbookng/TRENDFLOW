@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { EntityAdapter, createEntityAdapter } from '@reduxjs/toolkit';
 import { SocialAnalysisItemInterface } from '@/types/social';
 import {
   YoutubeAnalysisInterface,

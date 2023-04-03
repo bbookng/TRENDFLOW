@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as S from './index.styles';
 import { Down, Up } from '@/assets';
 
@@ -6,17 +6,42 @@ export interface CommentItemProps {
   comment: string;
   upCount: number;
   downCount: number;
+  isLast: boolean;
+  nextPage: () => void;
 }
 
-const CommentItem = ({ comment, upCount, downCount }: CommentItemProps): React.ReactElement => {
+const CommentItem = ({
+  comment,
+  upCount,
+  downCount,
+  isLast,
+  nextPage,
+}: CommentItemProps): React.ReactElement => {
   const [isShow, setIsShow] = useState(false);
+  const commentRef = useRef<HTMLDivElement | undefined>();
 
+  useEffect(() => {
+    if (!commentRef?.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (isLast && entry.isIntersecting) {
+          nextPage();
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        rootMargin: '100px',
+      }
+    );
+    observer.observe(commentRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [commentRef, isLast]);
   const handleClickMoreBtn = () => {
     setIsShow((prev) => !prev);
   };
   return (
     <S.Wrapper>
-      <S.Comment>
+      <S.Comment ref={commentRef}>
         <S.CommentTextBox>
           <S.CommentText isShow={isShow}>{comment}</S.CommentText>
           <S.MoreBtn onClick={handleClickMoreBtn}>{isShow ? '숨기기' : '자세히 보기'}</S.MoreBtn>

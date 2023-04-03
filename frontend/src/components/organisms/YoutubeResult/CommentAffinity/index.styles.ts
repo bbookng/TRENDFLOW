@@ -14,10 +14,13 @@ interface BarItemProps {
 }
 export const Wrapper = styled.div`
   width: 100%;
+  margin-top: 2rem;
   @media ${MEDIA_QUERY.DESKTOP} {
-    width: 500px;
+    flex: 1;
+    width: 100%;
     display: flex;
     flex-direction: column;
+    margin-top: 0;
   }
 `;
 
@@ -25,10 +28,17 @@ export const Title = styled.div`
   font-size: ${FONT_SIZE.TITLE};
   font-weight: ${FONT_WEIGHT.TITLE};
   margin-bottom: 1rem;
+  color: ${({ theme }) => theme.text};
 `;
 
 export const AffinityPaper = styled(Paper)`
   width: 100%;
+  @media ${MEDIA_QUERY.DESKTOP} {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
 
 export const BarChart = styled.div`

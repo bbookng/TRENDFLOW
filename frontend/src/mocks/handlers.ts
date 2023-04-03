@@ -45,7 +45,9 @@ export const handlers = [
   rest.get(`${BASE_URL}/analyze/youtube/comment`, (req, res, ctx) => {
     const page: number = parseInt(req.url.searchParams.get('page') as string, 10);
     const perPage: number = parseInt(req.url.searchParams.get('perPage') as string, 10);
-
-    return res(ctx.status(200), ctx.json(pComment.slice(page * perPage, page * perPage + perPage)));
+    return res(
+      ctx.status(200),
+      ctx.json(pComment.slice((page - 1) * perPage, (page - 1) * perPage + perPage))
+    );
   }),
 ];
