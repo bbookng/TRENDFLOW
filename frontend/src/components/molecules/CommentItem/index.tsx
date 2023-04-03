@@ -18,7 +18,7 @@ const CommentItem = ({
   nextPage,
 }: CommentItemProps): React.ReactElement => {
   const [isShow, setIsShow] = useState(false);
-  const commentRef = useRef<HTMLDivElement | undefined>();
+  const commentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!commentRef?.current) return;
