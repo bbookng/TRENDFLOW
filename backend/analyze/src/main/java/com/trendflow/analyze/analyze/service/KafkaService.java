@@ -45,7 +45,7 @@ public class KafkaService {
 		return consumer;
 	}
 
-	public void sendYoutubeUrl(url) {
+	public void sendYoutubeUrl(String url) {
 		try (KafkaProducer<String, String> kafkaProducer = createKafkaProducer()) {
 			ProducerRecord<String, String> record = new ProducerRecord<>(youtubeUrlTopic, url);
 			RecordMetadata metadata = kafkaProducer.send(record).get();
