@@ -26,6 +26,36 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KafkaService {
 
+	public class Payload {
+		private List<String> cnt_df;
+		private List<String> comment_df;
+		private Map<String, String> video_info;
+
+		public List<String> getCnt_df() {
+			return cnt_df;
+		}
+
+		public void setCnt_df(List<String> cnt_df) {
+			this.cnt_df = cnt_df;
+		}
+
+		public List<String> getComment_df() {
+			return comment_df;
+		}
+
+		public void setComment_df(List<String> comment_df) {
+			this.comment_df = comment_df;
+		}
+
+		public Map<String, String> getVideo_info() {
+			return video_info;
+		}
+
+		public void setVideo_info(Map<String, String> video_info) {
+			this.video_info = video_info;
+		}
+	}
+
 	private final KafkaTemplate<String, Object> kafkaTemplate;
 
 	public void sendYoutubeUrl(String url) {
@@ -41,19 +71,19 @@ public class KafkaService {
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "kr.co.sys4u.app.dto.Payload");
+		consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.trendflow.analyze.analyze.service.KafkaService.Payload");
 		consumerProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
 
-		DefaultKafkaConsumerFactory<String, Payload> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProps);
-		KafkaConsumer<String, Payload> kafkaConsumer = consumerFactory.createConsumer();
+		DefaultKafkaConsumerFactory<String, KafkaService.Payload> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProps);
+		KafkaConsumer<String, KafkaService.Payload> kafkaConsumer = consumerFactory.createConsumer();
 		kafkaConsumer.subscribe(Collections.singletonList("youtube_analyze"));
 
 		while (true) {
-			ConsumerRecords<String, Payload> records = kafkaConsumer.poll(Duration.ofSeconds(1));
+			ConsumerRecords<String, KafkaService.Payload> records = kafkaConsumer.poll(Duration.ofSeconds(1));
 			if (records.isEmpty()) {
 				continue;
 			}
-			for (ConsumerRecord<String, Payload> record : records) {
+			for (ConsumerRecord<String, KafkaService.Payload> record : records) {
 				// 메시지 처리
 				System.out.println(record.value());
 			}
