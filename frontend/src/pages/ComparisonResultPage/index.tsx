@@ -12,9 +12,12 @@ import {
   DateWrapper,
   HighLight,
   SpaceTypography,
+  TrendChartContentsWrapper,
 } from '@/pages/SocialResultPage/index.styles';
 import { getSevenDaysAgoDate } from '@/utils/date';
 import * as S from './index.styles';
+import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
+import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 
 const ComparisonResultPage = () => {
   // 키워드
@@ -24,6 +27,10 @@ const ComparisonResultPage = () => {
   // 날짜
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
+
+  // 임시 데이터
+  const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
+    useGetSocialAnalysisQuery();
 
   return (
     <S.Wrapper>
@@ -65,6 +72,7 @@ const ComparisonResultPage = () => {
         </DateWrapper>
       </DateSelectWrapper>
 
+      {/* 막대 차트 */}
       <S.ChartsWrapper>
         <S.ChartWrapper>
           <Label>{keyword1}</Label>
@@ -75,6 +83,12 @@ const ComparisonResultPage = () => {
           <BarChart barColor={PALETTE.BLUE400} desktopWidth="100%" />
         </S.ChartWrapper>
       </S.ChartsWrapper>
+
+      {/* 꺾은선 차트 */}
+      <TrendChartContentsWrapper>
+        <TrendLineChart text="피치 지수 비교" socialAnalysisData={socialAnalysisData!} />
+        <TrendLineChart text="언급량 비교" socialAnalysisData={socialAnalysisData!} />
+      </TrendChartContentsWrapper>
     </S.Wrapper>
   );
 };
