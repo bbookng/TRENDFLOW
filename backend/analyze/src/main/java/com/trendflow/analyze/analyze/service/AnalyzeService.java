@@ -18,7 +18,6 @@ import com.trendflow.analyze.msa.dto.vo.KeywordCount;
 import com.trendflow.analyze.msa.dto.vo.Source;
 import com.trendflow.analyze.msa.service.CommonService;
 import com.trendflow.analyze.msa.service.KeywordService;
-import com.trendflow.analyze.service.KafkaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -175,8 +174,8 @@ public class AnalyzeService {
 
     public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {
         System.out.println("findYoutubeRequest = " + findYoutubeRequest);
-        kafkaService.sendYoutubeUrl("https://www.youtube.com/watch?v=wMRvCP6y0Ys");
-        kafkaService.consumeYoutubeAnalyze();
+        kafkaService.sendYoutubeUrl(findYoutubeRequest.getLink());
+        Payload payload = kafkaService.consumeYoutubeAnalyze();
         return null;
     }
 
