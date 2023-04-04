@@ -33,8 +33,8 @@ public class AnalyzeController {
             List<FindSocialResponse> findSocialResponseList
                     = analyzeService.findSocial(FindSocialRequest.builder()
                                                 .keyword(keyword)
-                                                .startDate(startDate.atStartOfDay())
-                                                .endDate(endDate.atTime(23,59, 59))
+                                                .startDate(startDate)
+                                                .endDate(endDate)
                                                 .build());
 
             return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findSocialResponseList));
@@ -58,8 +58,8 @@ public class AnalyzeController {
             FindRelationContentResponse findRelationContentResponse
                     = analyzeService.findRelationContent(FindRelationContentRequest.builder()
                                                         .keyword(keyword)
-                                                        .startDate(startDate.atStartOfDay())
-                                                        .endDate(endDate.atTime(23,59, 59))
+                                                        .startDate(startDate)
+                                                        .endDate(endDate)
                                                         .build());
 
             return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findRelationContentResponse));
@@ -129,8 +129,8 @@ public class AnalyzeController {
                     = analyzeService.findCompareKeyword(FindCompareKeywordRequest.builder()
                                                             .keywordA(keyword1)
                                                             .keywordB(keyword2)
-                                                            .startDate(startDate.atStartOfDay())
-                                                            .endDate(endDate.atTime(23,59, 59))
+                                                            .startDate(startDate)
+                                                            .endDate(endDate)
                                                             .build());
             return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findCompareKeywordResponse));
         } catch (NotFoundException e){

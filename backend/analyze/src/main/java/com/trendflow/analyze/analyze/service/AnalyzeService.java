@@ -43,8 +43,8 @@ public class AnalyzeService {
     @Transactional
     public List<FindSocialResponse> findSocial(FindSocialRequest findSocialRequest) {
         String keyword = findSocialRequest.getKeyword();
-        LocalDateTime startDate = findSocialRequest.getStartDate();
-        LocalDateTime endDate = findSocialRequest.getEndDate();
+        LocalDate startDate = findSocialRequest.getStartDate();
+        LocalDate endDate = findSocialRequest.getEndDate();
 
         SocialMap socialMap = getSocialMap(keyword, startDate, endDate);
 
@@ -52,8 +52,9 @@ public class AnalyzeService {
         Map<LocalDate, MentionCountInfo> keywordCountMap = socialMap.getKeywordCountMap();
         Map<LocalDate, GrapeQuotientInfo> sentimentCountMap = socialMap.getSentimentCountMap();
 
-        LocalDate now = startDate.toLocalDate();
-        LocalDate end = endDate.toLocalDate();
+        LocalDate now = startDate;
+        LocalDate end = endDate;
+
         // 전날 데이터 확인 후 삽입
         if (!keywordCountMap.containsKey(now.minusDays(1))) {
             keywordCountMap.put(now.minusDays(1), MentionCountInfo.builder()
@@ -138,8 +139,8 @@ public class AnalyzeService {
 
     public FindRelationContentResponse findRelationContent(FindRelationContentRequest findRelationContentRequest) {
         String keyword = findRelationContentRequest.getKeyword();
-        LocalDateTime startDate = findRelationContentRequest.getStartDate();
-        LocalDateTime endDate = findRelationContentRequest.getEndDate();
+        LocalDate startDate = findRelationContentRequest.getStartDate();
+        LocalDate endDate = findRelationContentRequest.getEndDate();
 
         String ARTICLE = commonService.getLocalCode(CommonCode.ARTICLE.getName()).getCode();
         String BLOG = commonService.getLocalCode(CommonCode.BLOG.getName()).getCode();
@@ -188,8 +189,8 @@ public class AnalyzeService {
         String keywordA = findCompareKeywordRequest.getKeywordA();
         String keywordB = findCompareKeywordRequest.getKeywordB();
 
-        LocalDateTime startDate = findCompareKeywordRequest.getStartDate();
-        LocalDateTime endDate = findCompareKeywordRequest.getEndDate();
+        LocalDate startDate = findCompareKeywordRequest.getStartDate();
+        LocalDate endDate = findCompareKeywordRequest.getEndDate();
 
         SocialMap socialMapA = getSocialMap(keywordA, startDate, endDate);
         SocialMap socialMapB = getSocialMap(keywordB, startDate, endDate);
@@ -204,8 +205,8 @@ public class AnalyzeService {
         Map<LocalDate, MentionCountInfo> keywordCountMapB = socialMapB.getKeywordCountMap();
         Map<LocalDate, GrapeQuotientInfo> sentimentCountMapB = socialMapB.getSentimentCountMap();
 
-        LocalDate now = startDate.toLocalDate();
-        LocalDate end = endDate.toLocalDate();
+        LocalDate now = startDate;
+        LocalDate end = endDate;
         // 일자별 확인
         while (now.isBefore(end) || now.isEqual(end)) {
             CountCompare mentionCountCompare = CountCompare.builder()
@@ -276,7 +277,7 @@ public class AnalyzeService {
 
     @Transactional
     public List<FindRelationKeywordResponse> findRelationKeyword(List<Long> keywordIdList) {
-        List<Relation> relationList = relationRepository.findTop8ByKeywordIdInOrderByCountDesc(keywordIdList);
+        List<Relation> relationList = relationRepository.findByKeywordIdList(keywordIdList, 8);
         return relationList.stream()
                 .map(FindRelationKeywordResponse::fromEntity)
                 .collect(Collectors.toList());
@@ -284,22 +285,25 @@ public class AnalyzeService {
 
     @Transactional
     public List<FindWordCloudKeywordResponse> findWordCloudKeyword(List<Long> keywordIdList) {
-        List<Relation> relationList = relationRepository.findTop200ByKeywordIdInOrderByCountDesc(keywordIdList);
+        List<Relation> relationList = relationRepository.findByKeywordIdList(keywordIdList, 100);
         return relationList.stream()
                 .map(FindWordCloudKeywordResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    private SocialMap getSocialMap(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
+    private SocialMap getSocialMap(String keyword, LocalDate startDate, LocalDate endDate) {
         // 플랫폼 별 언급량
         List<KeywordCount> keywordCountList = keywordService.getKeywordCount(keyword, startDate.minusDays(1), endDate);
+
+        Integer start = Integer.parseInt(startDate.toString().replace("-", ""));
+        Integer end = Integer.parseInt(endDate.toString().replace("-", ""));
 
         // 키워드와 일치하는 키워드 객체 응답
         List<Keyword> keywordList = keywordService.getKeyword(keyword, startDate.minusDays(1), endDate);
         // 키워드의 일자별, 소스별 긍정, 중립, 부정 지수
         List<SentimentCount> sentimentList = sentimentRepository.findBySourceIdIn(keywordList.stream()
                 .map(Keyword::getSourceId)
-                .collect(Collectors.toList()), startDate, endDate);
+                .collect(Collectors.toList()), start, end);
 
         // 맵 생성
         Map<LocalDate, MentionCountInfo> keywordCountMap = new HashMap<>();

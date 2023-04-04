@@ -16,11 +16,12 @@ public interface SentimentRepository extends JpaRepository<Sentiment, Long> {
             "SELECT s.score as score, COUNT(s.score) as count, DATE(s.reg_dt) as regDt " +
             "FROM sentiment s " +
             "WHERE s.source_id IN ( :sourceIdList ) " +
-            "AND s.reg_dt BETWEEN :startDate AND :endDate " +
+            "AND s.reg_dt >= :startDate " +
+            "AND s.reg_dt <= :endDate " +
             "GROUP BY score, DATE(s.reg_dt) " +
             "ORDER BY DATE(s.reg_dt) ASC, score ASC;",
             nativeQuery = true)
     List<SentimentCount> findBySourceIdIn(@Param("sourceIdList") List<Long> sourceIdList,
-                                          @Param("startDate") LocalDateTime startDate,
-                                          @Param("endDate") LocalDateTime endDate);
+                                          @Param("startDate") Integer startDate,
+                                          @Param("endDate") Integer endDate);
 }
