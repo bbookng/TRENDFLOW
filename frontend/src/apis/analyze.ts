@@ -18,7 +18,7 @@ export const analyzeApi = createApi({
   tagTypes: ['analyze'],
   endpoints: (builder) => ({
     getSocialAnalysis: builder.query<Array<SocialAnalysisItemInterface>, SocialReqBodyInterface>({
-      query: (info) => ({ url: 'social', body: info }),
+      query: (info) => ({ url: 'social', params: info }),
     }),
     getYoutubeAnalysis: builder.query<YoutubeAnalysisInterface, string>({
       query: (link) => `youtube?link=${encodeURIComponent(link)}`,
@@ -36,7 +36,7 @@ export const analyzeApi = createApi({
     }),
     getComparisionAnalysis: builder.query<ComparisonAnalysisInterface, ComaparisonReqBodyInterface>(
       {
-        query: (info) => ({ url: 'social', body: info }),
+        query: (info) => ({ url: 'social', params: info }),
       }
     ),
   }),
