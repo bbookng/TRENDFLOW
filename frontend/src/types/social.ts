@@ -22,3 +22,14 @@ export interface SocialAnalysisItemInterface {
     };
   };
 }
+
+export interface SocialContentInterface {
+  id: number;
+  social: string;
+  code: string;
+  thumbnail: string | null;
+  title: string;
+  desc: string;
+  date: string;
+  link: string;
+}

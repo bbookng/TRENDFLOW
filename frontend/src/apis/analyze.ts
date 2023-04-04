@@ -5,6 +5,7 @@ import {
   YoutubeCommentInterface,
   YoutubeCommentQueryProps,
 } from '@/types/youtube';
+import { api } from '@/apis/utils/axios';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 const port = window.location.href.split(':', 3)[2].substring(0, 4);
@@ -16,8 +17,12 @@ export const analyzeApi = createApi({
   }),
   tagTypes: ['analyze'],
   endpoints: (builder) => ({
-    getSocialAnalysis: builder.query<Array<SocialAnalysisItemInterface>, void>({
-      query: () => `social`,
+    getSocialAnalysis: builder.query<
+      Array<SocialAnalysisItemInterface>,
+      { keyword: string; startDate: string; endDate: string }
+    >({
+      query: ({ keyword, startDate, endDate }) =>
+        `social?keyword=${keyword}&startDate=${startDate}&endDate=${endDate}`,
     }),
     getYoutubeAnalysis: builder.query<YoutubeAnalysisInterface, string>({
       query: (link) => `youtube?link=${encodeURIComponent(link)}`,
@@ -35,6 +40,20 @@ export const analyzeApi = createApi({
     }),
   }),
 });
+
+export const getContents = async (
+  keyword: string,
+  code: string,
+  page: number,
+  perPage: number,
+  startDate: string,
+  endDate: string
+) => {
+  const data = await api.get(
+    `/analyze/related?keyword=${keyword}&code=${code}&page=${page}&perPage=${perPage}&startDate=${startDate}&endDate=${endDate}`
+  );
+  return data;
+};
 
 export const {
   useGetSocialAnalysisQuery,

@@ -6,16 +6,16 @@ import { ko } from 'date-fns/esm/locale';
 import { useLocation } from 'react-router-dom';
 import { Typography } from '@/components/atoms';
 import { SearchBar } from '@/components/molecules';
-import { getSevenDaysAgoDate } from '@/utils/date';
+import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
 import 'react-datepicker/dist/react-datepicker.css';
 import BarChart from '@/components/molecules/BarChart';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
-import PostContents from '@/components/organisms/SocialResult/PostContents';
 import { useGetRelatedKeywordsQuery, useGetWordCloudKeywordsQuery } from '@/apis/keyword';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 import * as S from './index.styles';
+import SocialRelatedContents from '@/components/organisms/SocialResult/SocialRelatedContents';
 
 const SocialResultPage = () => {
   const {
@@ -42,14 +42,17 @@ const SocialResultPage = () => {
   const { data: relatedKeywords, isSuccess: isRelatedKeywordsSuccess } =
     useGetRelatedKeywordsQuery();
   const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
-    useGetSocialAnalysisQuery();
-
+    useGetSocialAnalysisQuery({
+      keyword,
+      startDate: getDateToYYYYDDMM(startDate as Date),
+      endDate: getDateToYYYYDDMM(endDate as Date),
+    });
   return (
     <S.Wrapper>
       <S.TitleWrapper>
         <S.TypeWrapper>
           <Typography variant="H3">
-            <S.HighLight>{keyword}</S.HighLight> 소셜 분석 리포트{' '}
+            <S.HighLight>{keyword}</S.HighLight> 소셜 분석 리포트
           </Typography>
           {/* <S.Icon alt="즐겨찾기" src={star} width="27px" height="27px" /> */}
         </S.TypeWrapper>
@@ -89,7 +92,10 @@ const SocialResultPage = () => {
 
       <S.KeywordContentsWrapper>
         {/* 막대기 차트 */}
-        <BarChart />
+        <S.ChartWrapper>
+          <S.Title>분석 그래프</S.Title>
+          <BarChart />
+        </S.ChartWrapper>
 
         {/* 워드 클라우드 */}
         <S.RelatedKeywordContentsWrapper>
@@ -102,17 +108,18 @@ const SocialResultPage = () => {
         </S.RelatedKeywordContentsWrapper>
       </S.KeywordContentsWrapper>
       {/* 긍부정, 트렌드 LineChart */}
-      <S.TrendChartContentsWrapper>
-        {isSocialAnalysisDataSuccess && (
-          <TrendLineChart text="긍부정 추이" socialAnalysisData={socialAnalysisData} />
-        )}
-      </S.TrendChartContentsWrapper>
-
-      <S.RelatedPostWrapper>
-        <PostContents title="관련기사" />
-        <PostContents title="관련 블로그" />
-        <PostContents title="관련 유투브" />
-      </S.RelatedPostWrapper>
+      <S.FlexBox>
+        <S.TrendChartContentsWrapper>
+          {isSocialAnalysisDataSuccess && (
+            <TrendLineChart text="긍부정 추이" socialAnalysisData={socialAnalysisData} />
+          )}
+        </S.TrendChartContentsWrapper>
+        <SocialRelatedContents
+          keyword={keyword}
+          startDate={getDateToYYYYDDMM(startDate as Date)}
+          endDate={getDateToYYYYDDMM(endDate as Date)}
+        />
+      </S.FlexBox>
     </S.Wrapper>
   );
 };
