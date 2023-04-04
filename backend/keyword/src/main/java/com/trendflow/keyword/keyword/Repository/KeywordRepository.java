@@ -42,11 +42,11 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
 
     @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
             "FROM keyword k " +
-            "WHERE k.keyword = :keyword" +
+            "WHERE k.keyword = :keyword " +
             "AND k.reg_dt >= :startDate " +
             "AND k.reg_dt <= :endDate;", nativeQuery = true)
-    List<Keyword> findByKeywordAndDate(String keyword,
-                                       Integer atStartOfDay,
-                                       Integer atStartOfDay1);
+    List<Keyword> findByKeywordAndDate(@Param("keyword") String keyword,
+                                       @Param("startDate") Integer startDate,
+                                       @Param("endDate") Integer endDate);
 
 }
