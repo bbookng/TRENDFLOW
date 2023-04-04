@@ -9,7 +9,6 @@ import {
   Legend,
 } from 'chart.js';
 import { useTheme } from '@emotion/react';
-import { useEffect } from 'react';
 import * as S from './index.styles';
 import { PALETTE } from '@/constants/palette';
 import { SocialAnalysisItemInterface } from '@/types/social';

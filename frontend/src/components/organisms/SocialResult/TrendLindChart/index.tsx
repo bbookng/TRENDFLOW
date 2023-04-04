@@ -11,7 +11,7 @@ interface TrendLineChartProps {
 const TrendLineChart = ({ text, socialAnalysisData }: TrendLineChartProps) => {
   return (
     <S.Container>
-      <S.SpaceTypography variant="H3">{text}</S.SpaceTypography>
+      <S.Title>{text}</S.Title>
       <LineChart socialAnalysisData={socialAnalysisData} />
     </S.Container>
   );
