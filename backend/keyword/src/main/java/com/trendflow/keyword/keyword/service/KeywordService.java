@@ -8,6 +8,8 @@ import com.trendflow.keyword.keyword.entity.Keyword;
 import com.trendflow.keyword.keyword.entity.KeywordCount;
 import com.trendflow.keyword.keyword.entity.KeywordDistinct;
 import com.trendflow.keyword.msa.service.AnalyzeService;
+import com.trendflow.keyword.msa.service.CommonService;
+import com.trendflow.keyword.msa.vo.RelateCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ public class KeywordService {
     private final WordCloudKeywordRepository wordCloudKeywordRepository;
 
     private final AnalyzeService analyzeService;
+    private final CommonService commonService;
 
     @Value("${keyword.hot.expire}")
     private Integer hotExpire;
@@ -224,7 +227,12 @@ public class KeywordService {
         Integer start = Integer.parseInt(startDate.toString().replace("-", ""));
         Integer end = Integer.parseInt(endDate.toString().replace("-", ""));
 
-        return keywordRepository.findByKeywordAndDatePage(keyword, code, page, perPage, start, end);
+        List<RelateCode> codeList = commonService.getRelateCode(code);
+
+        return keywordRepository.findByKeywordAndDatePage(keyword,
+                codeList.stream()
+                        .map(RelateCode::getPlatformCode)
+                        .collect(Collectors.toList()), page, perPage, start, end);
     }
 
     @Transactional
