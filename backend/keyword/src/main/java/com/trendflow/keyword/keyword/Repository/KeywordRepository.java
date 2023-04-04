@@ -38,7 +38,7 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
     @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
             "FROM keyword k " +
             "WHERE k.keyword = :keyword ;", nativeQuery = true)
-    List<Keyword> findByKeyword(@Param("keyword") String keyword);
+    List<Keyword> findAllByKeyword(@Param("keyword") String keyword);
 
     @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
             "FROM keyword k " +
@@ -48,5 +48,17 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
     List<Keyword> findByKeywordAndDate(@Param("keyword") String keyword,
                                        @Param("startDate") Integer startDate,
                                        @Param("endDate") Integer endDate);
+
+    @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
+            "FROM keyword k " +
+            "WHERE k.keyword = :keyword " +
+            "OFFSET :perPage * (page - 1) ROWS " +
+            "FETCH NEXT :perPage ROWS ONLY;", nativeQuery = true)
+    List<Keyword> findByKeywordAndDatePage(@Param("keyword") String keyword,
+                                           @Param("code") String code,
+                                           @Param("page") Integer page,
+                                           @Param("perPage") Integer perPage,
+                                           @Param("startDate") Integer startDate,
+                                           @Param("endDate") Integer endDate);
 
 }

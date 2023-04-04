@@ -145,7 +145,7 @@ public class KeywordService {
 
     @Transactional
     public List<FindRelateKeywordResponse> findRelateKeyword(String keyword) throws RuntimeException {
-        List<Keyword> keywordIdList = keywordRepository.findByKeyword(keyword);
+        List<Keyword> keywordIdList = keywordRepository.findAllByKeyword(keyword);
 
         String key = String.format("%s_%s", KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), keyword);
 
@@ -183,14 +183,14 @@ public class KeywordService {
 
     @Transactional
     public List<FindWordCloudResponse> findWordCloudKeyword(String keyword) throws RuntimeException {
-        List<Keyword> keywordIdList = keywordRepository.findByKeyword(keyword);
+        List<Keyword> keywordList = keywordRepository.findAllByKeyword(keyword);
 
         String key = String.format("%s_%s", KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), keyword);
 
         List<WordCloudKeyword> wordCloudKeywordList = wordCloudKeywordRepository.findById(key)
                 .orElseGet(() -> {
                     List<WordCloudKeyword> now = analyzeService.getRelationForWordCloud(
-                                keywordIdList.stream()
+                                    keywordList.stream()
                                     .map(Keyword::getKeywordId)
                                     .collect(Collectors.toList())
                             ).stream()
@@ -216,6 +216,15 @@ public class KeywordService {
         Integer end = Integer.parseInt(endDate.toString().replace("-", ""));
 
         return keywordRepository.findByKeywordAndDate(keyword, start, end);
+    }
+
+    @Transactional
+    public List<Keyword> findKeywordPage(String keyword, String code, Integer page, Integer perPage, LocalDate startDate, LocalDate endDate) {
+
+        Integer start = Integer.parseInt(startDate.toString().replace("-", ""));
+        Integer end = Integer.parseInt(endDate.toString().replace("-", ""));
+
+        return keywordRepository.findByKeywordAndDatePage(keyword, code, page, perPage, start, end);
     }
 
     @Transactional
