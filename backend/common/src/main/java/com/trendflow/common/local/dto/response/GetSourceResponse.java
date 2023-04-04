@@ -5,6 +5,7 @@ import com.trendflow.common.local.entity.Source;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ public class GetSourceResponse {
     private String thumbnail;
     private String title;
     private String content;
-    private LocalDateTime date;
+    private LocalDate date;
     private String link;
 
     public static GetSourceResponse of(Source source) {
