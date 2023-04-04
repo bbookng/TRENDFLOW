@@ -5,5 +5,5 @@ import java.time.LocalDate;
 public interface KeywordCount {
     String getPlatformCode();
     Long getCount();
-    Integer getRegDt();
+    LocalDate getRegDt();
 }
