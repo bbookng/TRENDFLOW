@@ -301,9 +301,10 @@ public class AnalyzeService {
         // 키워드와 일치하는 키워드 객체 응답
         List<Keyword> keywordList = keywordService.getKeyword(keyword, startDate.minusDays(1), endDate);
         // 키워드의 일자별, 소스별 긍정, 중립, 부정 지수
-        List<SentimentCount> sentimentList = sentimentRepository.findBySourceIdIn(keywordList.stream()
-                .map(Keyword::getSourceId)
-                .collect(Collectors.toList()), start, end);
+        List<SentimentCount> sentimentList = sentimentRepository.findBySourceIdIn(
+                keywordList.stream()
+                    .map(Keyword::getSourceId)
+                    .collect(Collectors.toList()), start, end);
 
         // 맵 생성
         Map<LocalDate, MentionCountInfo> keywordCountMap = new HashMap<>();
