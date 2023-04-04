@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { rest } from 'msw';
 import {
   hot,
@@ -8,7 +9,12 @@ import {
   recommend,
   wordCloud,
   bookmark,
+  relatedArticle,
+  relatedBlog,
+  relatedYoutube,
 } from '@/mocks/data';
+import { SocialContentInterface } from '@/types/social';
+import { CONTENT_CODE } from '@/constants/code';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 
@@ -36,8 +42,17 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(social));
   }),
 
-  rest.post(`${BASE_URL}/member/login`, (req, res, ctx) => {
-    return res(ctx.status(500));
+  rest.get(`${BASE_URL}/analyze/related`, (req, res, ctx) => {
+    const code: string = req.url.searchParams.get('code') as string;
+    const page: number = parseInt(req.url.searchParams.get('page') as string, 10);
+    const perPage: number = parseInt(req.url.searchParams.get('perPage') as string, 10);
+    const resultJson: Array<SocialContentInterface> =
+      code === CONTENT_CODE.ARTICLE
+        ? relatedArticle.slice((page - 1) * perPage, (page - 1) * perPage + perPage)
+        : code === CONTENT_CODE.BLOG
+        ? relatedBlog.slice((page - 1) * perPage, (page - 1) * perPage + perPage)
+        : relatedYoutube.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
+    return res(ctx.status(200), ctx.json(resultJson));
   }),
 
   // 유튜브
@@ -63,5 +78,9 @@ export const handlers = [
   // 멤버
   rest.get(`${BASE_URL}/member/bookmark`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(bookmark));
+  }),
+
+  rest.post(`${BASE_URL}/member/login`, (req, res, ctx) => {
+    return res(ctx.status(500));
   }),
 ];

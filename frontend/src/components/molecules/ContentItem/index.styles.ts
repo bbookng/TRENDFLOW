@@ -1,62 +1,56 @@
 import styled from '@emotion/styled';
 import { PALETTE } from '@/constants/palette';
-import { BORDER_RADIUS } from '@/constants/styles';
-import { Typography } from '@/components/atoms/Typography/index.styles';
-import { MEDIA_QUERY } from '@/constants/media';
-import { Img } from '@/components/atoms/Img/index.styles';
+import { FONT_WEIGHT } from '@/constants/styles';
 
 export const Wrapper = styled.div`
-  cursor: pointer;
-  border-radius: ${BORDER_RADIUS.MD};
-  border: 1px solid ${PALETTE.WHITE300};
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  max-width: 400px;
-  height: 168px;
-  margin: 0.5rem 0;
-  width: 47%;
-  background-color: ${PALETTE.WHITE200};
-
-  @media ${MEDIA_QUERY.DESKTOP} {
-    background-color: transparent;
-    width: 100%;
-    flex-direction: row;
-    max-height: 112px;
-  }
-`;
-
-export const Thumbnail = styled(Img)`
   width: 100%;
-  height: 75px;
-
-  @media ${MEDIA_QUERY.DESKTOP} {
-    width: 40%;
-    height: auto;
-  }
+  cursor: pointer;
 `;
 
-export const ContentsWrapper = styled.div`
+export const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-
-  @media ${MEDIA_QUERY.DESKTOP} {
-    width: 55%;
-  }
+  gap: 1rem;
+  align-items: center;
 `;
 
-export const TitleTypography = styled(Typography)`
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  word-break: break-all;
+export const Thumbnail = styled.img`
+  width: 60px;
+  height: 60px;
 `;
-export const DescriptionTypography = styled(Typography)`
+
+export const TextContainer = styled.div`
+  color: ${({ theme }) => theme.text};
+`;
+
+export const Title = styled.div`
+  width: 100%;
+  font-size: 1rem;
+  font-weight: ${FONT_WEIGHT.SEMIBOLD};
+  line-height: 1.25rem;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
-  word-break: break-all;
-  line-height: 1.2;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; // 원하는 라인수
+  -webkit-box-orient: vertical;
+`;
+
+export const Desc = styled.div`
+  margin-top: 0.4rem;
+  width: 100%;
+  font-size: 0.85rem;
+  line-height: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; // 원하는 라인수
+  -webkit-box-orient: vertical;
+`;
+
+export const Date = styled.div`
+  margin-top: 0.625rem;
+  display: flex;
+  justify-content: flex-end;
+  color: ${({ theme }) => theme.text200};
 `;

@@ -6,6 +6,7 @@ import {
   YoutubeCommentInterface,
   YoutubeCommentQueryProps,
 } from '@/types/youtube';
+import { api } from '@/apis/utils/axios';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
 const port = window.location.href.split(':', 3)[2].substring(0, 4);
@@ -18,7 +19,7 @@ export const analyzeApi = createApi({
   tagTypes: ['analyze'],
   endpoints: (builder) => ({
     getSocialAnalysis: builder.query<Array<SocialAnalysisItemInterface>, SocialReqBodyInterface>({
-      query: (info) => ({ url: 'social', body: info }),
+      query: (info) => ({ url: 'social', params: info }),
     }),
     getYoutubeAnalysis: builder.query<YoutubeAnalysisInterface, string>({
       query: (link) => `youtube?link=${encodeURIComponent(link)}`,
@@ -36,11 +37,25 @@ export const analyzeApi = createApi({
     }),
     getComparisionAnalysis: builder.query<ComparisonAnalysisInterface, ComaparisonReqBodyInterface>(
       {
-        query: (info) => ({ url: 'social', body: info }),
+        query: (info) => ({ url: 'social', params: info }),
       }
     ),
   }),
 });
+
+export const getContents = async (
+  keyword: string,
+  code: string,
+  page: number,
+  perPage: number,
+  startDate: string,
+  endDate: string
+) => {
+  const data = await api.get(
+    `/analyze/related?keyword=${keyword}&code=${code}&page=${page}&perPage=${perPage}&startDate=${startDate}&endDate=${endDate}`
+  );
+  return data;
+};
 
 export const {
   useGetSocialAnalysisQuery,
