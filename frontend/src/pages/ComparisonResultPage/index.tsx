@@ -15,8 +15,8 @@ import {
   TrendChartContentsWrapper,
 } from '@/pages/SocialResultPage/index.styles';
 import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
-import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
 import { useGetComparisionAnalysisQuery, useGetSocialAnalysisQuery } from '@/apis/analyze';
+import ComparisonLineChart from '@/components/organisms/ComparisonResult/ComparisonLineChart';
 import * as S from './index.styles';
 
 const ComparisonResultPage = () => {
@@ -55,18 +55,17 @@ const ComparisonResultPage = () => {
     );
 
   // 비교 분석
-  const { data: compariosnAnalysis, isSuccess: comparisonAnalysisSusccess } =
-    useGetComparisionAnalysisQuery(
-      {
-        keyword1,
-        keyword2,
-        startDate: getDateToYYYYDDMM(startDate!),
-        endDate: getDateToYYYYDDMM(endDate!),
-      },
-      {
-        refetchOnMountOrArgChange: true,
-      }
-    );
+  const { data: comparisonAnalysis } = useGetComparisionAnalysisQuery(
+    {
+      keyword1,
+      keyword2,
+      startDate: getDateToYYYYDDMM(startDate!),
+      endDate: getDateToYYYYDDMM(endDate!),
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   return (
     <S.Wrapper>
@@ -121,10 +120,22 @@ const ComparisonResultPage = () => {
       </S.ChartsWrapper>
 
       {/* 꺾은선 차트 */}
-      <TrendChartContentsWrapper>
-        <TrendLineChart text="피치 지수 비교" socialAnalysisData={keyword1SocialAnalysis!} />
-        <TrendLineChart text="언급량 비교" socialAnalysisData={keyword2SocialAnalysis!} />
-      </TrendChartContentsWrapper>
+      {comparisonAnalysis && (
+        <TrendChartContentsWrapper>
+          <ComparisonLineChart
+            title="피치 지수 비교"
+            keyword1={keyword1}
+            keyword2={keyword2}
+            comparisonData={comparisonAnalysis!.grapeQuotientCompare}
+          />
+          <ComparisonLineChart
+            title="언급량 비교"
+            keyword1={keyword1}
+            keyword2={keyword2}
+            comparisonData={comparisonAnalysis!.mentionCountCompare}
+          />
+        </TrendChartContentsWrapper>
+      )}
     </S.Wrapper>
   );
 };
