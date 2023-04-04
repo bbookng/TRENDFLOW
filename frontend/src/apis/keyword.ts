@@ -20,8 +20,8 @@ export const keywordApi = createApi({
       query: () => 'hot',
       providesTags: ['hot'],
     }),
-    getRelatedKeywords: builder.query<Array<RankingListItemInterface>, void>({
-      query: () => 'relate',
+    getRelatedKeywords: builder.query<Array<RankingListItemInterface>, { keyword: string }>({
+      query: (keyword) => ({ url: 'related', body: keyword }),
       providesTags: ['relate'],
     }),
     getRecommendKeywords: builder.query<RecommendKeywordInterface[], void>({
