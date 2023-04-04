@@ -111,11 +111,27 @@ const ComparisonResultPage = () => {
       <S.ChartsWrapper>
         <S.ChartWrapper>
           <Label>{keyword1}</Label>
-          <BarChart barColor={PALETTE.RED400} desktopWidth="100%" />
+          <BarChart
+            labels={['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24']}
+            barLabel="언급량"
+            barData={keyword1SocialAnalysis?.map((item) => item.mentionCountInfo.total)}
+            lineLabel="피치 지수"
+            lineData={keyword2SocialAnalysis?.map((item) => item.grapeQuotientInfo.positive)}
+            barColor={PALETTE.RED400}
+            desktopWidth="100%"
+          />
         </S.ChartWrapper>
         <S.ChartWrapper>
           <Label>{keyword2}</Label>
-          <BarChart barColor={PALETTE.BLUE400} desktopWidth="100%" />
+          <BarChart
+            labels={['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24']}
+            barLabel="언급량"
+            barData={keyword1SocialAnalysis?.map((item) => item.mentionCountInfo.total)}
+            lineLabel="피치 지수"
+            lineData={keyword2SocialAnalysis?.map((item) => item.grapeQuotientInfo.positive)}
+            barColor={PALETTE.BLUE400}
+            desktopWidth="100%"
+          />
         </S.ChartWrapper>
       </S.ChartsWrapper>
 
