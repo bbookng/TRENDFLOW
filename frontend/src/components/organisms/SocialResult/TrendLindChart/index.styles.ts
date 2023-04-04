@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { MEDIA_QUERY } from '@/constants/media';
 import { Typography } from '@/components/atoms/Typography/index.styles';
+import { FONT_SIZE, FONT_WEIGHT } from '@/constants/styles';
 
 export const Container = styled.div`
   display: flex;
@@ -11,7 +12,12 @@ export const Container = styled.div`
     height: 448px;
   }
 `;
-
+export const Title = styled.div`
+  font-size: ${FONT_SIZE.TITLE};
+  font-weight: ${FONT_WEIGHT.TITLE};
+  margin-bottom: 1rem;
+  color: ${({ theme }) => theme.text};
+`;
 export const SpaceTypography = styled(Typography)`
   margin-bottom: 1rem;
 `;

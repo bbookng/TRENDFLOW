@@ -12,6 +12,10 @@ import { ReactComponent as Down } from '@/assets/icons/down.svg';
 import { ReactComponent as Like } from '@/assets/icons/like.svg';
 import { ReactComponent as Video } from '@/assets/icons/video.svg';
 import { ReactComponent as Message } from '@/assets/icons/message.svg';
+import { ReactComponent as NaverNews } from '@/assets/icons/naverNews.svg';
+import { ReactComponent as NaverBlog } from '@/assets/icons/naverBlog.svg';
+import { ReactComponent as Youtube2 } from '@/assets/icons/youtube2.svg';
+import { ReactComponent as Daum } from '@/assets/icons/daum.svg';
 
 export {
   Logo,
@@ -27,4 +31,8 @@ export {
   Like,
   Video,
   Message,
+  NaverNews,
+  NaverBlog,
+  Youtube2,
+  Daum,
 };
