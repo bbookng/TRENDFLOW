@@ -14,7 +14,7 @@ export const keywordApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: port === '6006' ? 'http://localhost:6006/keyword/' : `${BASE_URL}/keyword/`,
   }),
-  tagTypes: ['hot', 'relate', 'recommend', 'wordcloud'],
+  tagTypes: ['hot', 'related', 'recommend', 'wordcloud'],
   endpoints: (builder) => ({
     getHotKeywords: builder.query<RankingListInterface, void>({
       query: () => 'hot',
@@ -22,7 +22,7 @@ export const keywordApi = createApi({
     }),
     getRelatedKeywords: builder.query<Array<RankingListItemInterface>, { keyword: string }>({
       query: (keyword) => ({ url: 'related', params: keyword }),
-      providesTags: ['relate'],
+      providesTags: ['related'],
     }),
     getRecommendKeywords: builder.query<RecommendKeywordInterface[], void>({
       query: () => 'recommend',

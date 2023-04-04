@@ -8,9 +8,9 @@
       "twitter": 500
     },
     "grapeQuotientInfo": {
-      "positive": 70,
-      "negative": 20,
-      "neutral": 10
+      "positive": 50,
+      "negative": 25,
+      "neutral": 25
     },
     "compareInfo": {
       "mention": {
@@ -32,9 +32,9 @@
       "twitter": 500
     },
     "grapeQuotientInfo": {
-      "positive": 70,
-      "negative": 20,
-      "neutral": 10
+      "positive": 55,
+      "negative": 28,
+      "neutral": 17
     },
     "compareInfo": {
       "mention": {
@@ -56,9 +56,9 @@
       "twitter": 500
     },
     "grapeQuotientInfo": {
-      "positive": 70,
-      "negative": 20,
-      "neutral": 10
+      "positive": 20,
+      "negative": 78,
+      "neutral": 2
     },
     "compareInfo": {
       "mention": {
@@ -80,9 +80,9 @@
       "twitter": 500
     },
     "grapeQuotientInfo": {
-      "positive": 70,
-      "negative": 20,
-      "neutral": 10
+      "positive": 76,
+      "negative": 18,
+      "neutral": 6
     },
     "compareInfo": {
       "mention": {
@@ -104,9 +104,9 @@
       "twitter": 500
     },
     "grapeQuotientInfo": {
-      "positive": 70,
-      "negative": 20,
-      "neutral": 10
+      "positive": 10,
+      "negative": 76,
+      "neutral": 14
     },
     "compareInfo": {
       "mention": {
@@ -128,9 +128,9 @@
       "twitter": 500
     },
     "grapeQuotientInfo": {
-      "positive": 70,
-      "negative": 20,
-      "neutral": 10
+      "positive": 64,
+      "negative": 34,
+      "neutral": 2
     },
     "compareInfo": {
       "mention": {
@@ -152,9 +152,9 @@
       "twitter": 500
     },
     "grapeQuotientInfo": {
-      "positive": 70,
-      "negative": 20,
-      "neutral": 10
+      "positive": 94,
+      "negative": 5,
+      "neutral": 1
     },
     "compareInfo": {
       "mention": {
