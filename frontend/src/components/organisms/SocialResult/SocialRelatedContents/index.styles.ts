@@ -6,6 +6,7 @@ import { FONT_SIZE, FONT_WEIGHT } from '@/constants/styles';
 
 export const Wrapper = styled.div`
   width: 100%;
+  max-width: 500px;
   margin-top: 3rem;
   @media ${MEDIA_QUERY.DESKTOP} {
     display: flex;

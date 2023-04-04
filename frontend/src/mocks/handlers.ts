@@ -24,7 +24,7 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(hot));
   }),
 
-  rest.get(`${BASE_URL}/keyword/relate`, (req, res, ctx) => {
+  rest.get(`${BASE_URL}/keyword/related`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(relate));
   }),
 
