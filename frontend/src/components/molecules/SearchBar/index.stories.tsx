@@ -1,6 +1,5 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { useState } from 'react';
-import SearchBar, { SearchBarProps } from '@/components/molecules/SearchBar';
+import SearchBar, { SearchBarPropsInterface } from '@/components/molecules/SearchBar';
 
 export default {
   title: 'Molecules/SearchBar',
@@ -9,30 +8,21 @@ export default {
     placeholder: {
       control: { type: 'text' },
     },
-    value: {
+    searched: {
       control: { type: 'text' },
-    },
-    onChange: {
-      action: 'change',
-    },
-    onSubmit: {
-      action: 'submit',
     },
   },
 } as ComponentMeta<typeof SearchBar>;
 
 const Template: ComponentStory<typeof SearchBar> = ({
   placeholder,
-  value,
-  onChange,
-  onSubmit,
-}: SearchBarProps) => {
-  return (
-    <SearchBar placeholder={placeholder} value={value} onChange={onChange} onSubmit={onSubmit} />
-  );
+  searched,
+}: SearchBarPropsInterface) => {
+  return <SearchBar placeholder={placeholder} searched={searched} />;
 };
 
 export const Primary = Template.bind({});
 Primary.args = {
   placeholder: '키워드를 입력하세요.',
+  searched: '입력됨',
 };
