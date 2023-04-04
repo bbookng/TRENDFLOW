@@ -16,6 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,75 +28,75 @@ public class KeywordController {
     private final KeywordService keywordService;
 
     @GetMapping("/hot")
-    public ResponseEntity<BasicResponse> findHotKeyword(){
+    public ResponseEntity<FindHotKeywordResponse> findHotKeyword(){
         log.info("findHotKeyword - Call");
 
         try {
             FindHotKeywordResponse findHotKeywordResponse = keywordService.findHotKeyword();
-            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findHotKeywordResponse));
+            return ResponseEntity.ok().body(findHotKeywordResponse);
         } catch (NotFoundException e){
             log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(KeywordCode.FAIL, null));
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseEntity.internalServerError().body(BasicResponse.Body(KeywordCode.FAIL, null));
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
     @GetMapping("/recommend")
-    public ResponseEntity<BasicResponse> findRecommendKeyword(){
+    public ResponseEntity<List<FindRecommendKeywordResponse>> findRecommendKeyword(){
         log.info("findRecommendKeyword - Call");
 
         try {
             List<FindRecommendKeywordResponse> findRecommendKeywordResponseList = keywordService.findRecommendKeyword();
-            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findRecommendKeywordResponseList));
+            return ResponseEntity.ok().body(findRecommendKeywordResponseList);
         } catch (NotFoundException e){
             log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(KeywordCode.FAIL, null));
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseEntity.internalServerError().body(BasicResponse.Body(KeywordCode.FAIL, null));
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
-    @GetMapping("/relate")
-    public ResponseEntity<BasicResponse> findRelateKeyword(@RequestParam String keyword){
+    @GetMapping("/related")
+    public ResponseEntity<List<FindRelateKeywordResponse>> findRelateKeyword(@RequestParam String keyword){
         log.info("findRelateKeyword - Call");
 
         try {
             List<FindRelateKeywordResponse> findRelateKeywordResponseList = keywordService.findRelateKeyword(keyword);
-            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findRelateKeywordResponseList));
+            return ResponseEntity.ok().body(findRelateKeywordResponseList);
         } catch (NotFoundException e){
             log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(KeywordCode.FAIL, null));
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
             e.printStackTrace();
             log.error(e.getMessage());
-            return ResponseEntity.internalServerError().body(BasicResponse.Body(KeywordCode.FAIL, null));
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
     @GetMapping("/wordcloud")
-    public ResponseEntity<BasicResponse> findWordCloudKeyword(@RequestParam String keyword){
+    public ResponseEntity<List<FindWordCloudResponse>> findWordCloudKeyword(@RequestParam String keyword){
         log.info("findWordCloudKeyword - Call");
 
         try {
             List<FindWordCloudResponse> findWordCloudResponseList = keywordService.findWordCloudKeyword(keyword);
-            return ResponseEntity.ok().body(BasicResponse.Body(KeywordCode.SUCCESS, findWordCloudResponseList));
+            return ResponseEntity.ok().body(findWordCloudResponseList);
         } catch (NotFoundException e){
             log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(KeywordCode.FAIL, null));
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseEntity.internalServerError().body(BasicResponse.Body(KeywordCode.FAIL, null));
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
 
     @GetMapping("")
     public ResponseEntity<List<Keyword>> findKeyword(@RequestParam String keyword,
-                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate){
+                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
         log.info("findKeyword - Call");
 
         try {
@@ -112,8 +113,8 @@ public class KeywordController {
 
     @GetMapping("/platform")
     public ResponseEntity<List<KeywordCount>> findKeywordCount(@RequestParam String keyword,
-                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate){
+                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
         log.info("findKeywordCount - Call");
 
         try {
