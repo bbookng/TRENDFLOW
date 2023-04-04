@@ -5,6 +5,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -32,5 +33,5 @@ public class Relation {
     @Column(name = "count")
     private Long count;
     @Column(name = "reg_dt")
-    private LocalDateTime regDt;
+    private LocalDate regDt;
 }

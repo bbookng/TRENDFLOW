@@ -23,7 +23,7 @@ public class AnalyzeController {
     private final AnalyzeService analyzeService;
 
     @GetMapping("/social")
-    public ResponseEntity<BasicResponse> findSocial(@RequestParam String keyword,
+    public ResponseEntity<List<FindSocialResponse>> findSocial(@RequestParam String keyword,
                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
 
@@ -33,23 +33,23 @@ public class AnalyzeController {
             List<FindSocialResponse> findSocialResponseList
                     = analyzeService.findSocial(FindSocialRequest.builder()
                                                 .keyword(keyword)
-                                                .startDate(startDate.atStartOfDay())
-                                                .endDate(endDate.atTime(23,59, 59))
+                                                .startDate(startDate)
+                                                .endDate(endDate)
                                                 .build());
 
-            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findSocialResponseList));
+            return ResponseEntity.ok().body(findSocialResponseList);
         } catch (NotFoundException e){
             log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(AnalyzeCode.DATA_FOUND_FAIL, null));
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
             e.printStackTrace();
             log.error(e.getMessage());
-            return ResponseEntity.internalServerError().body(BasicResponse.Body(AnalyzeCode.FAIL, null));
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
     @GetMapping("/related")
-    public ResponseEntity<BasicResponse> findRelationContent(@RequestParam String keyword,
+    public ResponseEntity<FindRelationContentResponse> findRelationContent(@RequestParam String keyword,
                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
         log.info("findRelationContent - Call");
@@ -58,22 +58,22 @@ public class AnalyzeController {
             FindRelationContentResponse findRelationContentResponse
                     = analyzeService.findRelationContent(FindRelationContentRequest.builder()
                                                         .keyword(keyword)
-                                                        .startDate(startDate.atStartOfDay())
-                                                        .endDate(endDate.atTime(23,59, 59))
+                                                        .startDate(startDate)
+                                                        .endDate(endDate)
                                                         .build());
 
-            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findRelationContentResponse));
+            return ResponseEntity.ok().body(findRelationContentResponse);
         } catch (NotFoundException e){
             log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(AnalyzeCode.DATA_FOUND_FAIL, null));
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseEntity.internalServerError().body(BasicResponse.Body(AnalyzeCode.FAIL, null));
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
     @GetMapping("/youtube")
-    public ResponseEntity<BasicResponse> findYoutube(@RequestParam String link){
+    public ResponseEntity<List<FindYoutubeResponse>> findYoutube(@RequestParam String link){
         log.info("findYoutube - Call");
 
         try {
@@ -82,18 +82,18 @@ public class AnalyzeController {
                                                     .link(link)
                                                     .build());
 
-            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findYoutubeResponseList));
+            return ResponseEntity.ok().body(findYoutubeResponseList);
         } catch (NotFoundException e){
             log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(AnalyzeCode.DATA_FOUND_FAIL, null));
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseEntity.internalServerError().body(BasicResponse.Body(AnalyzeCode.FAIL, null));
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
     @GetMapping("/youtube/comment")
-    public ResponseEntity<BasicResponse> findYoutubeComment(@RequestParam String link,
+    public ResponseEntity<List<FindYoutubeCommentResponse>> findYoutubeComment(@RequestParam String link,
                                                             @RequestParam Integer code,
                                                             @RequestParam Integer page,
                                                             @RequestParam Integer perPage){
@@ -108,17 +108,17 @@ public class AnalyzeController {
                                                             .perPage(perPage)
                                                             .build());
 
-            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findYoutubeCommentResponseList));
+            return ResponseEntity.ok().body(findYoutubeCommentResponseList);
         } catch (NotFoundException e){
             log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(AnalyzeCode.DATA_FOUND_FAIL, null));
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseEntity.internalServerError().body(BasicResponse.Body(AnalyzeCode.FAIL, null));
+            return ResponseEntity.internalServerError().body(null);
         }
     }
     @GetMapping("/compare")
-    public ResponseEntity<BasicResponse> findCompareKeyword(@RequestParam String keyword1,
+    public ResponseEntity<FindCompareKeywordResponse> findCompareKeyword(@RequestParam String keyword1,
                                                             @RequestParam String keyword2,
                                                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
@@ -129,16 +129,16 @@ public class AnalyzeController {
                     = analyzeService.findCompareKeyword(FindCompareKeywordRequest.builder()
                                                             .keywordA(keyword1)
                                                             .keywordB(keyword2)
-                                                            .startDate(startDate.atStartOfDay())
-                                                            .endDate(endDate.atTime(23,59, 59))
+                                                            .startDate(startDate)
+                                                            .endDate(endDate)
                                                             .build());
-            return ResponseEntity.ok().body(BasicResponse.Body(AnalyzeCode.SUCCESS, findCompareKeywordResponse));
+            return ResponseEntity.ok().body(findCompareKeywordResponse);
         } catch (NotFoundException e){
             log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(AnalyzeCode.DATA_FOUND_FAIL, null));
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseEntity.internalServerError().body(BasicResponse.Body(AnalyzeCode.FAIL, null));
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
