@@ -21,7 +21,7 @@ export const keywordApi = createApi({
       providesTags: ['hot'],
     }),
     getRelatedKeywords: builder.query<Array<RankingListItemInterface>, { keyword: string }>({
-      query: (keyword) => ({ url: 'related', body: keyword }),
+      query: (keyword) => ({ url: 'related', params: keyword }),
       providesTags: ['relate'],
     }),
     getRecommendKeywords: builder.query<RecommendKeywordInterface[], void>({
