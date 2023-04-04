@@ -5,7 +5,7 @@ import { Tooltip } from 'react-tooltip';
 import { ROUTER_PATH } from '@/constants/path';
 import * as S from './index.styles';
 
-interface SearchBarPropsInterface {
+export interface SearchBarPropsInterface {
   placeholder?: string;
   searched?: string;
 }
