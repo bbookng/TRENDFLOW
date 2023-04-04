@@ -17,7 +17,7 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
             "WHERE kc.reg_dt >= :startDate " +
             "AND kc.reg_dt <= :endDate " +
             "GROUP BY kc.keyword " +
-            "ORDER BY count DESC LIMIT :limit", nativeQuery = true)
+            "ORDER BY count DESC LIMIT :limit ;", nativeQuery = true)
     List<KeywordDistinct> findByRegDt(@Param("startDate") Integer startDate,
                                       @Param("endDate") Integer endDate,
                                       @Param("limit") Integer limit);
@@ -37,11 +37,16 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
 
     @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
             "FROM keyword k " +
-            "WHERE k.keyword = :keyword", nativeQuery = true)
+            "WHERE k.keyword = :keyword ;", nativeQuery = true)
     List<Keyword> findByKeyword(@Param("keyword") String keyword);
 
-    List<Keyword> findByKeywordAndRegDtBetweenOrderBySourceId(String keyword,
-                                                              Integer atStartOfDay,
-                                                              Integer atStartOfDay1);
+    @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
+            "FROM keyword k " +
+            "WHERE k.keyword = :keyword " +
+            "AND k.reg_dt >= :startDate " +
+            "AND k.reg_dt <= :endDate ;", nativeQuery = true)
+    List<Keyword> findByKeywordAndDate(@Param("keyword") String keyword,
+                                       @Param("startDate") Integer startDate,
+                                       @Param("endDate") Integer endDate);
 
 }
