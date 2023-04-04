@@ -22,3 +22,9 @@ export interface SocialAnalysisItemInterface {
     };
   };
 }
+
+export interface SocialReqBodyInterface {
+  keyword: string;
+  startDate: string;
+  endDate: string;
+}

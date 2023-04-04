@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import Input from '@/components/atoms/Input';
+import { Input } from '@/components/atoms/Input/index.styles';
 import { MEDIA_QUERY, MOBILE_MIN_WIDTH } from '@/constants/media';
 import { BORDER_RADIUS, BOX_SHADOW } from '@/constants/styles';
 
@@ -8,6 +8,11 @@ export const Wrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   min-width: ${MOBILE_MIN_WIDTH}px;
+
+  & .tooltip {
+    background-color: ${({ theme }) => theme.contentBackground};
+    color: ${({ theme }) => theme.negative};
+  }
 `;
 
 export const Form = styled.form`

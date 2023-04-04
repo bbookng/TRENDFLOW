@@ -12,11 +12,11 @@ export const memberApi = createApi({
   tagTypes: ['bookmark'],
   endpoints: (builder) => ({
     getBookmark: builder.query<string | null, HeaderInterface>({
-      query: (header) => ({ url: 'bookmark', header }),
+      query: (token) => ({ url: 'bookmark', header: token }),
       providesTags: ['bookmark'],
     }),
     postBookmark: builder.mutation<string | null, HeaderInterface>({
-      query: (header) => ({ url: 'bookmark', method: 'POST', header }),
+      query: (token) => ({ url: 'bookmark', method: 'POST', header: token }),
       invalidatesTags: ['bookmark'],
     }),
   }),

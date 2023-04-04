@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import Lottie from 'lottie-react';
@@ -6,27 +5,16 @@ import { Divider, Typography } from '@/components/atoms';
 import { useGetRecommendKeywordsQuery } from '@/apis/keyword';
 import { SearchBar } from '@/components/molecules';
 import { ROUTER_PATH } from '@/constants/path';
-import * as S from './index.styles';
 import searchLottie from '@/assets/lotties/searchLottie.json';
+import * as S from './index.styles';
 
 export interface BoxInterface {
   marginTopBottom?: string;
 }
 
 const SocialMainPage = () => {
-  const [value, setValue] = useState('');
   const navi = useNavigate();
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    navi(`/${ROUTER_PATH.SOCIAL_RESULT_PAGE}`, { state: { keyword: value } });
-  };
-
   const theme = useTheme();
-
   const {
     data: recommendKeywords,
     isLoading,
@@ -38,12 +26,7 @@ const SocialMainPage = () => {
   return (
     <>
       <S.SearchWrapper>
-        <SearchBar
-          placeholder="키워드를 입력하세요"
-          value={value}
-          onChange={handleChange}
-          onSubmit={handleSubmit}
-        />
+        <SearchBar placeholder="키워드를 입력하세요" />
       </S.SearchWrapper>
       <S.Contents>
         <S.Left>

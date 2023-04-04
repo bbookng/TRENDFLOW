@@ -14,9 +14,9 @@ import {
   SpaceTypography,
   TrendChartContentsWrapper,
 } from '@/pages/SocialResultPage/index.styles';
-import { getSevenDaysAgoDate } from '@/utils/date';
+import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
-import { useGetSocialAnalysisQuery } from '@/apis/analyze';
+import { useGetComparisionAnalysisQuery, useGetSocialAnalysisQuery } from '@/apis/analyze';
 import * as S from './index.styles';
 
 const ComparisonResultPage = () => {
@@ -28,9 +28,45 @@ const ComparisonResultPage = () => {
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
 
-  // 임시 데이터
-  const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
-    useGetSocialAnalysisQuery();
+  // 키워드1 소셜 분석
+  const { data: keyword1SocialAnalysis, isSuccess: keyword1SocialAnaysisSuccess } =
+    useGetSocialAnalysisQuery(
+      {
+        keyword: keyword1,
+        startDate: getDateToYYYYDDMM(startDate!),
+        endDate: getDateToYYYYDDMM(endDate!),
+      },
+      {
+        refetchOnMountOrArgChange: true,
+      }
+    );
+
+  // 키워드2 소셜 분석
+  const { data: keyword2SocialAnalysis, isSuccess: keyword2SocialAnaysisSuccess } =
+    useGetSocialAnalysisQuery(
+      {
+        keyword: keyword2,
+        startDate: getDateToYYYYDDMM(startDate!),
+        endDate: getDateToYYYYDDMM(endDate!),
+      },
+      {
+        refetchOnMountOrArgChange: true,
+      }
+    );
+
+  // 비교 분석
+  const { data: compariosnAnalysis, isSuccess: comparisonAnalysisSusccess } =
+    useGetComparisionAnalysisQuery(
+      {
+        keyword1,
+        keyword2,
+        startDate: getDateToYYYYDDMM(startDate!),
+        endDate: getDateToYYYYDDMM(endDate!),
+      },
+      {
+        refetchOnMountOrArgChange: true,
+      }
+    );
 
   return (
     <S.Wrapper>
@@ -86,8 +122,8 @@ const ComparisonResultPage = () => {
 
       {/* 꺾은선 차트 */}
       <TrendChartContentsWrapper>
-        <TrendLineChart text="피치 지수 비교" socialAnalysisData={socialAnalysisData!} />
-        <TrendLineChart text="언급량 비교" socialAnalysisData={socialAnalysisData!} />
+        <TrendLineChart text="피치 지수 비교" socialAnalysisData={keyword1SocialAnalysis!} />
+        <TrendLineChart text="언급량 비교" socialAnalysisData={keyword2SocialAnalysis!} />
       </TrendChartContentsWrapper>
     </S.Wrapper>
   );

@@ -1,3 +1,3 @@
 export interface HeaderInterface {
-  header: string;
+  token: string;
 }
