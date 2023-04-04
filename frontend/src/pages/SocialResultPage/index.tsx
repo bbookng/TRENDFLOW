@@ -22,31 +22,30 @@ const SocialResultPage = () => {
     state: { keyword },
   } = useLocation();
 
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
-  const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
-
-  // 서치바
-  const [value, setValue] = useState(keyword);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // 페이지 이동 필요 X 새로운 키워드를 가지고 api 다시 쏴서 데이터만 받으면 될듯
-  };
+  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<Date>(getSevenDaysAgoDate());
 
   const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
     useGetWordCloudKeywordsQuery();
-  const { data: relatedKeywords, isSuccess: isRelatedKeywordsSuccess } =
-    useGetRelatedKeywordsQuery();
+  const { data: relatedKeywords, isSuccess: isRelatedKeywordsSuccess } = useGetRelatedKeywordsQuery(
+    { keyword },
+    {
+      refetchOnMountOrArgChange: true,
+      skip: !keyword,
+    }
+  );
   const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
-    useGetSocialAnalysisQuery({
-      keyword,
-      startDate: getDateToYYYYDDMM(startDate as Date),
-      endDate: getDateToYYYYDDMM(endDate as Date),
-    });
+    useGetSocialAnalysisQuery(
+      {
+        keyword,
+        startDate: getDateToYYYYDDMM(startDate!),
+        endDate: getDateToYYYYDDMM(endDate!),
+      },
+      {
+        refetchOnMountOrArgChange: true,
+        skip: !keyword,
+      }
+    );
   return (
     <S.Wrapper>
       <S.TitleWrapper>
@@ -56,12 +55,7 @@ const SocialResultPage = () => {
           </Typography>
           {/* <S.Icon alt="즐겨찾기" src={star} width="27px" height="27px" /> */}
         </S.TypeWrapper>
-        <SearchBar
-          placeholder="키워드를 입력하세요"
-          value={value}
-          onChange={handleChange}
-          onSubmit={handleSubmit}
-        />
+        <SearchBar placeholder="키워드를 입력하세요" searched={keyword} />
       </S.TitleWrapper>
 
       <S.DateSelectWrapper>
@@ -70,7 +64,7 @@ const SocialResultPage = () => {
             locale={ko}
             dateFormat="yyyy-MM-dd"
             selected={startDate}
-            onChange={(date) => setStartDate(date)}
+            onChange={(date) => setStartDate(date!)}
             customInput={<CustomDatePicker />}
             minDate={new Date(2022, 8, 1)}
             maxDate={endDate}
@@ -82,7 +76,7 @@ const SocialResultPage = () => {
             locale={ko}
             dateFormat="yyyy-MM-dd"
             selected={endDate}
-            onChange={(date) => setEndDate(date)}
+            onChange={(date) => setEndDate(date!)}
             customInput={<CustomDatePicker />}
             minDate={startDate}
             maxDate={new Date()}

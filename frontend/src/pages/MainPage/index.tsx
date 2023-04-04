@@ -1,15 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 import { useGetHotKeywordsQuery, useGetRelatedKeywordsQuery } from '@/apis/keyword';
 import { SearchBar } from '@/components/molecules';
 import { HotKeywords, NoBookmark, DailyAnalysis } from '@/components/organisms/MainPage';
 import HotKeywordsSkeleton from '@/components/organisms/MainPage/HotKeywords/Skeleton';
-import { ROUTER_PATH } from '@/constants/path';
 import { useGetBookmarkQuery } from '@/apis/member';
 import { getToken } from '@/utils/token';
 import * as S from './index.styles';
+import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
 
 const MainPage = () => {
   const token = getToken();
@@ -17,7 +15,7 @@ const MainPage = () => {
     data: bookmark,
     error: bookmarkError,
     isLoading: bookmarkLoading,
-  } = useGetBookmarkQuery({ header: token! }, { skip: !token });
+  } = useGetBookmarkQuery({ token: token! }, { skip: !token });
 
   const {
     data: hotKeywords,
@@ -31,41 +29,35 @@ const MainPage = () => {
     data: socialAnalysis,
     error: socialAnalysisError,
     isLoading: socialAnalysisLoading,
-  } = useGetSocialAnalysisQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-    skip: !bookmark,
-  });
+  } = useGetSocialAnalysisQuery(
+    {
+      keyword: bookmark!,
+      startDate: getDateToYYYYDDMM(getSevenDaysAgoDate()),
+      endDate: getDateToYYYYDDMM(new Date()),
+    },
+    {
+      refetchOnMountOrArgChange: true,
+      skip: !bookmark,
+    }
+  );
 
   const {
     data: relatedKeywords,
     error: relatedKeywordsError,
     isLoading: relatedKeywordsLoading,
-  } = useGetRelatedKeywordsQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-    skip: !bookmark,
-  });
-
-  // 서치바
-  const [value, setValue] = useState('');
-  const navi = useNavigate();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    navi(`/${ROUTER_PATH.SOCIAL_RESULT_PAGE}`, { state: { keyword: value } });
-  };
+  } = useGetRelatedKeywordsQuery(
+    {
+      keyword: bookmark!,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+      skip: !bookmark,
+    }
+  );
 
   return (
     <S.Wrapper>
-      <SearchBar
-        placeholder="키워드를 입력하세요"
-        value={value}
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-      />
+      <SearchBar placeholder="키워드를 입력하세요" />
 
       {hotKeywordsLoading && (
         <S.HotKeywordsWrapper>

@@ -14,6 +14,11 @@ export const Form = styled.form`
   min-width: ${MOBILE_MIN_WIDTH}px;
   max-width: ${MOBILE_MAX_WIDTH}px;
 
+  & .tooltip {
+    background-color: ${({ theme }) => theme.contentBackground};
+    color: ${({ theme }) => theme.negative};
+  }
+
   @media ${MEDIA_QUERY.DESKTOP} {
     flex-direction: row;
     width: 600px;

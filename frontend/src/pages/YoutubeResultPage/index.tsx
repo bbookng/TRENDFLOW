@@ -10,24 +10,12 @@ import { Paper, Typography } from '@/components/atoms';
 import { TitleWrapper } from '@/pages/SocialResultPage/index.styles';
 import CommentAffinity from '@/components/organisms/YoutubeResult/CommentAffinity';
 import CommentAnalysis from '@/components/organisms/YoutubeResult/CommentAnalysis';
-import { ROUTER_PATH } from '@/constants/path';
 
 const YoutubeResultPage = () => {
-  const navi = useNavigate();
   const {
     state: { link },
   } = useLocation();
-  const [value, setValue] = useState(link);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // 페이지 이동 필요 X 새로운 키워드를 가지고 api 다시 쏴서 데이터만 받으면 될듯
-    console.log('??');
-    navi(`/${ROUTER_PATH.YOUTUBE_RESULT_PAGE}`, { state: { link: value } });
-  };
   const { data: youtubeData } = useGetYoutubeAnalysisQuery(link);
 
   return (
@@ -36,12 +24,7 @@ const YoutubeResultPage = () => {
         <S.TitleWrapper>
           <Typography variant="H3">유튜브 분석 레포트</Typography>
         </S.TitleWrapper>
-        <SearchBar
-          placeholder="키워드를 입력하세요"
-          value={value}
-          onChange={handleChange}
-          onSubmit={handleSubmit}
-        />
+        <SearchBar placeholder="키워드를 입력하세요" searched={link} />
       </TitleWrapper>
       <S.YoutubeInfo>
         <S.VideoInfo>

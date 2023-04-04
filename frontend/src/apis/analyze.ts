@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { SocialAnalysisItemInterface } from '@/types/social';
+import { ComparisonAnalysisInterface, ComaparisonReqBodyInterface } from '../types/comparison';
+import { SocialAnalysisItemInterface, SocialReqBodyInterface } from '@/types/social';
 import {
   YoutubeAnalysisInterface,
   YoutubeCommentInterface,
@@ -17,12 +18,8 @@ export const analyzeApi = createApi({
   }),
   tagTypes: ['analyze'],
   endpoints: (builder) => ({
-    getSocialAnalysis: builder.query<
-      Array<SocialAnalysisItemInterface>,
-      { keyword: string; startDate: string; endDate: string }
-    >({
-      query: ({ keyword, startDate, endDate }) =>
-        `social?keyword=${keyword}&startDate=${startDate}&endDate=${endDate}`,
+    getSocialAnalysis: builder.query<Array<SocialAnalysisItemInterface>, SocialReqBodyInterface>({
+      query: (info) => ({ url: 'social', params: info }),
     }),
     getYoutubeAnalysis: builder.query<YoutubeAnalysisInterface, string>({
       query: (link) => `youtube?link=${encodeURIComponent(link)}`,
@@ -38,6 +35,11 @@ export const analyzeApi = createApi({
         )}&code=${code}&page=${page}&perPage=${perPage}`;
       },
     }),
+    getComparisionAnalysis: builder.query<ComparisonAnalysisInterface, ComaparisonReqBodyInterface>(
+      {
+        query: (info) => ({ url: 'social', params: info }),
+      }
+    ),
   }),
 });
 
@@ -59,4 +61,5 @@ export const {
   useGetSocialAnalysisQuery,
   useGetYoutubeAnalysisQuery,
   useGetYoutubeCommentAnalysisQuery,
+  useGetComparisionAnalysisQuery,
 } = analyzeApi;
