@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trendflow.common.global.exception.NotFoundException;
-import com.trendflow.common.global.exception.UnAuthException;
 import com.trendflow.common.local.entity.Source;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -39,8 +39,6 @@ public class YoutubeService {
 
             HttpHeaders headers = new HttpHeaders();
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-
-            System.out.println("keyword = " + keyword);
 
             UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(YOUTUBE_URI)
                     .queryParam("part", "snippet")
@@ -71,7 +69,7 @@ public class YoutubeService {
                 String title = snippet.get("title").asText();
                 String link = "https://www.youtube.com/watch?v=" + item.get("id").get("videoId").asText();
                 String content = snippet.get("description").asText();
-                LocalDateTime regDt = ZonedDateTime.parse(snippet.get("publishedAt").asText()).toLocalDateTime();
+                LocalDate regDt = ZonedDateTime.parse(snippet.get("publishedAt").asText()).toLocalDate();
                 String thumbImg = snippet.get("thumbnails").get("medium").get("url").asText();
 
                 sourceList.add(Source.builder()
