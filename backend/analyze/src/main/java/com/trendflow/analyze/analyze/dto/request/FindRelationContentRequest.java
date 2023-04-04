@@ -3,13 +3,12 @@ package com.trendflow.analyze.analyze.dto.request;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
+import java.time.LocalDate;
 
 @Data
 @Builder
 public class FindRelationContentRequest {
     private String keyword;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 }

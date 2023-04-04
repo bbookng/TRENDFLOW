@@ -3,6 +3,7 @@ package com.trendflow.analyze.msa.dto.vo;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,5 +14,5 @@ public class Keyword {
     private String platformCode;
     private String keyword;
     private Long count;
-    private LocalDateTime regDt;
+    private LocalDate regDt;
 }
