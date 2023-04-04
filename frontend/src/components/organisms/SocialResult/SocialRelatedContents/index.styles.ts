@@ -6,9 +6,9 @@ import { FONT_SIZE, FONT_WEIGHT } from '@/constants/styles';
 
 export const Wrapper = styled.div`
   width: 100%;
-  max-width: 500px;
   margin-top: 3rem;
   @media ${MEDIA_QUERY.DESKTOP} {
+    max-width: 500px;
     display: flex;
     flex-direction: column;
   }
@@ -56,4 +56,7 @@ export const Filter = styled.div`
   gap: 1rem;
 `;
 
-export const FilterBtn = styled.button<{ isClick: boolean; kind: string }>``;
+export const FilterBtn = styled.button<{ isClick: boolean; kind: string }>`
+  background-color: transparent;
+  color: ${({ theme }) => theme.text200};
+`;

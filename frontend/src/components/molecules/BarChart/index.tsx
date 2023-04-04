@@ -26,31 +26,42 @@ Chart.register(
   PointElement
 );
 
-const labels = ['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24'];
-
-interface BarChartPropsInterface {
+export interface BarChartPropsInterface {
   desktopWidth?: string;
   barColor?: string;
+  labels: Array<string>;
+  barLabel: string;
+  lineLabel: string;
+  barData: Array<number> | undefined;
+  lineData: Array<number> | undefined;
 }
 
-const BarChart = ({ desktopWidth, barColor }: BarChartPropsInterface) => {
+const BarChart = ({
+  desktopWidth,
+  barColor,
+  labels,
+  barLabel,
+  lineLabel,
+  barData,
+  lineData,
+}: BarChartPropsInterface) => {
   const theme = useTheme();
   const data: any = {
     labels,
     datasets: [
       {
-        label: '피치 지수',
+        label: lineLabel,
         yAxisID: 'peach',
         type: 'line',
-        data: [33, 45, 87, 49, 81, 67, 72],
+        data: lineData,
         borderColor: theme.text,
         borderWidth: 1,
       },
       {
-        label: '언급량',
+        label: barLabel,
         yAxisID: 'mention',
         type: 'bar',
-        data: [193, 10, 300, 124, 284, 84, 400],
+        data: barData,
         backgroundColor: barColor || PALETTE.BRAND400,
       },
     ],

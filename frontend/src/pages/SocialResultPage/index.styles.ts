@@ -111,4 +111,8 @@ export const TrendChartContentsWrapper = styled.div`
 
 export const FlexBox = styled.div`
   display: flex;
+  flex-direction: column;
+  @media ${MEDIA_QUERY.DESKTOP} {
+    flex-direction: row;
+  }
 `;

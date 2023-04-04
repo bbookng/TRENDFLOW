@@ -22,24 +22,8 @@ const RelatedKeyword = ({ wordCloudKeywords, relatedKeywords }: Props) => {
       <S.SpaceTypography variant="H4">연관 키워드</S.SpaceTypography>
       <S.WordCloudPaper>
         <S.WordCloudContentsWrapper>
-          <WordCloud data={wordCloudData} font="PRETENDARD" />
+          <WordCloud data={wordCloudData} fontSize={60} fontWeight={600} font="PRETENDARD" />
         </S.WordCloudContentsWrapper>
-
-        <S.RankingListWrapper>
-          <S.RelatedItemWrapper>
-            {relatedKeywords &&
-              relatedKeywords
-                .slice(0, 4)
-                .map((item) => <RankingItem key={item.rank} {...item} width="8rem" />)}
-          </S.RelatedItemWrapper>
-
-          <S.RelatedItemWrapper>
-            {relatedKeywords &&
-              relatedKeywords
-                .slice(-4)
-                .map((item) => <RankingItem key={item.rank} {...item} width="8rem" />)}
-          </S.RelatedItemWrapper>
-        </S.RankingListWrapper>
       </S.WordCloudPaper>
     </S.Wrapper>
   );
