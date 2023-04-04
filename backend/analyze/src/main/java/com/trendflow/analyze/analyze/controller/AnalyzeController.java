@@ -49,20 +49,26 @@ public class AnalyzeController {
     }
 
     @GetMapping("/related")
-    public ResponseEntity<FindRelationContentResponse> findRelationContent(@RequestParam String keyword,
-                                                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
+    public ResponseEntity<List<FindRelationContentResponse>> findRelationContent(@RequestParam String keyword,
+                                                                           @RequestParam String code,
+                                                                           @RequestParam Integer page,
+                                                                           @RequestParam Integer perPage,
+                                                                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
         log.info("findRelationContent - Call");
 
         try {
-            FindRelationContentResponse findRelationContentResponse
+            List<FindRelationContentResponse> findRelationContentResponseList
                     = analyzeService.findRelationContent(FindRelationContentRequest.builder()
                                                         .keyword(keyword)
+                                                        .code(code)
+                                                        .page(page)
+                                                        .perPage(perPage)
                                                         .startDate(startDate)
                                                         .endDate(endDate)
                                                         .build());
 
-            return ResponseEntity.ok().body(findRelationContentResponse);
+            return ResponseEntity.ok().body(findRelationContentResponseList);
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);

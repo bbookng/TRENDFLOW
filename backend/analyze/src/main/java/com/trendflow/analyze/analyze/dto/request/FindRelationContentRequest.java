@@ -9,6 +9,9 @@ import java.time.LocalDate;
 @Builder
 public class FindRelationContentRequest {
     private String keyword;
+    private String code;
+    private Integer page;
+    private Integer perPage;
     private LocalDate startDate;
     private LocalDate endDate;
 }

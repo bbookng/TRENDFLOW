@@ -15,7 +15,7 @@ public class FindYoutubeCommentResponse {
     private Integer downCount;
     private String comment;
 
-    public static FindYoutubeCommentResponse fromEntity(YoutubeComment youtubeComment) {
+    public static FindYoutubeCommentResponse of(YoutubeComment youtubeComment) {
         return FindYoutubeCommentResponse.builder()
                 .id(youtubeComment.getId())
                 .upCount(youtubeComment.getUpCount())
@@ -26,7 +26,7 @@ public class FindYoutubeCommentResponse {
 
     public static List<FindYoutubeCommentResponse> toList(List<YoutubeComment> youtubeCommentList) {
         return youtubeCommentList.stream()
-                .map(FindYoutubeCommentResponse::fromEntity)
+                .map(FindYoutubeCommentResponse::of)
                 .collect(Collectors.toList());
     }
 }
