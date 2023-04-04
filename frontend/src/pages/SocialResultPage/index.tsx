@@ -88,7 +88,13 @@ const SocialResultPage = () => {
         {/* 막대기 차트 */}
         <S.ChartWrapper>
           <S.Title>분석 그래프</S.Title>
-          <BarChart />
+          <BarChart
+            labels={['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24']}
+            barLabel="언급량"
+            barData={socialAnalysisData?.map((item) => item.mentionCountInfo.total)}
+            lineLabel="피치 지수"
+            lineData={socialAnalysisData?.map((item) => item.grapeQuotientInfo.positive)}
+          />
         </S.ChartWrapper>
 
         {/* 워드 클라우드 */}

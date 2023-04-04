@@ -37,7 +37,6 @@ export const WordCloudContentsWrapper = styled.div`
   width: 100%;
   height: 50%;
   @media ${MEDIA_QUERY.DESKTOP} {
-    width: 55%;
     height: 100%;
   }
 `;
