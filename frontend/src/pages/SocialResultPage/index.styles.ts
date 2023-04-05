@@ -30,7 +30,15 @@ export const TitleWrapper = styled.div`
 `;
 
 export const TypeWrapper = styled.div`
+  display: flex;
+  align-items: center;
   width: 100%;
+`;
+
+export const BookmarkBtn = styled.button`
+  width: 1.75rem;
+  margin-left: 1rem;
+  background-color: transparent;
 `;
 
 export const HighLight = styled.span`

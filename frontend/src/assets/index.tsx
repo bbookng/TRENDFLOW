@@ -16,6 +16,8 @@ import { ReactComponent as NaverNews } from '@/assets/icons/naverNews.svg';
 import { ReactComponent as NaverBlog } from '@/assets/icons/naverBlog.svg';
 import { ReactComponent as Youtube2 } from '@/assets/icons/youtube2.svg';
 import { ReactComponent as Daum } from '@/assets/icons/daum.svg';
+import { ReactComponent as Star } from '@/assets/icons/star.svg';
+import { ReactComponent as StarFill } from '@/assets/icons/star-fill.svg';
 
 export {
   Logo,
@@ -35,4 +37,6 @@ export {
   NaverBlog,
   Youtube2,
   Daum,
+  Star,
+  StarFill,
 };
