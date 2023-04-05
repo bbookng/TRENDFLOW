@@ -2,6 +2,9 @@ package com.trendflow.member.member.service;
 
 import com.trendflow.member.global.code.CommonCode;
 import com.trendflow.member.global.exception.NotFoundException;
+import com.trendflow.member.global.exception.UnAuthException;
+import com.trendflow.member.global.redis.session.LoginAccessToken;
+import com.trendflow.member.global.redis.session.LoginAccessTokenRepository;
 import com.trendflow.member.member.entity.Member;
 import com.trendflow.member.member.entity.Role;
 import com.trendflow.member.member.repository.MemberRepository;
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+    private final LoginAccessTokenRepository loginAccessTokenRepository;
     private final RoleRepository roleRepository;
     private final MemberRepository memberRepository;
     private final CommonService commonService;
@@ -27,7 +31,7 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException());
         return Member.builder()
                 .memberId(member.getMemberId())
-                .keywordId(member.getKeywordId())
+                .keyword(member.getKeyword())
                 .platformCode(member.getPlatformCode())
                 .name(member.getName())
                 .email(member.getEmail())
@@ -46,7 +50,7 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException());
         return Member.builder()
                 .memberId(member.getMemberId())
-                .keywordId(member.getKeywordId())
+                .keyword(member.getKeyword())
                 .platformCode(member.getPlatformCode())
                 .name(member.getName())
                 .email(member.getEmail())
@@ -69,5 +73,24 @@ public class MemberService {
                 .member(member)
                 .build());
         return memberRepository.save(member);
+    }
+
+    public String findBookmark(String accessToken) throws RuntimeException {
+        LoginAccessToken loginAccessToken = loginAccessTokenRepository.findById(accessToken)
+                .orElseThrow(() -> new UnAuthException());
+        Long memberId = loginAccessToken.getMemberId();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException());
+        return member.getKeyword();
+    }
+
+    public void registBookmark(String accessToken, String keyword) throws RuntimeException {
+        LoginAccessToken loginAccessToken = loginAccessTokenRepository.findById(accessToken)
+                .orElseThrow(() -> new UnAuthException());
+        Long memberId = loginAccessToken.getMemberId();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException());
+        member.setKeyword(keyword);
+        memberRepository.save(member);
     }
 }

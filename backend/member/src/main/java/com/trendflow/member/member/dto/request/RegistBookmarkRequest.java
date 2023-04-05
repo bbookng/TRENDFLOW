@@ -1,4 +1,4 @@
-package com.trendflow.member.auth.dto.request;
+package com.trendflow.member.member.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
-    private String platformCode;
-    private String authCode;
+public class RegistBookmarkRequest {
+    private String keyword;
 }

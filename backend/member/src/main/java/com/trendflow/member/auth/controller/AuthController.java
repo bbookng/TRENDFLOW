@@ -23,11 +23,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping("/health")
-    public ResponseEntity<BasicResponse> login() {
-        return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, null));
-    }
-
     @PostMapping("/login")
     public ResponseEntity<BasicResponse> login(@RequestBody LoginRequest loginRequest){
         log.info("login - Call");
