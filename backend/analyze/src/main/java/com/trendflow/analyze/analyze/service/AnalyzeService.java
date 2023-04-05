@@ -165,14 +165,19 @@ public class AnalyzeService {
                         youtubeSourceRepository.saveResult(key, youtubeNow, 6000);
                         return youtubeNow;
                     });
-            // page 별로 짤라서 반환
-            PageRequest pageRequest = PageRequest.of(page, perPage);
-            int start = (int) pageRequest.getOffset();
-            int end = Math.min((start + pageRequest.getPageSize()), youtubeSourceList.size());
-            Page<YoutubeSource> youtubeSourcePage = new PageImpl<>(youtubeSourceList.subList(start, end), pageRequest, youtubeSourceList.size());
 
-            List<Source> sourceList = Source.toList(youtubeSourcePage.toList());
-            findRelationContentResponseList = FindRelationContentResponse.toList(Code.YOUTUBE.getName(), code, sourceList);
+            if (page * perPage <= youtubeSourceList.size()) {
+                // page 별로 짤라서 반환
+                PageRequest pageRequest = PageRequest.of(page, perPage);
+                int start = (int) pageRequest.getOffset();
+                int end = Math.min((start + pageRequest.getPageSize()), youtubeSourceList.size());
+                Page<YoutubeSource> youtubeSourcePage = new PageImpl<>(youtubeSourceList.subList(start, end), pageRequest, youtubeSourceList.size());
+
+                List<Source> sourceList = Source.toList(youtubeSourcePage.toList());
+                findRelationContentResponseList = FindRelationContentResponse.toList(Code.YOUTUBE.getName(), code, sourceList);
+            } else {
+                findRelationContentResponseList = new ArrayList<>();
+            }
         } else {
             // 키워드 리스트 요청
             List<Keyword> keywordList = keywordService.getKeywordPage(keyword, code, page, perPage, startDate, endDate);

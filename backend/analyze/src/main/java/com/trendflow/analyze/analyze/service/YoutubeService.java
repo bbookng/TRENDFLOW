@@ -42,7 +42,7 @@ public class YoutubeService {
 
             UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(YOUTUBE_URI)
                     .queryParam("part", "snippet")
-                    .queryParam("maxResults", 20)
+                    .queryParam("maxResults", 50)
                     .queryParam("q", keyword)
                     .queryParam("type", "video")
                     .queryParam("key", YOUTUBE_KEY)
