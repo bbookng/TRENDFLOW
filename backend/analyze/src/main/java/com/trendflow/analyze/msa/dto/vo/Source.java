@@ -13,7 +13,6 @@ public class Source {
     private String thumbnail;
     private String title;
     private String content;
-    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate date;
     private String link;
 }

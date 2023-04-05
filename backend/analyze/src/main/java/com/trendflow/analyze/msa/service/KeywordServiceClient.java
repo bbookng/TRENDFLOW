@@ -17,6 +17,15 @@ public interface KeywordServiceClient {
     List<Keyword> getKeyword(@RequestParam String keyword,
                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate);
+
+    @GetMapping("/keyword/page")
+    List<Keyword> getKeywordPage(@RequestParam String keyword,
+                             @RequestParam String code,
+                             @RequestParam Integer page,
+                             @RequestParam Integer perPage,
+                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate);
+
     @GetMapping("/keyword/platform")
     List<KeywordCount> getKeywordCount(@RequestParam String keyword,
                                        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
