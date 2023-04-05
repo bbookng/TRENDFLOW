@@ -47,8 +47,6 @@ public class LocalCodeService {
     }
 
     public List<GetSourceResponse> getSource(List<Long> sourceIdList) throws RuntimeException {
-        System.out.println("getSourceRequest = " + sourceIdList);
-
         List<Source> sourceList = sourceRepository.findByPlatformCodeInAndSourceIdIn(sourceIdList);
         return GetSourceResponse.toList(sourceList);
     }
