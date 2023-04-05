@@ -25,7 +25,6 @@ public class LocalCodeService {
     private final LocalCodeRepository localCodeRepository;
     private final RelateCodeRepository relateCodeRepository;
     private final SourceRepository sourceRepository;
-    private final YoutubeService youtubeService;
 
     @Transactional
     public List<FindLocalCodeResponse> findAllLocalCode(String groupCode) {
