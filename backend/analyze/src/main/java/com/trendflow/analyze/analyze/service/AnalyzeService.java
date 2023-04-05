@@ -4,14 +4,11 @@ import com.trendflow.analyze.analyze.dto.request.*;
 import com.trendflow.analyze.analyze.dto.response.*;
 import com.trendflow.analyze.analyze.dto.vo.*;
 import com.trendflow.analyze.analyze.entity.Relation;
-import com.trendflow.analyze.analyze.entity.Sentiment;
 import com.trendflow.analyze.analyze.entity.SentimentCount;
 import com.trendflow.analyze.analyze.repository.RelationRepository;
 import com.trendflow.analyze.analyze.repository.SentimentRepository;
-import com.trendflow.analyze.global.code.AnalyzeCode;
-import com.trendflow.analyze.global.code.CommonCode;
+import com.trendflow.analyze.global.code.Code;
 import com.trendflow.analyze.global.code.SocialCacheCode;
-import com.trendflow.analyze.global.exception.NotFoundException;
 import com.trendflow.analyze.global.redis.Social;
 import com.trendflow.analyze.msa.dto.vo.Keyword;
 import com.trendflow.analyze.msa.dto.vo.KeywordCount;
@@ -23,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,40 +133,27 @@ public class AnalyzeService {
         return FindSocialResponse.toList(socialList);
     }
 
-    public FindRelationContentResponse findRelationContent(FindRelationContentRequest findRelationContentRequest) {
+    public List<FindRelationContentResponse> findRelationContent(FindRelationContentRequest findRelationContentRequest) {
         String keyword = findRelationContentRequest.getKeyword();
+        String code = findRelationContentRequest.getCode();
+        Integer page = findRelationContentRequest.getPage();
+        Integer perPage = findRelationContentRequest.getPerPage();
         LocalDate startDate = findRelationContentRequest.getStartDate();
         LocalDate endDate = findRelationContentRequest.getEndDate();
 
-        String ARTICLE = commonService.getLocalCode(CommonCode.ARTICLE.getName()).getCode();
-        String BLOG = commonService.getLocalCode(CommonCode.BLOG.getName()).getCode();
-        String YOUTUBE = commonService.getLocalCode(CommonCode.YOUTUBE.getName()).getCode();
+        // 키워드 리스트 요청
+        List<Keyword> keywordList = keywordService.getKeywordPage(keyword, code, page, perPage, startDate, endDate);
 
-        List<Keyword> keywordList = keywordService.getKeyword(keyword, startDate, endDate);
-
-        List<Source> article = commonService.getSource(keyword,
+        // 원본 데이터 요청
+        List<Source> sourceList = commonService.getSource(
+                keyword,
                 keywordList.stream()
-                .map(Keyword::getSourceId)
-                .distinct()
-                .collect(Collectors.toList()), ARTICLE);
+                    .map(Keyword::getSourceId)
+                    .distinct()
+                    .collect(Collectors.toList()),
+                code);
 
-        List<Source> blog = commonService.getSource(keyword,
-                keywordList.stream()
-                .map(Keyword::getSourceId)
-                .distinct()
-                .collect(Collectors.toList()), BLOG);
-
-        List<Source> youtube = commonService.getSource(keyword,
-                keywordList.stream()
-                .map(Keyword::getSourceId)
-                .distinct()
-                .collect(Collectors.toList()), YOUTUBE);
-
-        return FindRelationContentResponse.builder()
-                .article(article)
-                .blog(blog)
-                .youtube(youtube)
-                .build();
+        return FindRelationContentResponse.toList(sourceList);
     }
 
     public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {
@@ -188,7 +171,6 @@ public class AnalyzeService {
     public FindCompareKeywordResponse findCompareKeyword(FindCompareKeywordRequest findCompareKeywordRequest) {
         String keywordA = findCompareKeywordRequest.getKeywordA();
         String keywordB = findCompareKeywordRequest.getKeywordB();
-
         LocalDate startDate = findCompareKeywordRequest.getStartDate();
         LocalDate endDate = findCompareKeywordRequest.getEndDate();
 
@@ -279,7 +261,7 @@ public class AnalyzeService {
     public List<FindRelationKeywordResponse> findRelationKeyword(List<Long> keywordIdList) {
         List<Relation> relationList = relationRepository.findByKeywordIdList(keywordIdList, 8);
         return relationList.stream()
-                .map(FindRelationKeywordResponse::fromEntity)
+                .map(FindRelationKeywordResponse::of)
                 .collect(Collectors.toList());
     }
 
@@ -287,7 +269,7 @@ public class AnalyzeService {
     public List<FindWordCloudKeywordResponse> findWordCloudKeyword(List<Long> keywordIdList) {
         List<Relation> relationList = relationRepository.findByKeywordIdList(keywordIdList, 100);
         return relationList.stream()
-                .map(FindWordCloudKeywordResponse::fromEntity)
+                .map(FindWordCloudKeywordResponse::of)
                 .collect(Collectors.toList());
     }
 
@@ -395,10 +377,10 @@ public class AnalyzeService {
     }
 
     private MentionCountInfo setMentionCountInfo(MentionCountInfo mentionCountInfo, String platformCode, Long count) {
-        String DAUM_NEWS = commonService.getLocalCode(CommonCode.DAUM_NEWS.getName()).getCode();
-        String NAVER_NEWS = commonService.getLocalCode(CommonCode.NAVER_NEWS.getName()).getCode();
-        String NAVER_BLOG = commonService.getLocalCode(CommonCode.NAVER_BLOG.getName()).getCode();
-        String TWITTER = commonService.getLocalCode(CommonCode.TWITTER.getName()).getCode();
+        String DAUM_NEWS = commonService.getLocalCode(Code.DAUM_NEWS);
+        String NAVER_NEWS = commonService.getLocalCode(Code.NAVER_NEWS);
+        String NAVER_BLOG = commonService.getLocalCode(Code.NAVER_BLOG);
+        String TWITTER = commonService.getLocalCode(Code.TWITTER);
 
         Integer daumNews = 0;
         Integer naverNews = 0;
