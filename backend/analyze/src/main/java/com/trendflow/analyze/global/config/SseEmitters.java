@@ -5,14 +5,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
 @Slf4j
 public class SseEmitters {
     private final Map<Long, SseEmitter> emitters = new HashMap<>();
+
+    public SseEmitter get(Long memberId) {
+        return this.emitters.get(memberId);
+    }
 
     public SseEmitter add(Long memberId, SseEmitter emitter) {
         this.emitters.put(memberId, emitter);

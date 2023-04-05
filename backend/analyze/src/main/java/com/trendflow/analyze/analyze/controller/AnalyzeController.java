@@ -2,6 +2,7 @@ package com.trendflow.analyze.analyze.controller;
 
 import com.trendflow.analyze.analyze.dto.request.*;
 import com.trendflow.analyze.analyze.dto.response.*;
+import com.trendflow.analyze.analyze.dto.vo.Payload;
 import com.trendflow.analyze.analyze.service.AnalyzeService;
 import com.trendflow.analyze.global.config.SseEmitters;
 import com.trendflow.analyze.global.exception.NotFoundException;
@@ -95,19 +96,23 @@ public class AnalyzeController {
             ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
             taskExecutor.initialize();
 
-            Runnable r = () -> {
+            taskExecutor.execute(() -> {
                 try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
+                    Thread.sleep(10000);
+                    sseEmitters.get(24L).send("test!");
+//                    Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
+//                            .link(link)
+//                            .build());
+//                    sseEmitters.get(24L).send(payload.toString());
+                    emitter.complete();
+                } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                 }
-            };
-
-            taskExecutor.execute(r);
-
+            });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+
         return ResponseEntity.ok(emitter);
 //        taskExecutor.execute(() -> {
 //            try {
