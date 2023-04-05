@@ -93,8 +93,10 @@ public class AnalyzeController {
                     .data("connected!"));
 
             ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+            taskExecutor.initialize();
+
             taskExecutor.execute(() -> {
-                
+
                 System.out.println("test");
             });
 
