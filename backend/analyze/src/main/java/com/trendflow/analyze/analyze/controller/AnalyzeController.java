@@ -95,10 +95,15 @@ public class AnalyzeController {
             ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
             taskExecutor.initialize();
 
-            taskExecutor.execute(() -> {
+            Runnable r = () -> {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            };
 
-                System.out.println("test");
-            });
+            taskExecutor.execute(r);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
