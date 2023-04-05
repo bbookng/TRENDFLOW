@@ -34,8 +34,10 @@ public class MemberController {
 
     @PostMapping("/bookmark")
     public ResponseEntity<?>  registBookmark(@RequestHeader("Authorization") String accessToken,
-                                            @RequestBody RegistBookmarkRequest registBookmarkRequest) {
+                                             @RequestBody RegistBookmarkRequest registBookmarkRequest) {
         try {
+            log.info(registBookmarkRequest.toString());
+
             accessToken = accessToken.substring(7);
             String keyword = registBookmarkRequest.getKeyword();
             memberService.registBookmark(accessToken, keyword);
