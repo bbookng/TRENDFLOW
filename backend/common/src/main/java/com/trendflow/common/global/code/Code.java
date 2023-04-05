@@ -1,6 +1,6 @@
 package com.trendflow.common.global.code;
 
-public enum PlatformCode {
+public enum Code {
     DAUM_NEWS("DAUM_NEWS"),
     NAVER_NEWS("NAVER_NEWS"),
     NAVER_BLOG("NAVER_BLOG"),
@@ -12,7 +12,7 @@ public enum PlatformCode {
 
     private String code;
     public String getCode() { return this.code; }
-    PlatformCode(String code){
+    Code(String code){
         this.code = code;
     }
 }
