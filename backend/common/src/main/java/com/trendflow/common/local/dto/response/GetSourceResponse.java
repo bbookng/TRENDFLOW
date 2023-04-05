@@ -16,7 +16,7 @@ public class GetSourceResponse {
     private String platformCode;
     private String thumbnail;
     private String title;
-    private String content;
+    private String desc;
     private LocalDate date;
     private String link;
 
@@ -25,7 +25,7 @@ public class GetSourceResponse {
                 .platformCode(source.getPlatformCode())
                 .thumbnail(source.getThumbImg())
                 .title(source.getTitle())
-                .content(source.getContent())
+                .desc(source.getContent())
                 .date(source.getRegDt())
                 .link(source.getLink())
                 .build();
