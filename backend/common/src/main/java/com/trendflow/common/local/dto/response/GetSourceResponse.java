@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Data
 @Builder
 public class GetSourceResponse {
+    private String platformCode;
     private String thumbnail;
     private String title;
     private String content;
@@ -21,6 +22,7 @@ public class GetSourceResponse {
 
     public static GetSourceResponse of(Source source) {
         return GetSourceResponse.builder()
+                .platformCode(source.getPlatformCode())
                 .thumbnail(source.getThumbImg())
                 .title(source.getTitle())
                 .content(source.getContent())
