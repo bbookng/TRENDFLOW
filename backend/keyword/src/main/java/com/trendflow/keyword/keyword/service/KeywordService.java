@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -145,7 +146,20 @@ public class KeywordService {
 
     @Transactional
     public List<FindRelateKeywordResponse> findRelateKeyword(String keyword) throws RuntimeException {
-        List<Keyword> keywordIdList = keywordRepository.findByKeyword(keyword);
+
+        System.out.println(keyword);
+        // 현재 날짜 구하기
+        LocalDate now = LocalDate.now();
+
+        // 포맷 정의
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        // 포맷 적용
+        int nowint = Integer.parseInt(now.format(formatter));
+        System.out.println(nowint);
+
+        return null;
+       /* List<Keyword> keywordIdList = keywordRepository.findByKeyword(keyword);
 
         String key = String.format("%s_%s", KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), keyword);
 
@@ -178,7 +192,10 @@ public class KeywordService {
                     return now;
                 });
 
-        return FindRelateKeywordResponse.toList(relateKeywordList);
+        return FindRelateKeywordResponse.toList(relateKeywordList);*/
+
+
+
     }
 
     @Transactional
