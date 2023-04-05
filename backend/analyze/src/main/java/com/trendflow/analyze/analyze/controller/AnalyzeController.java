@@ -83,64 +83,20 @@ public class AnalyzeController {
     }
 
     @GetMapping("/youtube")
-    public ResponseEntity<SseEmitter> findYoutube(@RequestParam String link){
+    public ResponseEntity<Payload> findYoutube(@RequestParam String link){
         log.info("findYoutube - Call");
-
-        SseEmitter emitter = new SseEmitter(60 * 1000L);
-        sseEmitters.add(24L, emitter);
         try {
-            emitter.send(SseEmitter.event()
-                    .name("connect")
-                    .data("connected!"));
-
-            ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-            taskExecutor.initialize();
-
-            taskExecutor.execute(() -> {
-                try {
-                    Thread.sleep(10000);
-                    sseEmitters.get(24L).send("test!");
-//                    Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
-//                            .link(link)
-//                            .build());
-//                    sseEmitters.get(24L).send(payload.toString());
-                    emitter.complete();
-                } catch (InterruptedException | IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
+            Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
+                    .link(link)
+                    .build());
+            return ResponseEntity.ok().body(payload);
+        } catch (NotFoundException e){
+            log.error(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e){
+            log.error(e.getMessage());
+            return ResponseEntity.internalServerError().body(null);
         }
-
-        return ResponseEntity.ok(emitter);
-//        taskExecutor.execute(() -> {
-//            try {
-//                Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
-//                                    .link(link)
-//                                    .build());
-////                String json = new ObjectMapper().writeValueAsString();
-//                emitter.send(payload.toString());
-//                emitter.complete();
-//            } catch (Exception e) {
-//                emitter.completeWithError(e);
-//            }
-//        });
-//        try {
-//
-//
-//            analyzeService.findYoutube(FindYoutubeRequest.builder()
-//                    .link(link)
-//                    .build());
-//
-//            return ResponseEntity.ok().body(findYoutubeResponseList);
-//        } catch (NotFoundException e){
-//            log.error(e.getMessage());
-//            return ResponseEntity.badRequest().body(null);
-//        } catch (RuntimeException e){
-//            log.error(e.getMessage());
-//            return ResponseEntity.internalServerError().body(null);
-//        }
     }
 
     @GetMapping("/youtube/comment")
