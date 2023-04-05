@@ -41,11 +41,11 @@ const DailyAnalysis = ({
 
       <S.ContentWrapper>
         <BarChart
-          labels={['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24']}
+          labels={socialAnalysis?.map((item) => item.date.slice(5))}
           barLabel="언급량"
-          barData={[193, 10, 300, 124, 284, 84, 400]}
+          barData={socialAnalysis?.map((item) => item.mentionCountInfo.total)}
           lineLabel="피치 지수"
-          lineData={[33, 45, 87, 49, 81, 67, 72]}
+          lineData={socialAnalysis?.map((item) => item.grapeQuotientInfo.positive)}
         />
 
         <S.BadgeWrapper>
