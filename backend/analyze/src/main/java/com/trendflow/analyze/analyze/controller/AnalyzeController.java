@@ -1,21 +1,26 @@
 package com.trendflow.analyze.analyze.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trendflow.analyze.analyze.dto.request.*;
 import com.trendflow.analyze.analyze.dto.response.*;
+import com.trendflow.analyze.analyze.dto.vo.Payload;
 import com.trendflow.analyze.analyze.service.AnalyzeService;
 import com.trendflow.analyze.global.code.AnalyzeCode;
 import com.trendflow.analyze.global.exception.NotFoundException;
 import com.trendflow.analyze.global.response.BasicResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @RestController
@@ -81,23 +86,39 @@ public class AnalyzeController {
     }
 
     @GetMapping("/youtube")
-    public ResponseEntity<List<FindYoutubeResponse>> findYoutube(@RequestParam String link){
+    public SseEmitter findYoutube(@RequestParam String link){
         log.info("findYoutube - Call");
 
-        try {
-            List<FindYoutubeResponse> findYoutubeResponseList
-                    = analyzeService.findYoutube(FindYoutubeRequest.builder()
-                                                    .link(link)
-                                                    .build());
-
-            return ResponseEntity.ok().body(findYoutubeResponseList);
-        } catch (NotFoundException e){
-            log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(null);
-        } catch (RuntimeException e){
-            log.error(e.getMessage());
-            return ResponseEntity.internalServerError().body(null);
-        }
+        SseEmitter emitter = new SseEmitter();
+        TaskExecutor taskExecutor = (TaskExecutor) Executors.newSingleThreadExecutor();
+        taskExecutor.execute(() -> {
+            try {
+                Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
+                                    .link(link)
+                                    .build());
+                String json = new ObjectMapper().writeValueAsString(payload);
+                emitter.send(json);
+                emitter.complete();
+            } catch (Exception e) {
+                emitter.completeWithError(e);
+            }
+        });
+        return emitter;
+//        try {
+//
+//
+//            analyzeService.findYoutube(FindYoutubeRequest.builder()
+//                    .link(link)
+//                    .build());
+//
+//            return ResponseEntity.ok().body(findYoutubeResponseList);
+//        } catch (NotFoundException e){
+//            log.error(e.getMessage());
+//            return ResponseEntity.badRequest().body(null);
+//        } catch (RuntimeException e){
+//            log.error(e.getMessage());
+//            return ResponseEntity.internalServerError().body(null);
+//        }
     }
 
     @GetMapping("/youtube/comment")

@@ -207,11 +207,9 @@ public class AnalyzeService {
         return findRelationContentResponseList;
     }
 
-    public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {
-        System.out.println("findYoutubeRequest = " + findYoutubeRequest);
+    public Payload findYoutube(FindYoutubeRequest findYoutubeRequest) {
         kafkaService.sendYoutubeUrl(findYoutubeRequest.getLink());
-        Payload payload = kafkaService.consumeYoutubeAnalyze();
-        return null;
+        return kafkaService.consumeYoutubeAnalyze();
     }
 
     public List<FindYoutubeCommentResponse> findYoutubeComment(FindYoutubeCommentRequest findYoutubeCommentRequest) {
