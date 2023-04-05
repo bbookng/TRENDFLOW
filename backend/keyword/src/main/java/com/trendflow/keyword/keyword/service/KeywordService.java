@@ -229,6 +229,8 @@ public class KeywordService {
 
         List<RelateCode> codeList = commonService.getRelateCode(code);
 
+        System.out.println("codeList.toString() = " + codeList.toString());
+
         return keywordRepository.findByKeywordAndDatePage(keyword,
                 codeList.stream()
                         .map(RelateCode::getPlatformCode)
