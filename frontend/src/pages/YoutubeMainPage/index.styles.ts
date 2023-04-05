@@ -165,7 +165,7 @@ export const Title = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 2; // 원하는 라인수
   -webkit-box-orient: vertical;
-
+  color: ${({ theme }) => theme.text200};
   @media ${MEDIA_QUERY.DESKTOP} {
     font-size: 1.3rem;
   }

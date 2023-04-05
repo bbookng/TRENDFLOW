@@ -82,11 +82,17 @@ const YoutubeMainPage = () => {
       <S.FlexBox>
         {youtubeList.map((item) => {
           return item.thumbnail ? (
-            <S.YoutubeItem>
+            <S.YoutubeItem
+              key={item.id}
+              onClick={() => navi('result', { state: { link: item.link } })}
+            >
               <S.Thumbnail src={item.thumbnail} />
             </S.YoutubeItem>
           ) : (
-            <S.YoutubeItem onClick={() => navi('result', { state: { link: item.link } })}>
+            <S.YoutubeItem
+              key={item.id}
+              onClick={() => navi('result', { state: { link: item.link } })}
+            >
               <Svg size={50}>
                 <Youtube2 />
               </Svg>
