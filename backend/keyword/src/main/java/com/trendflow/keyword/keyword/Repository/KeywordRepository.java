@@ -53,6 +53,8 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
             "FROM keyword k " +
             "WHERE k.keyword = :keyword " +
             "AND k.platform_code IN (:codeList) " +
+            "AND k.reg_dt >= :startDate " +
+            "AND k.reg_dt <= :endDate " +
             "LIMIT :limit " +
             "OFFSET :offset ;", nativeQuery = true)
     List<Keyword> findByKeywordAndDatePage(@Param("keyword") String keyword,
