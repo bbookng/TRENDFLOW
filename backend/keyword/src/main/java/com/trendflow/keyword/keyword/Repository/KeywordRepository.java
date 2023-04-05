@@ -3,6 +3,7 @@ package com.trendflow.keyword.keyword.Repository;
 import com.trendflow.keyword.keyword.entity.Keyword;
 import com.trendflow.keyword.keyword.entity.KeywordCount;
 import com.trendflow.keyword.keyword.entity.KeywordDistinct;
+import com.trendflow.keyword.keyword.entity.RelatedKeywordCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -64,4 +65,18 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
                                            @Param("startDate") Integer startDate,
                                            @Param("endDate") Integer endDate);
 
+    @Query(value = "SELECT keyword, sum(count) as cnt FROM keyword "+
+            "WHERE source_id IN" +
+            "(  SELECT source_id FROM keyword "+
+                "WHERE keyword = :keyword "
+                +"AND reg_dt >= :fromDate "+
+                "AND reg_dt <= :toDate "+
+            ") " +
+            "GROUP BY keyword " +
+            "ORDER BY cnt "+
+            "DESC limit 100; ",
+            nativeQuery = true)
+    List<RelatedKeywordCount> findByKeywordAndFromToDate(@Param("keyword")String keyword,
+                                                   @Param("fromDate") int fromDate,
+                                                   @Param("toDate") int toDate );
 }
