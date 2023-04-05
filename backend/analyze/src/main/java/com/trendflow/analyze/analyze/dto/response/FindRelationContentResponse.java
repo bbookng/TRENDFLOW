@@ -7,7 +7,6 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Data
@@ -21,10 +20,8 @@ public class FindRelationContentResponse {
     private String link;
 
     public static FindRelationContentResponse of(Source source) {
-        AtomicLong id = new AtomicLong();
-
         return FindRelationContentResponse.builder()
-                .id(id.getAndIncrement() + 1)
+                .id(source.getSourceId())
                 .title(source.getTitle())
                 .content(source.getTitle())
                 .date(source.getDate())

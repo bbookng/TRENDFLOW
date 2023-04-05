@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class Source {
+    private Long sourceId;
     private String thumbnail;
     private String title;
     private String content;
