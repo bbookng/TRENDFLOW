@@ -7,10 +7,10 @@ import { HotKeywords, NoBookmark, DailyAnalysis } from '@/components/organisms/M
 import HotKeywordsSkeleton from '@/components/organisms/MainPage/HotKeywords/Skeleton';
 import { useGetBookmarkQuery } from '@/apis/member';
 import { getToken } from '@/utils/token';
-import * as S from './index.styles';
 import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
 import { useAppDispatch } from '@/hooks/storeHook';
 import { setHotKeyword } from '@/store/slices/keywordSlice';
+import * as S from './index.styles';
 
 const MainPage = () => {
   const token = getToken();
@@ -58,9 +58,9 @@ const MainPage = () => {
       skip: !bookmark,
     }
   );
-  useEffect(() => {
-    dispatch(setHotKeyword(hotKeywords?.week[0].keyword));
-  }, [hotKeywords]);
+  // useEffect(() => {
+  //   dispatch(setHotKeyword(hotKeywords?.week[0].keyword));
+  // }, [hotKeywords]);
   return (
     <S.Wrapper>
       <SearchBar placeholder="키워드를 입력하세요" />
