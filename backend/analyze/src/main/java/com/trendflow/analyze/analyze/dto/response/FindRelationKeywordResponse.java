@@ -15,7 +15,7 @@ public class FindRelationKeywordResponse {
     private String relationKeyword;
     private Long count;
 
-    public static FindRelationKeywordResponse fromEntity(Relation relation){
+    public static FindRelationKeywordResponse of(Relation relation){
         return FindRelationKeywordResponse.builder()
                 .keywordId(relation.getKeywordId())
                 .keyword(relation.getKeyword())

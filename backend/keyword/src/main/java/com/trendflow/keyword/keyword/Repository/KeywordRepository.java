@@ -38,7 +38,7 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
     @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
             "FROM keyword k " +
             "WHERE k.keyword = :keyword ;", nativeQuery = true)
-    List<Keyword> findByKeyword(@Param("keyword") String keyword);
+    List<Keyword> findAllByKeyword(@Param("keyword") String keyword);
 
     @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
             "FROM keyword k " +
@@ -48,5 +48,20 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
     List<Keyword> findByKeywordAndDate(@Param("keyword") String keyword,
                                        @Param("startDate") Integer startDate,
                                        @Param("endDate") Integer endDate);
+
+    @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
+            "FROM keyword k " +
+            "WHERE k.keyword = :keyword " +
+            "AND k.platform_code IN (:codeList) " +
+            "AND k.reg_dt >= :startDate " +
+            "AND k.reg_dt <= :endDate " +
+            "LIMIT :limit " +
+            "OFFSET :offset ;", nativeQuery = true)
+    List<Keyword> findByKeywordAndDatePage(@Param("keyword") String keyword,
+                                           @Param("codeList") List<String> codeList,
+                                           @Param("offset") Integer offset,
+                                           @Param("limit") Integer limit,
+                                           @Param("startDate") Integer startDate,
+                                           @Param("endDate") Integer endDate);
 
 }
