@@ -96,8 +96,8 @@ public class AnalyzeController {
                 Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
                                     .link(link)
                                     .build());
-                String json = new ObjectMapper().writeValueAsString(payload);
-                emitter.send(json);
+//                String json = new ObjectMapper().writeValueAsString();
+                emitter.send(payload.toString());
                 emitter.complete();
             } catch (Exception e) {
                 emitter.completeWithError(e);
