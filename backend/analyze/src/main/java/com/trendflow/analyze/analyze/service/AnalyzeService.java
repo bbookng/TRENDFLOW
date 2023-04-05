@@ -166,6 +166,8 @@ public class AnalyzeService {
                         return youtubeNow;
                     });
 
+            System.out.println("youtubeSourceList.size() = " + youtubeSourceList.size());
+
             if (page * perPage <= youtubeSourceList.size()) {
                 // page 별로 짤라서 반환
                 PageRequest pageRequest = PageRequest.of(page, perPage);
