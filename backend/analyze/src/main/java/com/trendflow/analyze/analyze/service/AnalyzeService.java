@@ -166,11 +166,9 @@ public class AnalyzeService {
                         return youtubeNow;
                     });
 
-            System.out.println("youtubeSourceList.size() = " + youtubeSourceList.size());
-
             if (page * perPage <= youtubeSourceList.size()) {
                 // page 별로 짤라서 반환
-                PageRequest pageRequest = PageRequest.of(page, perPage);
+                PageRequest pageRequest = PageRequest.of((page - 1), perPage);
                 int start = (int) pageRequest.getOffset();
                 int end = Math.min((start + pageRequest.getPageSize()), youtubeSourceList.size());
                 Page<YoutubeSource> youtubeSourcePage = new PageImpl<>(youtubeSourceList.subList(start, end), pageRequest, youtubeSourceList.size());
