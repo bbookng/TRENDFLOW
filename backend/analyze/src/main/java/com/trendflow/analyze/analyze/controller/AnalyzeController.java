@@ -32,8 +32,6 @@ public class AnalyzeController {
         log.info("findSocial - Call");
 
         try {
-            keyword = URLEncoder.encode(keyword, "UTF-8");
-
             List<FindSocialResponse> findSocialResponseList
                     = analyzeService.findSocial(FindSocialRequest.builder()
                                                 .keyword(keyword)
@@ -45,7 +43,7 @@ public class AnalyzeController {
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);
-        } catch (UnsupportedEncodingException | RuntimeException e){
+        } catch (RuntimeException e){
             e.printStackTrace();
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().body(null);
@@ -62,8 +60,6 @@ public class AnalyzeController {
         log.info("findRelationContent - Call");
 
         try {
-            keyword = URLEncoder.encode(keyword, "UTF-8");
-
             List<FindRelationContentResponse> findRelationContentResponseList
                     = analyzeService.findRelationContent(FindRelationContentRequest.builder()
                                                         .keyword(keyword)
@@ -78,7 +74,7 @@ public class AnalyzeController {
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);
-        } catch (UnsupportedEncodingException | RuntimeException e){
+        } catch (RuntimeException e){
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().body(null);
         }
@@ -137,9 +133,6 @@ public class AnalyzeController {
         log.info("findYoutubeComment - Call");
 
         try {
-            keyword1 = URLEncoder.encode(keyword1, "UTF-8");
-            keyword2 = URLEncoder.encode(keyword2, "UTF-8");
-
             FindCompareKeywordResponse findCompareKeywordResponse
                     = analyzeService.findCompareKeyword(FindCompareKeywordRequest.builder()
                                                             .keywordA(keyword1)
@@ -151,7 +144,7 @@ public class AnalyzeController {
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);
-        } catch (UnsupportedEncodingException | RuntimeException e){
+        } catch (RuntimeException e){
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().body(null);
         }
