@@ -2,25 +2,20 @@ package com.trendflow.analyze.analyze.controller;
 
 import com.trendflow.analyze.analyze.dto.request.*;
 import com.trendflow.analyze.analyze.dto.response.*;
-import com.trendflow.analyze.analyze.dto.vo.Payload;
 import com.trendflow.analyze.analyze.service.AnalyzeService;
+import com.trendflow.analyze.global.config.SseEmitters;
 import com.trendflow.analyze.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.scheduling.quartz.SimpleThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 @Slf4j
 @RestController
@@ -28,6 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @RequestMapping("/analyze")
 public class AnalyzeController {
     private final AnalyzeService analyzeService;
+    private final SseEmitters sseEmitters;
 
     @GetMapping("/social")
     public ResponseEntity<List<FindSocialResponse>> findSocial(@RequestParam String keyword,
@@ -86,30 +82,38 @@ public class AnalyzeController {
     }
 
     @GetMapping("/youtube")
-    public SseEmitter findYoutube(@RequestParam String link){
+    public ResponseEntity<SseEmitter> findYoutube(@RequestParam String link){
         log.info("findYoutube - Call");
 
-        SseEmitter emitter = new SseEmitter();
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(5);	// 기본 스레드 수
-        taskExecutor.setMaxPoolSize(10);	// 최대 스레드 수
-        taskExecutor.setQueueCapacity(100);	// Queue 사이즈
-        taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        SseEmitter emitter = new SseEmitter(60 * 1000L);
+        sseEmitters.add(24L, emitter);
+        try {
+            emitter.send(SseEmitter.event()
+                    .name("connect")
+                    .data("connected!"));
 
-        taskExecutor.execute(() -> {
-            try {
-                Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
-                                    .link(link)
-                                    .build());
-//                String json = new ObjectMapper().writeValueAsString();
-                emitter.send(payload.toString());
-                emitter.complete();
-            } catch (Exception e) {
-                emitter.completeWithError(e);
-            }
-        });
-        return emitter;
+            ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+            taskExecutor.execute(() -> {
+                
+                System.out.println("test");
+            });
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok(emitter);
+//        taskExecutor.execute(() -> {
+//            try {
+//                Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
+//                                    .link(link)
+//                                    .build());
+////                String json = new ObjectMapper().writeValueAsString();
+//                emitter.send(payload.toString());
+//                emitter.complete();
+//            } catch (Exception e) {
+//                emitter.completeWithError(e);
+//            }
+//        });
 //        try {
 //
 //
