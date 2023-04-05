@@ -1,18 +1,17 @@
 package com.trendflow.analyze.analyze.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trendflow.analyze.analyze.dto.request.*;
 import com.trendflow.analyze.analyze.dto.response.*;
 import com.trendflow.analyze.analyze.dto.vo.Payload;
 import com.trendflow.analyze.analyze.service.AnalyzeService;
-import com.trendflow.analyze.global.code.AnalyzeCode;
 import com.trendflow.analyze.global.exception.NotFoundException;
-import com.trendflow.analyze.global.response.BasicResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.quartz.SimpleThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -21,6 +20,7 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Slf4j
 @RestController
@@ -90,7 +90,13 @@ public class AnalyzeController {
         log.info("findYoutube - Call");
 
         SseEmitter emitter = new SseEmitter();
-        TaskExecutor taskExecutor = (TaskExecutor) Executors.newSingleThreadExecutor();
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(5);	// 기본 스레드 수
+        taskExecutor.setMaxPoolSize(10);	// 최대 스레드 수
+        taskExecutor.setQueueCapacity(100);	// Queue 사이즈
+        taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+
         taskExecutor.execute(() -> {
             try {
                 Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
