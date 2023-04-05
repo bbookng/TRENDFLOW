@@ -369,8 +369,6 @@ public class AnalyzeService {
             else sentimentCountMap.put(now, setGrapeQuotientInfo(sentimentCountMap.get(now), score, count));
         }
 
-
-
         return SocialMap.builder()
                 .keywordCountMap(keywordCountMap)
                 .sentimentCountMap(sentimentCountMap)
@@ -450,8 +448,8 @@ public class AnalyzeService {
     }
 
     private GrapeQuotientInfo setGrapeQuotientInfo(GrapeQuotientInfo grapeQuotientInfo, Double score, Long count) {
-        if (score > 0.0) grapeQuotientInfo.setPositive(count.intValue());
-        else if (score < 0.0) grapeQuotientInfo.setNegative(count.intValue());
+        if (score == 1.0) grapeQuotientInfo.setPositive(count.intValue());
+        else if (score == 0.0) grapeQuotientInfo.setNegative(count.intValue());
         else grapeQuotientInfo.setNeutral(count.intValue());
 
         return grapeQuotientInfo;
