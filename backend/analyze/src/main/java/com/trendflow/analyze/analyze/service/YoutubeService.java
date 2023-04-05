@@ -46,7 +46,7 @@ public class YoutubeService {
                     .queryParam("q", keyword)
                     .queryParam("type", "video")
                     .queryParam("key", YOUTUBE_KEY)
-                    .build(true);
+                    .build(false);
 
             System.out.println(uriBuilder.toString());
 
