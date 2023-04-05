@@ -42,7 +42,7 @@ const SearchBar = ({ placeholder, searched }: SearchBarPropsInterface) => {
           data-tooltip-content="공백은 입력할 수 없습니다."
           data-tooltip-place="bottom"
         />
-        <button type="submit">
+        <button type="submit" style={{ backgroundColor: 'transparent' }}>
           <svg
             width="16"
             height="16"

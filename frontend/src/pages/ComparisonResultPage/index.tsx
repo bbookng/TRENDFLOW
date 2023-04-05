@@ -15,7 +15,7 @@ import {
   TrendChartContentsWrapper,
 } from '@/pages/SocialResultPage/index.styles';
 import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
-import { useGetComparisionAnalysisQuery, useGetSocialAnalysisQuery } from '@/apis/analyze';
+import { useGetComparisonAnalysisQuery, useGetSocialAnalysisQuery } from '@/apis/analyze';
 import ComparisonLineChart from '@/components/organisms/ComparisonResult/ComparisonLineChart';
 import * as S from './index.styles';
 
@@ -29,7 +29,7 @@ const ComparisonResultPage = () => {
   const [endDate, setEndDate] = useState<Date | null>(new Date());
 
   // 키워드1 소셜 분석
-  const { data: keyword1SocialAnalysis, isSuccess: keyword1SocialAnaysisSuccess } =
+  const { data: keyword1SocialAnalysis, isSuccess: keyword1SocialAnalysisSuccess } =
     useGetSocialAnalysisQuery(
       {
         keyword: keyword1,
@@ -42,7 +42,7 @@ const ComparisonResultPage = () => {
     );
 
   // 키워드2 소셜 분석
-  const { data: keyword2SocialAnalysis, isSuccess: keyword2SocialAnaysisSuccess } =
+  const { data: keyword2SocialAnalysis, isSuccess: keyword2SocialAnalysisSuccess } =
     useGetSocialAnalysisQuery(
       {
         keyword: keyword2,
@@ -55,7 +55,7 @@ const ComparisonResultPage = () => {
     );
 
   // 비교 분석
-  const { data: comparisonAnalysis } = useGetComparisionAnalysisQuery(
+  const { data: comparisonAnalysis } = useGetComparisonAnalysisQuery(
     {
       keyword1,
       keyword2,

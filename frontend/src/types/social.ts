@@ -34,7 +34,7 @@ export interface SocialContentInterface {
   link: string;
 }
 
-export interface SocialReqBodyInterface {
+export interface SocialReqInterface {
   keyword: string;
   startDate: string;
   endDate: string;
