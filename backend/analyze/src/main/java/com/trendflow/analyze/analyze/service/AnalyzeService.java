@@ -145,14 +145,10 @@ public class AnalyzeService {
         List<Keyword> keywordList = keywordService.getKeywordPage(keyword, code, page, perPage, startDate, endDate);
 
         // 원본 데이터 요청
-        List<Source> sourceList = commonService.getSource(
-                keyword,
-                keywordList.stream()
-                    .map(Keyword::getSourceId)
-                    .distinct()
-                    .collect(Collectors.toList()),
-                code);
-
+        List<Source> sourceList = commonService.getSource(keywordList.stream()
+                                                            .map(Keyword::getSourceId)
+                                                            .distinct()
+                                                            .collect(Collectors.toList()));
         return FindRelationContentResponse.toList(sourceList);
     }
 
