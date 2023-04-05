@@ -36,6 +36,11 @@ export const WordCloudPaper = styled(Paper)`
 export const WordCloudContentsWrapper = styled.div`
   width: 100%;
   height: 50%;
+  & > div > svg > g {
+    & > text {
+      cursor: pointer;
+    }
+  }
   @media ${MEDIA_QUERY.DESKTOP} {
     height: 100%;
   }

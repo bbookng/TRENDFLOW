@@ -22,7 +22,7 @@ interface LineChartPropsInterface {
 const LineChart = ({ socialAnalysisData }: Partial<LineChartPropsInterface>) => {
   const theme = useTheme();
 
-  const labels = socialAnalysisData?.map((data) => data.date);
+  const labels = socialAnalysisData?.map((data) => data.date.slice(5));
 
   const options = {
     responsive: true,

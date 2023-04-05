@@ -29,7 +29,7 @@ Chart.register(
 export interface BarChartPropsInterface {
   desktopWidth?: string;
   barColor?: string;
-  labels: Array<string>;
+  labels: Array<string> | undefined;
   barLabel: string;
   lineLabel: string;
   barData: Array<number> | undefined;
