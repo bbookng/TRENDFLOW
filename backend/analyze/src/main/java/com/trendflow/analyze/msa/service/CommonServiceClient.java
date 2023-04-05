@@ -15,5 +15,5 @@ public interface CommonServiceClient {
     @GetMapping("/common/local/{name}")
     LocalCode getLocalCode(@PathVariable String name);
     @PostMapping("/common/source")
-    List<Source> getSource(@RequestBody GetSourceRequest getSourceRequest);
+    List<Source> getSource(@RequestBody List<Long> sourceIdList);
 }
