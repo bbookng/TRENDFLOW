@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect } from 'react';
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
 import { useGetHotKeywordsQuery, useGetRelatedKeywordsQuery } from '@/apis/keyword';
 import { SearchBar } from '@/components/molecules';
@@ -8,7 +9,7 @@ import { useGetBookmarkQuery } from '@/apis/member';
 import { getToken } from '@/utils/token';
 import * as S from './index.styles';
 import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
-import { useAppDispatch, useAppSelector } from '@/hooks/storeHook';
+import { useAppDispatch } from '@/hooks/storeHook';
 import { setHotKeyword } from '@/store/slices/keywordSlice';
 
 const MainPage = () => {
@@ -24,7 +25,6 @@ const MainPage = () => {
     data: hotKeywords,
     error: hotKeywordsError,
     isLoading: hotKeywordsLoading,
-    isSuccess: hotKeywordsSuccess,
   } = useGetHotKeywordsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
@@ -58,9 +58,9 @@ const MainPage = () => {
       skip: !bookmark,
     }
   );
-  if (hotKeywordsSuccess) {
+  useEffect(() => {
     dispatch(setHotKeyword(hotKeywords?.week[0].keyword));
-  }
+  }, [hotKeywords]);
   return (
     <S.Wrapper>
       <SearchBar placeholder="키워드를 입력하세요" />

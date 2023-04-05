@@ -45,12 +45,13 @@ export const FormInput = styled(Input)`
   height: 48px;
   padding: 0 2.6rem;
 
-  font-size: 1.2rem;
+  font-size: 1rem;
   background-color: ${({ theme }) => theme.contentBackground};
   border-radius: ${BORDER_RADIUS.XL};
   box-shadow: ${BOX_SHADOW.BLACK_SM};
 
   @media ${MEDIA_QUERY.DESKTOP} {
+    font-size: 1.2rem;
     margin-right: 0;
   }
 `;
