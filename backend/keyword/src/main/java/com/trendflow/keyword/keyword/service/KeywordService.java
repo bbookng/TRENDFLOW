@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +49,8 @@ public class KeywordService {
             60 분마다 갱신
          */
 
-        Integer today = Integer.parseInt(LocalDate.now().toString().replace("-", ""));
+//        Integer today = Integer.parseInt(LocalDate.now().toString().replace("-", ""));
+        Integer today = Integer.parseInt(LocalDate.of(2023, 2, 28).toString().replace("-", ""));
 
         // 일간 HOT Keyword
         // 이미 계산된 결과가 없으면 (만료시간이 되서 결과가 사라져 갱신해야되는 경우) 계산 시작
@@ -86,7 +86,8 @@ public class KeywordService {
         List<HotKeyword> weekNow = hotKeywordRepository.findById(KeywordCacheCode.WEEK_HOT_KEYWORD_RESULT.getCode())
                 .orElseGet(() -> {
 
-                    Integer startDate = Integer.parseInt(LocalDate.now().minusDays(7).toString().replace("-", ""));
+//                    Integer startDate = Integer.parseInt(LocalDate.now().minusDays(7).toString().replace("-", ""));
+                    Integer startDate = Integer.parseInt(LocalDate.of(2023, 2, 28).minusDays(7).toString().replace("-", ""));
 
                     List<KeywordDistinct> weekKeywordList = keywordRepository.findByRegDt(startDate, today, 8);
 
@@ -121,7 +122,8 @@ public class KeywordService {
         List<RecommendKeyword> recommendKeywordList = recommendKeywordRepository.findById(KeywordCacheCode.RECOMMEND_KEYWORD.getCode())
                 .orElseGet(() -> {
 
-                    Integer today = Integer.parseInt(LocalDate.now().toString().replace("-", ""));
+//                    Integer today = Integer.parseInt(LocalDate.now().toString().replace("-", ""));
+                    Integer today = Integer.parseInt(LocalDate.of(2023, 2, 28).toString().replace("-", ""));
 
                     List<KeywordDistinct> keywordList = keywordRepository.findByRegDt(today, today, 10);
 
@@ -148,11 +150,14 @@ public class KeywordService {
         String key = String.format("%s_%s", KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), keyword);
 
         AtomicInteger rank = new AtomicInteger();
+        // 캐시에서 연관 키워드 저장되어있는지 확인
         List<RelateKeyword> relateKeywordList = relateKeywordRepository.findById(key)
                 .orElseGet(() -> {
-                    List<RelateKeyword> now = analyzeService.getRelation(keywordIdList.stream()
-                                    .map(Keyword::getKeywordId)
-                                    .collect(Collectors.toList())
+                    // 캐시에 저장되어 있지 않으면 analyze Service 쪽으로 요청을 보내서 연관 키워드를 가져옴
+                    List<RelateKeyword> now = analyzeService.getRelation(
+                                keywordIdList.stream()
+                                        .map(Keyword::getKeywordId)
+                                        .collect(Collectors.toList())
                             ).stream()
                             .map(relation ->
                                     RelateKeyword.builder()
@@ -184,9 +189,10 @@ public class KeywordService {
 
         List<WordCloudKeyword> wordCloudKeywordList = wordCloudKeywordRepository.findById(key)
                 .orElseGet(() -> {
-                    List<WordCloudKeyword> now = analyzeService.getRelationForWordCloud(keywordIdList.stream()
-                                .map(Keyword::getKeywordId)
-                                .collect(Collectors.toList())
+                    List<WordCloudKeyword> now = analyzeService.getRelationForWordCloud(
+                                keywordIdList.stream()
+                                    .map(Keyword::getKeywordId)
+                                    .collect(Collectors.toList())
                             ).stream()
                             .map(relation ->
                                     WordCloudKeyword.builder()
@@ -197,29 +203,29 @@ public class KeywordService {
 
                     wordCloudKeywordRepository.saveResult(key, now, wordCloudExpire);
                     return now;
-
                 });
 
         return FindWordCloudResponse.toList(wordCloudKeywordList);
     }
 
+    // feign 서비스
     @Transactional
     public List<Keyword> findKeyword(String keyword, LocalDate startDate, LocalDate endDate) {
 
         Integer start = Integer.parseInt(startDate.toString().replace("-", ""));
-        Integer today = Integer.parseInt(LocalDate.now().toString().replace("-", ""));
+        Integer end = Integer.parseInt(endDate.toString().replace("-", ""));
 
-        return keywordRepository.findByKeywordAndRegDtBetweenOrderBySourceId(keyword, start, today);
+        return keywordRepository.findByKeywordAndDate(keyword, start, end);
     }
 
     @Transactional
     public List<KeywordCount> findKeywordCount(String keyword, LocalDate startDate, LocalDate endDate) {
 
         Integer start = Integer.parseInt(startDate.toString().replace("-", ""));
-        Integer today = Integer.parseInt(LocalDate.now().toString().replace("-", ""));
+        Integer end = Integer.parseInt(endDate.toString().replace("-", ""));
 
         List<KeywordCount> keywordCountList =
-                keywordRepository.countByPlatformCodeAndRegDt(keyword, start, today);
+                keywordRepository.countByPlatformCodeAndRegDt(keyword, start, end);
         return keywordCountList;
     }
 

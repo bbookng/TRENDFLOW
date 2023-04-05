@@ -3,6 +3,7 @@ package com.trendflow.common.local.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -28,7 +29,7 @@ public class Source {
     @Column(name = "content")
     private String content;
     @Column(name = "reg_dt")
-    private LocalDateTime regDt;
+    private LocalDate regDt;
     @Column(name = "thumb_img")
     private String thumbImg;
 }

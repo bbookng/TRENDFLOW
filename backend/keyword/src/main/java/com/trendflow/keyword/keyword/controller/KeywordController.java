@@ -59,7 +59,7 @@ public class KeywordController {
         }
     }
 
-    @GetMapping("/relate")
+    @GetMapping("/related")
     public ResponseEntity<List<FindRelateKeywordResponse>> findRelateKeyword(@RequestParam String keyword){
         log.info("findRelateKeyword - Call");
         System.out.println("relate!!");

@@ -12,13 +12,15 @@ import java.util.List;
 
 @Repository
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
-    @Query(value = "SELECT kc.keyword as keyword, SUM(kc.count) as count\n" +
-            "FROM keyword_count kc \n" +
-            "WHERE kc.reg_dt >= :startDate \n" +
-            "AND kc.reg_dt <= :endDate \n" +
-            "GROUP BY kc.keyword\n" +
-            "ORDER BY count DESC LIMIT :limit", nativeQuery = true)
-    List<KeywordDistinct> findByRegDt(@Param("startDate") Integer startDate, @Param("endDate") Integer endDate, @Param("limit") Integer limit);
+    @Query(value = "SELECT kc.keyword as keyword, SUM(kc.count) as count " +
+            "FROM keyword_count kc " +
+            "WHERE kc.reg_dt >= :startDate " +
+            "AND kc.reg_dt <= :endDate " +
+            "GROUP BY kc.keyword " +
+            "ORDER BY count DESC LIMIT :limit ;", nativeQuery = true)
+    List<KeywordDistinct> findByRegDt(@Param("startDate") Integer startDate,
+                                      @Param("endDate") Integer endDate,
+                                      @Param("limit") Integer limit);
 
     @Query(value =
             "SELECT k.platform_code as platformCode, SUM(k.count) as count, DATE(k.reg_dt) as regDt " +
@@ -29,13 +31,22 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
                     "GROUP BY k.platform_code, k.reg_dt " +
                     "ORDER BY k.reg_dt, platformCode;",
             nativeQuery = true)
-    List<KeywordCount> countByPlatformCodeAndRegDt(@Param("keyword") String keyword, @Param("startDate") Integer startDate, @Param("endDate") Integer endDate);
+    List<KeywordCount> countByPlatformCodeAndRegDt(@Param("keyword") String keyword,
+                                                   @Param("startDate") Integer startDate,
+                                                   @Param("endDate") Integer endDate);
 
-    @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, k.reg_dt " +
+    @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
             "FROM keyword k " +
-            "WHERE k.keyword = :keyword", nativeQuery = true)
+            "WHERE k.keyword = :keyword ;", nativeQuery = true)
     List<Keyword> findByKeyword(@Param("keyword") String keyword);
 
-    List<Keyword> findByKeywordAndRegDtBetweenOrderBySourceId(String keyword, Integer atStartOfDay, Integer atStartOfDay1);
+    @Query(value = "SELECT k.keyword_id, k.source_id, k.platform_code, k.keyword, k.count, DATE(k.reg_dt) as reg_dt " +
+            "FROM keyword k " +
+            "WHERE k.keyword = :keyword " +
+            "AND k.reg_dt >= :startDate " +
+            "AND k.reg_dt <= :endDate ;", nativeQuery = true)
+    List<Keyword> findByKeywordAndDate(@Param("keyword") String keyword,
+                                       @Param("startDate") Integer startDate,
+                                       @Param("endDate") Integer endDate);
 
 }
