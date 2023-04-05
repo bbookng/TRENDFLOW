@@ -68,6 +68,7 @@ const SocialResultPage = () => {
       params: { keyword: keyword! },
     };
     postBookmark(req);
+    setIsBookmarked((prev) => !prev)
   };
 
   return (
@@ -116,7 +117,7 @@ const SocialResultPage = () => {
         <S.ChartWrapper>
           <S.Title>분석 그래프</S.Title>
           <BarChart
-            labels={['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24']}
+            labels={socialAnalysisData?.map((item) => item.date.slice(5))}
             barLabel="언급량"
             barData={socialAnalysisData?.map((item) => item.mentionCountInfo.total)}
             lineLabel="피치 지수"

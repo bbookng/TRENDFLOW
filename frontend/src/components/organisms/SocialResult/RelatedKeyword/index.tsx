@@ -1,8 +1,7 @@
 import WordCloud from 'react-d3-cloud';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import _ from 'lodash';
 import * as S from './index.styles';
-import { RankingItem } from '@/components/molecules';
 import { WordCloudInterface } from '@/types/keyword';
 import { RankingListItemInterface } from '@/types/ranking';
 
@@ -16,7 +15,6 @@ const RelatedKeyword = ({ wordCloudKeywords, relatedKeywords }: Props) => {
   const wordCloudData = useMemo(() => {
     return _.cloneDeep(wordCloudKeywords);
   }, [wordCloudKeywords]);
-
   return (
     <S.Wrapper>
       <S.SpaceTypography variant="H4">연관 키워드</S.SpaceTypography>
