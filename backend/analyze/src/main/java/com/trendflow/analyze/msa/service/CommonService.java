@@ -20,6 +20,7 @@ public class CommonService {
         return localCode.getName();
 }
     public List<Source> getSource(List<Long> sourceIdList){
+        System.out.println("sourceIdList.toString() = " + sourceIdList.toString());
         return commonServiceClient.getSource(GetSourceRequest.builder()
                         .sourceIdList(sourceIdList)
                         .build());
