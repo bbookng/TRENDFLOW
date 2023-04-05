@@ -25,7 +25,6 @@ public class LocalCodeService {
     private final LocalCodeRepository localCodeRepository;
     private final RelateCodeRepository relateCodeRepository;
     private final SourceRepository sourceRepository;
-    private final YoutubeService youtubeService;
 
     @Transactional
     public List<FindLocalCodeResponse> findAllLocalCode(String groupCode) {
@@ -46,9 +45,7 @@ public class LocalCodeService {
         return FindRelateCodeResponse.toList(relateCodeList);
     }
 
-    public List<GetSourceResponse> getSource(GetSourceRequest getSourceRequest) throws RuntimeException {
-        List<Long> sourceIdList = getSourceRequest.getSourceIdList();
-
+    public List<GetSourceResponse> getSource(List<Long> sourceIdList) throws RuntimeException {
         List<Source> sourceList = sourceRepository.findByPlatformCodeInAndSourceIdIn(sourceIdList);
         return GetSourceResponse.toList(sourceList);
     }
