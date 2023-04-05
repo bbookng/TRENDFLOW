@@ -33,7 +33,7 @@ public class MemberController {
     }
 
     @PostMapping("/bookmark")
-    public ResponseEntity<?>  registBookmark(@RequestHeader("Authorization") String accessToken,
+    public ResponseEntity<?> registBookmark(@RequestHeader("Authorization") String accessToken,
                                              @RequestBody RegistBookmarkRequest registBookmarkRequest) {
         try {
             log.info(registBookmarkRequest.toString());
