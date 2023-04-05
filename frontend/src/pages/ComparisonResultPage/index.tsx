@@ -112,7 +112,7 @@ const ComparisonResultPage = () => {
         <S.ChartWrapper>
           <Label>{keyword1}</Label>
           <BarChart
-            labels={['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24']}
+            labels={keyword1SocialAnalysis?.map((item) => item.date.slice(5))}
             barLabel="언급량"
             barData={keyword1SocialAnalysis?.map((item) => item.mentionCountInfo.total)}
             lineLabel="피치 지수"
@@ -124,7 +124,7 @@ const ComparisonResultPage = () => {
         <S.ChartWrapper>
           <Label>{keyword2}</Label>
           <BarChart
-            labels={['3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24']}
+            labels={keyword1SocialAnalysis?.map((item) => item.date.slice(5))}
             barLabel="언급량"
             barData={keyword1SocialAnalysis?.map((item) => item.mentionCountInfo.total)}
             lineLabel="피치 지수"

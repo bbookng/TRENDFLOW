@@ -6,10 +6,12 @@ import navbarReducer from '@/store/slices/navbarSlice';
 import userReducer from '@/store/slices/userSlice';
 import toastReducer from '@/store/slices/toastSlice';
 import guideReducer from '@/store/slices/guideSlice';
+import keywordReducer from '@/store/slices/keywordSlice';
 import { keywordApi } from '@/apis/keyword';
 import { analyzeApi } from '@/apis/analyze';
 
 const rootReducer = combineReducers({
+  bestHotKeyword: keywordReducer,
   isDark: themeReducer,
   test: testReducer,
   isNavbar: navbarReducer,
