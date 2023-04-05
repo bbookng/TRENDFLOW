@@ -48,6 +48,8 @@ public class YoutubeService {
                     .queryParam("key", YOUTUBE_KEY)
                     .build(true);
 
+            System.out.println(uriBuilder.toString());
+
             HttpEntity<MultiValueMap<String, String>> youtubeRequest = new HttpEntity<>(body, headers);
             RestTemplate rt = new RestTemplate();
             ResponseEntity<String> response = rt.exchange(
