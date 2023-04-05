@@ -28,8 +28,8 @@ export const keywordApi = createApi({
       query: () => 'recommend',
       providesTags: ['recommend'],
     }),
-    getWordCloudKeywords: builder.query<WordCloudInterface[], void>({
-      query: () => `wordcloud`,
+    getWordCloudKeywords: builder.query<WordCloudInterface[], { keyword: string }>({
+      query: (keyword) => ({ url: 'wordcloud', params: keyword }),
       providesTags: ['wordcloud'],
       keepUnusedDataFor: 1,
     }),

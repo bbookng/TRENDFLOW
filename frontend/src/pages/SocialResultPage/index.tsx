@@ -37,7 +37,7 @@ const SocialResultPage = () => {
   const [startDate, setStartDate] = useState<Date>(getSevenDaysAgoDate());
 
   const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
-    useGetWordCloudKeywordsQuery();
+    useGetWordCloudKeywordsQuery(keyword);
 
   const { data: relatedKeywords, isSuccess: isRelatedKeywordsSuccess } = useGetRelatedKeywordsQuery(
     { keyword },
@@ -68,7 +68,7 @@ const SocialResultPage = () => {
       params: { keyword: keyword! },
     };
     postBookmark(req);
-    setIsBookmarked((prev) => !prev)
+    setIsBookmarked((prev) => !prev);
   };
 
   return (
