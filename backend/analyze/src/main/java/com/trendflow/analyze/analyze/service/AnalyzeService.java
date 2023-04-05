@@ -10,12 +10,17 @@ import com.trendflow.analyze.analyze.repository.SentimentRepository;
 import com.trendflow.analyze.global.code.Code;
 import com.trendflow.analyze.global.code.SocialCacheCode;
 import com.trendflow.analyze.global.redis.Social;
+import com.trendflow.analyze.global.redis.YoutubeSource;
+import com.trendflow.analyze.global.redis.YoutubeSourceRepository;
 import com.trendflow.analyze.msa.dto.vo.Keyword;
 import com.trendflow.analyze.msa.dto.vo.KeywordCount;
 import com.trendflow.analyze.msa.dto.vo.Source;
 import com.trendflow.analyze.msa.service.CommonService;
 import com.trendflow.analyze.msa.service.KeywordService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +36,12 @@ import java.util.stream.Collectors;
 public class AnalyzeService {
     private final RelationRepository relationRepository;
     private final SentimentRepository sentimentRepository;
+    private final YoutubeSourceRepository youtubeSourceRepository;
 
     private final CommonService commonService;
     private final KeywordService keywordService;
     private final KafkaService kafkaService;
+    private final YoutubeService youtubeService;
 
     @Transactional
     public List<FindSocialResponse> findSocial(FindSocialRequest findSocialRequest) {
@@ -141,15 +148,44 @@ public class AnalyzeService {
         LocalDate startDate = findRelationContentRequest.getStartDate();
         LocalDate endDate = findRelationContentRequest.getEndDate();
 
-        // 키워드 리스트 요청
-        List<Keyword> keywordList = keywordService.getKeywordPage(keyword, code, page, perPage, startDate, endDate);
+        String ARTICLE = commonService.getLocalCode(Code.ARTICLE);
+        String BLOG = commonService.getLocalCode(Code.BLOG);
+        String YOUTUBE = commonService.getLocalCode(Code.YOUTUBE);
 
-        // 원본 데이터 요청
-        List<Source> sourceList = commonService.getSource(keywordList.stream()
-                                                            .map(Keyword::getSourceId)
-                                                            .distinct()
-                                                            .collect(Collectors.toList()));
-        return FindRelationContentResponse.toList(sourceList);
+        List<Source> sourceList = null;
+        // 유튜브
+        if (code.equals(YOUTUBE)) {
+            // 캐시서버에 유튜브 원본이 있는지 확인
+
+            String key = String.format("%s_%s", Code.YOUTUBE.getName(), keyword);
+
+            List<YoutubeSource> youtubeSourceList = youtubeSourceRepository.findById(key)
+                    .orElseGet(() -> {
+                        // 없으면 API 호출
+                        List<Source> now = youtubeService.getYoutubeSource(keyword);
+                        List<YoutubeSource> youtubeNow = YoutubeSource.toList(now);
+                        youtubeSourceRepository.saveResult(key, youtubeNow, 6000);
+                        return youtubeNow;
+                    });
+
+            // page 별로 짤라서 반환
+            PageRequest pageRequest = PageRequest.of(page, perPage);
+            int start = (int) pageRequest.getOffset();
+            int end = Math.min((start + pageRequest.getPageSize()), youtubeSourceList.size());
+            Page<YoutubeSource> youtubeSourcePage = new PageImpl<>(youtubeSourceList.subList(start, end), pageRequest, youtubeSourceList.size());
+
+            sourceList = Source.toList(youtubeSourcePage.toList());
+        } else {
+            // 키워드 리스트 요청
+            List<Keyword> keywordList = keywordService.getKeywordPage(keyword, code, page, perPage, startDate, endDate);
+
+            // 원본 데이터 요청
+            sourceList = commonService.getSource(keywordList.stream()
+                    .map(Keyword::getSourceId)
+                    .distinct()
+                    .collect(Collectors.toList()));
+        }
+        return FindRelationContentResponse.toList(code, sourceList);
     }
 
     public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {

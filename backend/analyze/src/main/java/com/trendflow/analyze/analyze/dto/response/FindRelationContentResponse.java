@@ -7,31 +7,34 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Data
 @Builder
 public class FindRelationContentResponse {
     private Long id;
+    private String social;
+    private String code;
     private String title;
-    private String content;
+    private String desc;
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate date;
     private String link;
 
-    public static FindRelationContentResponse of(Source source) {
-        return FindRelationContentResponse.builder()
-                .id(source.getSourceId())
-                .title(source.getTitle())
-                .content(source.getTitle())
-                .date(source.getDate())
-                .link(source.getLink())
-                .build();
-    }
-
-    public static List<FindRelationContentResponse> toList(List<Source> sourceList) {
+    public static List<FindRelationContentResponse> toList(String code, List<Source> sourceList) {
+        AtomicLong id = new AtomicLong();
         return sourceList.stream()
-                .map(FindRelationContentResponse::of)
+                .map(source ->
+                        FindRelationContentResponse.builder()
+                                .id(id.getAndIncrement() + 1)
+                                .social(source.getSocial())
+                                .code(code)
+                                .title(source.getTitle())
+                                .desc(source.getDesc())
+                                .date(source.getDate())
+                                .link(source.getLink())
+                                .build())
                 .collect(Collectors.toList());
     }
 }
