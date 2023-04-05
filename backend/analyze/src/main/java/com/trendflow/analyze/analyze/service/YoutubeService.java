@@ -1,10 +1,10 @@
-package com.trendflow.common.local.service;
+package com.trendflow.analyze.analyze.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trendflow.common.global.exception.NotFoundException;
-import com.trendflow.common.local.entity.Source;
+import com.trendflow.analyze.global.exception.NotFoundException;
+import com.trendflow.analyze.msa.dto.vo.Source;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -69,15 +69,15 @@ public class YoutubeService {
                 String title = snippet.get("title").asText();
                 String link = "https://www.youtube.com/watch?v=" + item.get("id").get("videoId").asText();
                 String content = snippet.get("description").asText();
-                LocalDate regDt = ZonedDateTime.parse(snippet.get("publishedAt").asText()).toLocalDate();
-                String thumbImg = snippet.get("thumbnails").get("medium").get("url").asText();
+                LocalDate date = ZonedDateTime.parse(snippet.get("publishedAt").asText()).toLocalDate();
+                String thumbnail = snippet.get("thumbnails").get("medium").get("url").asText();
 
                 sourceList.add(Source.builder()
                         .title(title)
                         .link(link)
-                        .content(content)
-                        .regDt(regDt)
-                        .thumbImg(thumbImg)
+                        .desc(content)
+                        .date(date)
+                        .thumbnail(thumbnail)
                         .build());
             }
 

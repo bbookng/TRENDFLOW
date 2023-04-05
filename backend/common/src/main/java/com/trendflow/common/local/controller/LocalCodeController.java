@@ -65,11 +65,11 @@ public class LocalCodeController {
     }
 
     @PostMapping("/source")
-    public ResponseEntity<List<GetSourceResponse>> getSource(@RequestBody GetSourceRequest getSourceRequest){
+    public ResponseEntity<List<GetSourceResponse>> getSource(@RequestBody List<Long> sourceIdList){
         log.info("getSource - Call");
 
         try {
-            List<GetSourceResponse> getSourceResponseList = localCodeService.getSource(getSourceRequest);
+            List<GetSourceResponse> getSourceResponseList = localCodeService.getSource(sourceIdList);
             return ResponseEntity.ok().body(getSourceResponseList);
         } catch (NotFoundException e){
             e.printStackTrace();
