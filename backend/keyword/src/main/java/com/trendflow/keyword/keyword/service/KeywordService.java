@@ -232,7 +232,7 @@ public class KeywordService {
         return keywordRepository.findByKeywordAndDatePage(keyword,
                 codeList.stream()
                         .map(RelateCode::getPlatformCode)
-                        .collect(Collectors.toList()), page, perPage, start, end);
+                        .collect(Collectors.toList()), perPage, perPage * (page - 1), start, end);
     }
 
     @Transactional

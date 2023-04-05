@@ -53,12 +53,12 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
             "FROM keyword k " +
             "WHERE k.keyword = :keyword " +
             "AND k.platform_code IN (:codeList) " +
-            "OFFSET :perPage * (page - 1) ROWS " +
-            "FETCH NEXT :perPage ROWS ONLY;", nativeQuery = true)
+            "LIMIT :limit " +
+            "OFFSET :offset ;", nativeQuery = true)
     List<Keyword> findByKeywordAndDatePage(@Param("keyword") String keyword,
                                            @Param("codeList") List<String> codeList,
-                                           @Param("page") Integer page,
-                                           @Param("perPage") Integer perPage,
+                                           @Param("offset") Integer offset,
+                                           @Param("limit") Integer limit,
                                            @Param("startDate") Integer startDate,
                                            @Param("endDate") Integer endDate);
 
