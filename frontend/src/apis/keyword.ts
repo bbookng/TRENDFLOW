@@ -29,7 +29,7 @@ export const keywordApi = createApi({
       providesTags: ['recommend'],
     }),
     getWordCloudKeywords: builder.query<WordCloudInterface[], { keyword: string }>({
-      query: (keyword) => ({ url: 'wordcloud', params: keyword }),
+      query: ({ keyword }) => `wordcloud?keyword=${keyword}`,
       providesTags: ['wordcloud'],
       keepUnusedDataFor: 1,
     }),

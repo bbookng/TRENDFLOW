@@ -37,7 +37,13 @@ const SocialResultPage = () => {
   const [startDate, setStartDate] = useState<Date>(getSevenDaysAgoDate());
 
   const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
-    useGetWordCloudKeywordsQuery(keyword);
+    useGetWordCloudKeywordsQuery(
+      { keyword },
+      {
+        refetchOnMountOrArgChange: true,
+        skip: !keyword,
+      }
+    );
 
   const { data: relatedKeywords, isSuccess: isRelatedKeywordsSuccess } = useGetRelatedKeywordsQuery(
     { keyword },

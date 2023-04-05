@@ -32,9 +32,10 @@ const SocialRelatedContents = ({
     setPage(page + 1);
   };
 
-  const handleClickFilter = (code: string) => {
+  const handleClickFilter = (kind: string) => {
+    if (code === kind) return;
     setContentList([]);
-    setCode(code);
+    setCode(kind);
     setPage(1);
   };
 
