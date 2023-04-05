@@ -1,31 +1,44 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-unstable-nested-components */
-import { useState } from 'react';
-import DatePicker from 'react-datepicker';
-import { ko } from 'date-fns/esm/locale';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Typography } from '@/components/atoms';
-import { SearchBar } from '@/components/molecules';
-import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
+import { ko } from 'date-fns/esm/locale';
+import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import BarChart from '@/components/molecules/BarChart';
+import { useGetSocialAnalysisQuery } from '@/apis/analyze';
+import { useGetRelatedKeywordsQuery, useGetWordCloudKeywordsQuery } from '@/apis/keyword';
+import { useGetBookmarkQuery, usePostBookmarkMutation } from '@/apis/member';
+import { Star, StarFill } from '@/assets';
+import { Typography } from '@/components/atoms';
+import { SearchBar, BarChart } from '@/components/molecules';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
-import { useGetRelatedKeywordsQuery, useGetWordCloudKeywordsQuery } from '@/apis/keyword';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
-import { useGetSocialAnalysisQuery } from '@/apis/analyze';
-import * as S from './index.styles';
 import SocialRelatedContents from '@/components/organisms/SocialResult/SocialRelatedContents';
+import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
+import { getToken } from '@/utils/token';
+import * as S from './index.styles';
 
 const SocialResultPage = () => {
+  const token = getToken();
+  const {
+    data: bookmark,
+    error: bookmarkError,
+    isLoading: bookmarkLoading,
+  } = useGetBookmarkQuery({ token: token! }, { skip: !token });
+
   const {
     state: { keyword },
   } = useLocation();
+
+  const [isBookmarked, setIsBookmarked] = useState(bookmark === keyword);
+
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [startDate, setStartDate] = useState<Date>(getSevenDaysAgoDate());
 
   const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
     useGetWordCloudKeywordsQuery();
+
   const { data: relatedKeywords, isSuccess: isRelatedKeywordsSuccess } = useGetRelatedKeywordsQuery(
     { keyword },
     {
@@ -33,6 +46,7 @@ const SocialResultPage = () => {
       skip: !keyword,
     }
   );
+
   const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
     useGetSocialAnalysisQuery(
       {
@@ -45,6 +59,18 @@ const SocialResultPage = () => {
         skip: !keyword,
       }
     );
+
+  const [postBookmark] = usePostBookmarkMutation();
+
+  const handleBookmarkBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const req = {
+      header: { token: token! },
+      params: { keyword: keyword! },
+    };
+    postBookmark(req);
+    setIsBookmarked((prev) => !prev)
+  };
+
   return (
     <S.Wrapper>
       <S.TitleWrapper>
@@ -52,7 +78,10 @@ const SocialResultPage = () => {
           <Typography variant="H3">
             <S.HighLight>{keyword}</S.HighLight> 소셜 분석 리포트
           </Typography>
-          {/* <S.Icon alt="즐겨찾기" src={star} width="27px" height="27px" /> */}
+          {/* 북마크 */}
+          <S.BookmarkBtn onClick={handleBookmarkBtn}>
+            {isBookmarked ? <StarFill /> : <Star />}
+          </S.BookmarkBtn>
         </S.TypeWrapper>
         <SearchBar placeholder="키워드를 입력하세요" searched={keyword} />
       </S.TitleWrapper>
