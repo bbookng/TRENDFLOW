@@ -19,11 +19,9 @@ public class CommonService {
         LocalCode localCode = commonServiceClient.getLocalCode(codeName);
         return localCode.getName();
 }
-    public List<Source> getSource(String keyword, List<Long> sourceIdList, String sourceCode){
+    public List<Source> getSource(List<Long> sourceIdList){
         return commonServiceClient.getSource(GetSourceRequest.builder()
-                        .keyword(keyword)
                         .sourceIdList(sourceIdList)
-                        .sourceCode(sourceCode)
                         .build());
     }
 }

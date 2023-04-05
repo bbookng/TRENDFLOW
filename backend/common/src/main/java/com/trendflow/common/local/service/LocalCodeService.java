@@ -47,36 +47,9 @@ public class LocalCodeService {
     }
 
     public List<GetSourceResponse> getSource(GetSourceRequest getSourceRequest) throws RuntimeException {
-        String keyword = getSourceRequest.getKeyword();
         List<Long> sourceIdList = getSourceRequest.getSourceIdList();
-        String sourceCode = getSourceRequest.getSourceCode();
 
-        String ARTICLE = findLocalCode(Code.ARTICLE.getCode()).getCode();
-        String BLOG = findLocalCode(Code.BLOG.getCode()).getCode();
-        String YOUTUBE = findLocalCode(Code.YOUTUBE.getCode()).getCode();
-
-        String DAUM_NEWS = findLocalCode(Code.DAUM_NEWS.getCode()).getCode();
-        String NAVER_NEWS = findLocalCode(Code.NAVER_NEWS.getCode()).getCode();
-        String NAVER_BLOG = findLocalCode(Code.NAVER_BLOG.getCode()).getCode();
-        String TWITTER = findLocalCode(Code.TWITTER.getCode()).getCode();
-
-        List<String> platformCodeList = new ArrayList<>();
-        List<GetSourceResponse> getSourceResponseList = null;
-        if (sourceCode.equals(ARTICLE)) {
-            platformCodeList.add(DAUM_NEWS);
-            platformCodeList.add(NAVER_NEWS);
-            List<Source> sourceList = sourceRepository.findByPlatformCodeInAndSourceIdIn(platformCodeList, sourceIdList);
-            getSourceResponseList = GetSourceResponse.toList(sourceList);
-        } else if (sourceCode.equals(BLOG)) {
-            platformCodeList.add(NAVER_BLOG);
-            platformCodeList.add(TWITTER);
-            List<Source> sourceList = sourceRepository.findByPlatformCodeInAndSourceIdIn(platformCodeList, sourceIdList);
-            getSourceResponseList = GetSourceResponse.toList(sourceList);
-        } else if (sourceCode.equals(YOUTUBE)) {
-            List<Source> sourceList = youtubeService.getYoutubeSource(keyword);
-            getSourceResponseList = GetSourceResponse.toList(sourceList);
-        } else throw new NotFoundException();
-
-        return getSourceResponseList;
+        List<Source> sourceList = sourceRepository.findByPlatformCodeInAndSourceIdIn(sourceIdList);
+        return GetSourceResponse.toList(sourceList);
     }
 }
