@@ -10,7 +10,5 @@ import java.util.List;
 @Data
 @Builder
 public class GetSourceRequest {
-    private String keyword;
     private List<Long> sourceIdList;
-    private String sourceCode;
 }

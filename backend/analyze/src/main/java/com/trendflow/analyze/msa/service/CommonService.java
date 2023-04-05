@@ -1,5 +1,6 @@
 package com.trendflow.analyze.msa.service;
 
+import com.trendflow.analyze.global.code.Code;
 import com.trendflow.analyze.msa.dto.request.GetSourceRequest;
 import com.trendflow.analyze.msa.dto.vo.LocalCode;
 import com.trendflow.analyze.msa.dto.vo.Source;
@@ -13,14 +14,14 @@ import java.util.List;
 public class CommonService {
     private final CommonServiceClient commonServiceClient;
 
-    public LocalCode getLocalCode(String name){
-        return commonServiceClient.getLocalCode(name);
-    }
-    public List<Source> getSource(String keyword, List<Long> sourceIdList, String sourceCode){
+    public String getLocalCode(Code code){
+        String codeName = code.getName();
+        LocalCode localCode = commonServiceClient.getLocalCode(codeName);
+        return localCode.getName();
+}
+    public List<Source> getSource(List<Long> sourceIdList){
         return commonServiceClient.getSource(GetSourceRequest.builder()
-                        .keyword(keyword)
                         .sourceIdList(sourceIdList)
-                        .sourceCode(sourceCode)
                         .build());
     }
 }

@@ -13,7 +13,7 @@ public class FindWordCloudKeywordResponse {
     private String relationKeyword;
     private Long count;
 
-    public static FindWordCloudKeywordResponse fromEntity(Relation relation){
+    public static FindWordCloudKeywordResponse of(Relation relation){
         return FindWordCloudKeywordResponse.builder()
                 .keywordId(relation.getKeywordId())
                 .keyword(relation.getKeyword())
