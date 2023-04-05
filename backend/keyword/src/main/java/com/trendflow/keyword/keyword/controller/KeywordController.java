@@ -111,6 +111,27 @@ public class KeywordController {
         }
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<List<Keyword>> findKeywordPage(@RequestParam String keyword,
+                                        @RequestParam String code,
+                                        @RequestParam Integer page,
+                                        @RequestParam Integer perPage,
+                                        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
+        log.info("findKeywordPage - Call");
+
+        try {
+            List<Keyword> keywordList = keywordService.findKeywordPage(keyword, code, page, perPage, startDate, endDate);
+            return ResponseEntity.ok().body(keywordList);
+        } catch (NotFoundException e){
+            log.error(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e){
+            log.error(e.getMessage());
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
     @GetMapping("/platform")
     public ResponseEntity<List<KeywordCount>> findKeywordCount(@RequestParam String keyword,
                                                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
