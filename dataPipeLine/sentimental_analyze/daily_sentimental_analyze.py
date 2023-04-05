@@ -2,9 +2,7 @@ from datetime import datetime
 
 # 파일 경로 설정
 
-platforms = ['navernews', 'naverblog', 'twitter', 'daumnews']
-
-today = datetime.today().strftime('%Y-%m-%d')
+platforms = ['navernews', 'naverblog', 'daum']
 
 # < 키워드별로 실행 >
 
@@ -34,7 +32,7 @@ from konlpy.tag import Okt, Kkma, Komoran
 import cloudpickle
 import kss
 import re
-import datetime
+from datetime import datetime, timedelta
 from functools import lru_cache
 import pandas as pd
 from pyspark.sql import SparkSession
@@ -116,9 +114,10 @@ def save_partition(partition):
     try:
         conn = create_connection()
         cursor = conn.cursor()
-        insert_query = "INSERT INTO sentiment (source_id, score, reg_dt) VALUES (%s, %s, IFNULL(%s, CURRENT_TIMESTAMP))"
+        insert_query = "INSERT INTO sentiment (source_id, score, reg_dt) VALUES (%s, %s, %s)"
         for row in partition:
-            cursor.execute(insert_query, (row['source_id'], row['score'], datetime.datetime.now()))
+            date = row['date'].replace('-', '')
+            cursor.execute(insert_query, (row['source_id'], row['score'], date))
         conn.commit()
     except mysql.connector.Error as e:
         print(f"Error message: {e}")
@@ -198,51 +197,55 @@ split_sentences_udf = udf(lambda content: split_sentences(content), ArrayType(St
 
 score_udf = udf(lambda sentences: calculate_score(sentences), ArrayType(DoubleType()))
 
+today = datetime.today() - timedelta(days=1)
+
 # DB에 있는 키워드 관련 Data 모두 분석 실행
 for keyword in keywords:
-    files_path = [f"hdfs://cluster.p.ssafy.io:9000/user/j8e205/json/input/{platform}/{today}/{keyword}.json" for platform in platforms]
-    try:
-        df = spark.read.option("multiline", "true").json(files_path)
-    except:
-        continue
+    files_path = [f"hdfs://cluster.p.ssafy.io:9000/user/j8e205/json/input/{platform}/{today.date()}/{keyword}.json" for platform in platforms]
 
-    print('----------------------파일불러왔음-------------------------------')
+    for file in files_path:
+        try:
+            df = spark.read.option("multiline", "true").json(file)
+        except:
+            continue
 
-    df = df.repartition(8)  # 10개의 파티션으로 나눔
+        print('----------------------파일불러왔음-------------------------------')
 
-    print('---------------------------파티션 나눴음------------------------------')
-    num_partitions = 24
-    result_df = df.select("id", explode(split_sentences_udf("content")).alias("sentence")).repartition(num_partitions,
-                                                                                                       "id").cache()
-    result_df = result_df.withColumn("score", sentiment_udf("sentence").cast(DoubleType())).repartition(num_partitions,
-                                                                                                        "id").cache()
-    df = result_df.groupBy("id").avg("score").repartition(num_partitions, "id")
+        df = df.repartition(8)  # 10개의 파티션으로 나눔
 
-    result_df.unpersist()
-    print('평균내기')
+        print('---------------------------파티션 나눴음------------------------------')
+        num_partitions = 24
+        result_df = df.select("id", explode(split_sentences_udf("content")).alias("sentence")).repartition(num_partitions,
+                                                                                                           "id").cache()
+        result_df = result_df.withColumn("score", sentiment_udf("sentence").cast(DoubleType())).repartition(num_partitions,
+                                                                                                            "id").cache()
+        df = result_df.groupBy("id").avg("score").repartition(num_partitions, "id")
 
-    df = df.withColumnRenamed("avg(score)", "score")
+        result_df.unpersist()
+        print('평균내기')
 
-    print('컬럼 이름 바꿈')
-    df = df.withColumn("score", when(df["score"] < 0.4, 0).when(df["score"] > 0.6, 1).otherwise(2))
+        df = df.withColumnRenamed("avg(score)", "score")
 
-    print('정수형으로 변환')
+        print('컬럼 이름 바꿈')
+        df = df.withColumn("score", when(df["score"] < 0.4, 0).when(df["score"] > 0.6, 1).otherwise(2))
 
-    url = "jdbc:mysql://trendflow.site:3306/analyzee?serverTimezone=Asia/Seoul&useSSL=false"
+        print('정수형으로 변환')
 
-    old_df = spark.read.jdbc(url, table="sentiment", properties=properties)
+        url = "jdbc:mysql://trendflow.site:3306/analyzee?serverTimezone=Asia/Seoul&useSSL=false"
 
-    max_id = old_df.agg({"sentiment_id": "max"}).collect()[0][0]
+        old_df = spark.read.jdbc(url, table="sentiment", properties=properties)
 
-    # 새로운 데이터프레임 생성
+        max_id = old_df.agg({"sentiment_id": "max"}).collect()[0][0]
 
-    new_df = df.select(col("id").alias("source_id"), "score")
+        # 새로운 데이터프레임 생성
 
-    print('저장시작')
+        new_df = df.select(col("id").alias("source_id"), "score")
 
-    new_df.repartition(num_partitions, "source_id").foreachPartition(lambda x: save_partition(x))
+        print('저장시작')
 
-    print('저장끝')
+        new_df.repartition(num_partitions, "source_id").foreachPartition(lambda x: save_partition(x))
+
+        print('저장끝')
 
 # # Spark 세션 종료
 spark.stop()
