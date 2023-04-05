@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { PostBookmarkReqInterface } from '../types/member';
 import { HeaderInterface } from '@/types/member';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
@@ -15,8 +16,8 @@ export const memberApi = createApi({
       query: (token) => ({ url: 'bookmark', header: token }),
       providesTags: ['bookmark'],
     }),
-    postBookmark: builder.mutation<string | null, HeaderInterface>({
-      query: (token) => ({ url: 'bookmark', method: 'POST', header: token }),
+    postBookmark: builder.mutation<string | null, PostBookmarkReqInterface>({
+      query: (req) => ({ url: 'bookmark', method: 'POST', ...req }),
       invalidatesTags: ['bookmark'],
     }),
   }),
