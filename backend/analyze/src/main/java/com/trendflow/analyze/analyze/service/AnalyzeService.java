@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -148,15 +149,12 @@ public class AnalyzeService {
         LocalDate startDate = findRelationContentRequest.getStartDate();
         LocalDate endDate = findRelationContentRequest.getEndDate();
 
-        String ARTICLE = commonService.getLocalCode(Code.ARTICLE);
-        String BLOG = commonService.getLocalCode(Code.BLOG);
         String YOUTUBE = commonService.getLocalCode(Code.YOUTUBE);
 
-        List<Source> sourceList = null;
+        List<FindRelationContentResponse> findRelationContentResponseList = null;
         // 유튜브
         if (code.equals(YOUTUBE)) {
             // 캐시서버에 유튜브 원본이 있는지 확인
-
             String key = String.format("%s_%s", Code.YOUTUBE.getName(), keyword);
 
             List<YoutubeSource> youtubeSourceList = youtubeSourceRepository.findById(key)
@@ -167,25 +165,39 @@ public class AnalyzeService {
                         youtubeSourceRepository.saveResult(key, youtubeNow, 6000);
                         return youtubeNow;
                     });
-
             // page 별로 짤라서 반환
             PageRequest pageRequest = PageRequest.of(page, perPage);
             int start = (int) pageRequest.getOffset();
             int end = Math.min((start + pageRequest.getPageSize()), youtubeSourceList.size());
             Page<YoutubeSource> youtubeSourcePage = new PageImpl<>(youtubeSourceList.subList(start, end), pageRequest, youtubeSourceList.size());
 
-            sourceList = Source.toList(youtubeSourcePage.toList());
+            List<Source> sourceList = Source.toList(youtubeSourcePage.toList());
+            findRelationContentResponseList = FindRelationContentResponse.toList(Code.YOUTUBE.getName(), code, sourceList);
         } else {
             // 키워드 리스트 요청
             List<Keyword> keywordList = keywordService.getKeywordPage(keyword, code, page, perPage, startDate, endDate);
-
             // 원본 데이터 요청
-            sourceList = commonService.getSource(keywordList.stream()
+            List<Source> sourceList = commonService.getSource(keywordList.stream()
                     .map(Keyword::getSourceId)
                     .distinct()
                     .collect(Collectors.toList()));
+
+            String DAUM_NEWS = commonService.getLocalCode(Code.DAUM_NEWS);
+            String NAVER_NEWS = commonService.getLocalCode(Code.NAVER_NEWS);
+            String NAVER_BLOG = commonService.getLocalCode(Code.NAVER_BLOG);
+
+            AtomicLong id = new AtomicLong();
+            findRelationContentResponseList = sourceList.stream().map(source -> {
+                if (source.getPlatformCode().equals(DAUM_NEWS)) {
+                    return FindRelationContentResponse.of(id.getAndIncrement() + 1, Code.DAUM.getName(), code, source);
+                } else if (source.getPlatformCode().equals(NAVER_NEWS) || source.getPlatformCode().equals(NAVER_BLOG)) {
+                    return FindRelationContentResponse.of(id.getAndIncrement() + 1, Code.NAVER.getName(), code, source);
+                } else {
+                    return FindRelationContentResponse.of(id.getAndIncrement() + 1, null, code, source);
+                }
+            }).collect(Collectors.toList());
         }
-        return FindRelationContentResponse.toList(code, sourceList);
+        return findRelationContentResponseList;
     }
 
     public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {

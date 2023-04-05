@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Data
 @Builder
 public class Source {
-    private String social;
+    private String platformCode;
     private String thumbnail;
     private String title;
     private String desc;
@@ -23,7 +23,7 @@ public class Source {
 
     public static Source of(YoutubeSource youtubeSource) {
         return Source.builder()
-                .social(Code.YOUTUBE.getName())
+                .platformCode("SU600")
                 .thumbnail(youtubeSource.getThumbnail())
                 .title(youtubeSource.getTitle())
                 .desc(youtubeSource.getContent())

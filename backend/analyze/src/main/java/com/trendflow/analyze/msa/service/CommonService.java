@@ -1,7 +1,6 @@
 package com.trendflow.analyze.msa.service;
 
 import com.trendflow.analyze.global.code.Code;
-import com.trendflow.analyze.msa.dto.request.GetSourceRequest;
 import com.trendflow.analyze.msa.dto.vo.LocalCode;
 import com.trendflow.analyze.msa.dto.vo.Source;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ public class CommonService {
         return localCode.getName();
 }
     public List<Source> getSource(List<Long> sourceIdList){
-        System.out.println("sourceIdList.toString() = " + sourceIdList.toString());
         return commonServiceClient.getSource(sourceIdList);
     }
 }

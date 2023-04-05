@@ -22,19 +22,23 @@ public class FindRelationContentResponse {
     private LocalDate date;
     private String link;
 
-    public static List<FindRelationContentResponse> toList(String code, List<Source> sourceList) {
+    public static FindRelationContentResponse of(Long id, String social, String code, Source source){
+        return FindRelationContentResponse.builder()
+                .id(id)
+                .social(social)
+                .code(code)
+                .title(source.getTitle())
+                .desc(source.getDesc())
+                .date(source.getDate())
+                .link(source.getLink())
+                .build();
+    }
+
+    public static List<FindRelationContentResponse> toList(String social, String code, List<Source> sourceList) {
         AtomicLong id = new AtomicLong();
         return sourceList.stream()
                 .map(source ->
-                        FindRelationContentResponse.builder()
-                                .id(id.getAndIncrement() + 1)
-                                .social(source.getSocial())
-                                .code(code)
-                                .title(source.getTitle())
-                                .desc(source.getDesc())
-                                .date(source.getDate())
-                                .link(source.getLink())
-                                .build())
+                        FindRelationContentResponse.of(id.getAndIncrement() + 1, social, code, source))
                 .collect(Collectors.toList());
     }
 }
