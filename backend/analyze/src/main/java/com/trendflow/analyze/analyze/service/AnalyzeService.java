@@ -116,9 +116,9 @@ public class AnalyzeService {
                 System.out.println(positive + " " + negative + " " + neutral);
 
                 if (sum != 0) {
-                    positive /= sum * 100;
-                    negative /= sum * 100;
-                    neutral /= sum * 100;
+                    positive /= sum * 50 + 50;
+                    negative /= sum * 50 + 50;
+                    neutral /= sum * 50 + 50;
                 }
 
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
@@ -336,22 +336,17 @@ public class AnalyzeService {
             mentionCountCompare.setKeyword2(countB);
 
             // 긍 부정
-            countA = 0;
-            Integer negetiveCountA = 0;
-            Integer neutralCountA = 0;
-
-            countB = 0;
-            Integer negetiveCountB = 0;
-            Integer neutralCountB = 0;
-
-
+            countA = 50;
+            countB = 50;
             if (sentimentCountMapA.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapA.get(now);
-                countA = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
+                Integer sum = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
+                if (sum != 0) countA = nowGrapeQuotient.getPositive() / sum * 50;
             }
             if (sentimentCountMapB.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapB.get(now);
-                countB = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
+                Integer sum = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
+                if (sum != 0) countB = nowGrapeQuotient.getPositive() / sum * 50;
             }
 
             // 비교
