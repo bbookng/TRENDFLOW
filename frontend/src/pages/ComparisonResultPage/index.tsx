@@ -67,7 +67,6 @@ const ComparisonResultPage = () => {
       refetchOnMountOrArgChange: true,
     }
   );
-  console.log(keyword2SocialAnalysis);
   return (
     <S.Wrapper>
       <S.TitleWrapper>

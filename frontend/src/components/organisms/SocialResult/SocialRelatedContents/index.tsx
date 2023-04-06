@@ -5,14 +5,19 @@ import { getContents } from '@/apis/analyze';
 import { CONTENT_CODE } from '@/constants/code';
 import { ContentItem } from '@/components/molecules';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
+import ContentItemSkeleton from '@/components/molecules/ContentItem/Skeleton';
 
 export interface SocialRelatedContentsInterface {
+  isSocialAnalysisDataLoading: boolean;
+  isWordCloudKeywordsSuccess: boolean;
   keyword: string;
   startDate: string;
   endDate: string;
 }
 
 const SocialRelatedContents = ({
+  isSocialAnalysisDataLoading,
+  isWordCloudKeywordsSuccess,
   keyword,
   startDate,
   endDate,
@@ -87,17 +92,24 @@ const SocialRelatedContents = ({
             유튜브
           </S.FilterBtn>
         </S.Filter>
-        {contentList?.map((content, index) => {
-          return (
-            <ContentItem
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
-              isLast={index === contentList.length - 1}
-              nextPage={nextPage}
-              content={content}
-            />
-          );
-        })}
+        {!isSocialAnalysisDataLoading && isWordCloudKeywordsSuccess && !isLoading
+          ? contentList?.map((content, index) => {
+              return (
+                <ContentItem
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={index}
+                  isLast={index === contentList.length - 1}
+                  nextPage={nextPage}
+                  content={content}
+                />
+              );
+            })
+          : Array(10)
+              .fill(0)
+              .map((_, index) => {
+                // eslint-disable-next-line react/no-array-index-key
+                return <ContentItemSkeleton key={index} />;
+              })}
       </S.RelatedPaper>
     </S.Wrapper>
   );

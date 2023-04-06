@@ -11,7 +11,6 @@ import { useGetBookmarkQuery, usePostBookmarkMutation } from '@/apis/member';
 import { Star, StarFill } from '@/assets';
 import { Typography } from '@/components/atoms';
 import { SearchBar } from '@/components/molecules';
-import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
 import SocialRelatedContents from '@/components/organisms/SocialResult/SocialRelatedContents';
@@ -21,6 +20,10 @@ import { useAppSelector, useAppDispatch } from '@/hooks/storeHook';
 import { showToast } from '@/store/slices/toastSlice';
 import * as S from './index.styles';
 import BarStackedChart from '@/components/molecules/BarStackedChart';
+import ChartSkeleton from '@/components/molecules/BarStackedChart/Skeleton';
+import RelatedKeywordWordCloud from '@/components/organisms/SocialResult/RelatedKeywordWordCloud';
+import RelatedKeywordWordCloudSkeleton from '@/components/organisms/SocialResult/RelatedKeywordWordCloud/Skeleton';
+import TrendLineChartSkeleton from '@/components/organisms/SocialResult/TrendLindChart/Skeleton';
 
 const SocialResultPage = () => {
   const token = getToken();
@@ -28,11 +31,7 @@ const SocialResultPage = () => {
     state: { keyword },
   } = useLocation();
 
-  const {
-    data: bookmark,
-    error: bookmarkError,
-    isLoading: bookmarkLoading,
-  } = useGetBookmarkQuery(undefined, { refetchOnMountOrArgChange: false, skip: !token });
+  const { data: bookmark, isLoading: bookmarkLoading } = useGetBookmarkQuery();
 
   const {
     user: { isLoggedIn },
@@ -44,27 +43,21 @@ const SocialResultPage = () => {
   const [endDate, setEndDate] = useState<Date>(getOneDaysAgoDate());
   const [startDate, setStartDate] = useState<Date>(getOneMonthAgoDate());
 
-  const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
-    useGetWordCloudKeywordsQuery(
-      { keyword },
-      {
-        refetchOnMountOrArgChange: false,
-        skip: !keyword,
-      }
-    );
+  const {
+    data: wordCloudKeywords,
+    isLoading: isWordCloudKeywordsLoading,
+    isSuccess: isWordCloudKeywordsSuccess,
+  } = useGetWordCloudKeywordsQuery({ keyword });
 
-  const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
-    useGetSocialAnalysisQuery(
-      {
-        keyword,
-        startDate: getDateToYYYYDDMM(startDate!),
-        endDate: getDateToYYYYDDMM(endDate!),
-      },
-      {
-        refetchOnMountOrArgChange: false,
-        skip: !keyword,
-      }
-    );
+  const {
+    data: socialAnalysisData,
+    isLoading: isSocialAnalysisDataLoading,
+    isSuccess: isSocialAnalysisDataSuccess,
+  } = useGetSocialAnalysisQuery({
+    keyword,
+    startDate: getDateToYYYYDDMM(startDate!),
+    endDate: getDateToYYYYDDMM(endDate!),
+  });
 
   const [postBookmark] = usePostBookmarkMutation();
 
@@ -75,6 +68,13 @@ const SocialResultPage = () => {
     }
     postBookmark({ keyword: keyword! });
     setIsBookmarked((prev) => !prev);
+  };
+
+  const isShow = () => {
+    if (!isSocialAnalysisDataLoading && isWordCloudKeywordsSuccess) {
+      return <RelatedKeywordWordCloud wordCloudKeywords={wordCloudKeywords} />;
+    }
+    return <RelatedKeywordWordCloudSkeleton />;
   };
 
   return (
@@ -121,32 +121,44 @@ const SocialResultPage = () => {
       <S.KeywordContentsWrapper>
         {/* 막대기 차트 */}
         <S.ChartWrapper>
-          <BarStackedChart
-            labels={socialAnalysisData?.map((item) => item.date.slice(5))}
-            barNaverLabel="네이버 언급량"
-            barNaverData={socialAnalysisData?.map((item) => item.mentionCountInfo.naver)}
-            barDaumLabel="다음 언급량"
-            barDaumData={socialAnalysisData?.map((item) => item.mentionCountInfo.daum)}
-            lineLabel="포도알 지수"
-            lineData={socialAnalysisData?.map((item) =>
-              Number(item.grapeQuotientInfo.grape.toFixed(2))
-            )}
-          />
+          {!isSocialAnalysisDataLoading && isWordCloudKeywordsSuccess ? (
+            <BarStackedChart
+              labels={socialAnalysisData?.map((item) => item.date.slice(5))}
+              barNaverLabel="네이버 언급량"
+              barNaverData={socialAnalysisData?.map((item) => item.mentionCountInfo.naver)}
+              barDaumLabel="다음 언급량"
+              barDaumData={socialAnalysisData?.map((item) => item.mentionCountInfo.daum)}
+              lineLabel="포도알 지수"
+              lineData={socialAnalysisData?.map((item) =>
+                Number(item.grapeQuotientInfo.grape.toFixed(2))
+              )}
+            />
+          ) : (
+            <ChartSkeleton />
+          )}
         </S.ChartWrapper>
 
         {/* 워드 클라우드 */}
         <S.RelatedKeywordContentsWrapper>
-          {isWordCloudKeywordsSuccess && <RelatedKeyword wordCloudKeywords={wordCloudKeywords} />}
+          {!isSocialAnalysisDataLoading && isWordCloudKeywordsSuccess ? (
+            <RelatedKeywordWordCloud wordCloudKeywords={wordCloudKeywords} />
+          ) : (
+            <RelatedKeywordWordCloudSkeleton />
+          )}
         </S.RelatedKeywordContentsWrapper>
       </S.KeywordContentsWrapper>
       {/* 긍부정, 트렌드 LineChart */}
       <S.FlexBox>
         <S.TrendChartContentsWrapper>
-          {isSocialAnalysisDataSuccess && (
+          {!isSocialAnalysisDataLoading && isWordCloudKeywordsSuccess ? (
             <TrendLineChart text="긍부정 추이" socialAnalysisData={socialAnalysisData} />
+          ) : (
+            <TrendLineChartSkeleton />
           )}
         </S.TrendChartContentsWrapper>
         <SocialRelatedContents
+          isSocialAnalysisDataLoading={isSocialAnalysisDataLoading}
+          isWordCloudKeywordsSuccess={isWordCloudKeywordsSuccess}
           keyword={keyword}
           startDate={getDateToYYYYDDMM(startDate as Date)}
           endDate={getDateToYYYYDDMM(endDate as Date)}
