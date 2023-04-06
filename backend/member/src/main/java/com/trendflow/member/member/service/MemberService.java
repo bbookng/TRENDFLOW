@@ -93,7 +93,9 @@ public class MemberService {
         Long memberId = loginAccessToken.getMemberId();
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException());
-        member.setKeyword(keyword);
+        if (keyword.equals(member.getKeyword())) member.setKeyword(null);
+        else member.setKeyword(keyword);
+
         memberRepository.save(member);
     }
 }
