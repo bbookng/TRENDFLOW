@@ -3,6 +3,7 @@ package com.trendflow.common.local.controller;
 import com.trendflow.common.global.exception.NotFoundException;
 import com.trendflow.common.local.dto.request.GetSourceRequest;
 import com.trendflow.common.local.dto.response.FindLocalCodeResponse;
+import com.trendflow.common.local.dto.response.FindRelateCodeResponse;
 import com.trendflow.common.local.dto.response.GetSourceResponse;
 import com.trendflow.common.local.service.LocalCodeService;
 import lombok.RequiredArgsConstructor;
@@ -49,12 +50,26 @@ public class LocalCodeController {
         }
     }
 
+    @GetMapping("/relate/{name}")
+    public ResponseEntity<List<FindRelateCodeResponse>> findRelateCode(@PathVariable(name = "name") String name){
+        log.info("findRelateCode - Call");
+
+        try {
+            List<FindRelateCodeResponse> findRelateCodeResponseList = localCodeService.findRelateCode(name);
+            return ResponseEntity.ok().body(findRelateCodeResponseList);
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
     @PostMapping("/source")
-    public ResponseEntity<List<GetSourceResponse>> getSource(@RequestBody GetSourceRequest getSourceRequest){
+    public ResponseEntity<List<GetSourceResponse>> getSource(@RequestBody List<Long> sourceIdList){
         log.info("getSource - Call");
 
         try {
-            List<GetSourceResponse> getSourceResponseList = localCodeService.getSource(getSourceRequest);
+            List<GetSourceResponse> getSourceResponseList = localCodeService.getSource(sourceIdList);
             return ResponseEntity.ok().body(getSourceResponseList);
         } catch (NotFoundException e){
             e.printStackTrace();

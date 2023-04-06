@@ -7,7 +7,8 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.trendflow.analyze.global.redis.Social;
-import com.trendflow.analyze.global.redis.YoutubeComment;
+import com.trendflow.analyze.global.redis.YoutubeSource;
+import com.trendflow.analyze.msa.dto.vo.Source;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +34,7 @@ public class RedisConfig {
     private String cachePassword;
 
     @Bean
-    public Jackson2JsonRedisSerializer youtubeCommentObjectMapper() {
+    public Jackson2JsonRedisSerializer youtubeSourceObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper()
                 .findAndRegisterModules()
                 .enable(SerializationFeature.INDENT_OUTPUT)
@@ -42,7 +43,7 @@ public class RedisConfig {
                 .registerModules(new JavaTimeModule());
 
         TypeFactory typeFactory = objectMapper.getTypeFactory();
-        CollectionType collectionType = typeFactory.constructCollectionType(List.class, YoutubeComment.class);
+        CollectionType collectionType = typeFactory.constructCollectionType(List.class, YoutubeSource.class);
 
         Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(collectionType);
         serializer.setObjectMapper(objectMapper);
@@ -67,9 +68,9 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisYoutubeCommentTemplate(
+    public RedisTemplate<?, ?> redisYoutubeSourceTemplate(
             @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
-            @Qualifier("youtubeCommentObjectMapper") Jackson2JsonRedisSerializer serializer) {
+            @Qualifier("youtubeSourceObjectMapper") Jackson2JsonRedisSerializer serializer) {
         return getRedisTemplate(redisConnectionFactory, serializer);
     }
 

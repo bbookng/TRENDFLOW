@@ -4,12 +4,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class Payload {
 	@JsonProperty("comment_df")
@@ -25,8 +23,7 @@ public class Payload {
 		this.videoInfo = videoInfo;
 	}
 
-	@Getter
-	@Setter
+	@Data
 	@NoArgsConstructor
 	public static class Comment {
 		private String id;
@@ -51,8 +48,7 @@ public class Payload {
 		}
 	}
 
-	@Getter
-	@Setter
+	@Data
 	@NoArgsConstructor
 	public static class AnalyzeResult {
 		private int label;
@@ -68,8 +64,7 @@ public class Payload {
 		}
 	}
 
-	@Getter
-	@Setter
+	@Data
 	@NoArgsConstructor
 	public static class VideoInfo {
 		private String channelTitle;
