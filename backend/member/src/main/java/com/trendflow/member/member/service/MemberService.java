@@ -5,6 +5,7 @@ import com.trendflow.member.global.exception.NotFoundException;
 import com.trendflow.member.global.exception.UnAuthException;
 import com.trendflow.member.global.redis.session.LoginAccessToken;
 import com.trendflow.member.global.redis.session.LoginAccessTokenRepository;
+import com.trendflow.member.member.dto.request.FindBookmarkResponse;
 import com.trendflow.member.member.entity.Member;
 import com.trendflow.member.member.entity.Role;
 import com.trendflow.member.member.repository.MemberRepository;
@@ -75,13 +76,15 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    public String findBookmark(String accessToken) throws RuntimeException {
+    public FindBookmarkResponse findBookmark(String accessToken) throws RuntimeException {
         LoginAccessToken loginAccessToken = loginAccessTokenRepository.findById(accessToken)
                 .orElseThrow(() -> new UnAuthException());
         Long memberId = loginAccessToken.getMemberId();
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException());
-        return member.getKeyword();
+        return FindBookmarkResponse.builder()
+                .bookmark(member.getKeyword())
+                .build();
     }
 
     public void registBookmark(String accessToken, String keyword) throws RuntimeException {

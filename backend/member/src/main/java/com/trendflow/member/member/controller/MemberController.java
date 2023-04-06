@@ -1,6 +1,7 @@
 package com.trendflow.member.member.controller;
 
 import com.trendflow.member.global.exception.UnAuthException;
+import com.trendflow.member.member.dto.request.FindBookmarkResponse;
 import com.trendflow.member.member.dto.request.RegistBookmarkRequest;
 import com.trendflow.member.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,12 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/bookmark")
-    public ResponseEntity<String> findBookmark(@RequestHeader("Authorization") String accessToken) {
+    public ResponseEntity<FindBookmarkResponse> findBookmark(@RequestHeader("Authorization") String accessToken) {
 
         try {
             accessToken = accessToken.substring(7);
-            String keyword = memberService.findBookmark(accessToken);
-            return ResponseEntity.ok().body(keyword);
+            FindBookmarkResponse findBookmarkResponse = memberService.findBookmark(accessToken);
+            return ResponseEntity.ok().body(findBookmarkResponse);
         } catch (UnAuthException e){
             log.error(e.getCode().toString());
             return ResponseEntity.badRequest().body(null);

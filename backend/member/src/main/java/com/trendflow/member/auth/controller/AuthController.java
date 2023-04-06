@@ -34,9 +34,11 @@ public class AuthController {
             return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, loginResponse));
         } catch (UnAuthException e){
             log.error(e.getCode().toString());
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getCode(), null));
         } catch (RuntimeException e){
             log.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(BasicResponse.Body(AuthCode.FAIL, null));
         }
     }
@@ -50,9 +52,11 @@ public class AuthController {
             return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, refreshTokenResponse));
         } catch (UnAuthException e){
             log.error(e.getCode().toString());
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getCode(), null));
         } catch (RuntimeException e){
             log.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(BasicResponse.Body(AuthCode.FAIL, null));
         }
     }
@@ -70,9 +74,11 @@ public class AuthController {
             return ResponseEntity.ok().body(AuthAccessTokenResponse.builder().isValid(true).build());
         } catch (UnAuthException e){
             log.error(e.getCode().toString());
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(AuthAccessTokenResponse.builder().isValid(false).build());
         } catch (RuntimeException e){
             log.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(null);
         }
     }
@@ -86,9 +92,11 @@ public class AuthController {
             return ResponseEntity.ok().body(BasicResponse.Body(AuthCode.SUCCESS, null));
         } catch (NotFoundException e){
             log.error("logout : NotFoundException");
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(AuthCode.FAIL, null));
         } catch (RuntimeException e){
             log.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(BasicResponse.Body(AuthCode.FAIL, null));
         }
     }
