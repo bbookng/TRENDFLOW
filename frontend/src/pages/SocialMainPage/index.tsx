@@ -3,6 +3,7 @@ import { useTheme } from '@emotion/react';
 import Lottie from 'lottie-react';
 import { Divider, Typography } from '@/components/atoms';
 import { useGetRecommendKeywordsQuery } from '@/apis/keyword';
+import ButtonSkeleton from '@/components/atoms/Button/Skeleton';
 import { SearchBar } from '@/components/molecules';
 import { ROUTER_PATH } from '@/constants/path';
 import searchLottie from '@/assets/lotties/searchLottie.json';
@@ -63,22 +64,31 @@ const SocialMainPage = () => {
             </S.TypoBox>
 
             <S.KeywordBox>
-              {recommendKeywords?.map((keyword) => (
-                <S.Keyword
-                  variant="outlined"
-                  fontSize="BASE"
-                  size="SMALL"
-                  borderSize="2"
-                  key={keyword.id}
-                  onClick={() =>
-                    navi(`/${ROUTER_PATH.SOCIAL_RESULT_PAGE}`, {
-                      state: { keyword: keyword.keyword },
-                    })
-                  }
-                >
-                  {keyword.keyword}
-                </S.Keyword>
-              ))}
+              {!recommendKeywords
+                ? [...Array(10).keys()].map((key) => (
+                    <S.KeywordInvisible key={key} size="SMALL">
+                      .
+                    </S.KeywordInvisible>
+                    // <S.KeywordSkeleton key={key} size="SMALL">
+                    //   .
+                    // </S.KeywordSkeleton>
+                  ))
+                : recommendKeywords?.map((keyword) => (
+                    <S.Keyword
+                      variant="outlined"
+                      fontSize="BASE"
+                      size="SMALL"
+                      borderSize="2"
+                      key={keyword.id}
+                      onClick={() =>
+                        navi(`/${ROUTER_PATH.SOCIAL_RESULT_PAGE}`, {
+                          state: { keyword: keyword.keyword },
+                        })
+                      }
+                    >
+                      {keyword.keyword}
+                    </S.Keyword>
+                  ))}
             </S.KeywordBox>
           </S.Wrapper>
         </S.Right>

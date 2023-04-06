@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
+import { PALETTE } from '@/constants/palette';
 
 export const Skeleton = styled.div`
-  background-color: ${({ theme }) => theme.headerBorder};
+  background-color: ${PALETTE.WHITE200};
   background: linear-gradient(
       100deg,
       rgba(255, 255, 255, 0) 40%,
