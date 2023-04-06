@@ -50,6 +50,8 @@ public class KafkaService {
 	// Kafka consumer 설정
 	private KafkaConsumer<String, String> createKafkaConsumer() {
 		Properties props = new Properties();
+		props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 600000);
+		props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 300000);
 		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, "my-group-id");
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());

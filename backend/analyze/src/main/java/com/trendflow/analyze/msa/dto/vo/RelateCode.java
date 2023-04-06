@@ -1,4 +1,4 @@
-package com.trendflow.member.auth.dto.request;
+package com.trendflow.analyze.msa.dto.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
+public class RelateCode {
+    private String code;
     private String platformCode;
-    private String authCode;
 }

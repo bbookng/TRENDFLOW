@@ -4,30 +4,32 @@ import com.trendflow.analyze.analyze.dto.request.*;
 import com.trendflow.analyze.analyze.dto.response.*;
 import com.trendflow.analyze.analyze.dto.vo.*;
 import com.trendflow.analyze.analyze.entity.Relation;
-import com.trendflow.analyze.analyze.entity.Sentiment;
 import com.trendflow.analyze.analyze.entity.SentimentCount;
 import com.trendflow.analyze.analyze.repository.RelationRepository;
 import com.trendflow.analyze.analyze.repository.SentimentRepository;
-import com.trendflow.analyze.global.code.AnalyzeCode;
-import com.trendflow.analyze.global.code.CommonCode;
+import com.trendflow.analyze.global.code.Code;
 import com.trendflow.analyze.global.code.SocialCacheCode;
-import com.trendflow.analyze.global.exception.NotFoundException;
 import com.trendflow.analyze.global.redis.Social;
+import com.trendflow.analyze.global.redis.YoutubeSource;
+import com.trendflow.analyze.global.redis.YoutubeSourceRepository;
 import com.trendflow.analyze.msa.dto.vo.Keyword;
 import com.trendflow.analyze.msa.dto.vo.KeywordCount;
 import com.trendflow.analyze.msa.dto.vo.Source;
 import com.trendflow.analyze.msa.service.CommonService;
 import com.trendflow.analyze.msa.service.KeywordService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,10 +37,12 @@ import java.util.stream.Collectors;
 public class AnalyzeService {
     private final RelationRepository relationRepository;
     private final SentimentRepository sentimentRepository;
+    private final YoutubeSourceRepository youtubeSourceRepository;
 
     private final CommonService commonService;
     private final KeywordService keywordService;
     private final KafkaService kafkaService;
+    private final YoutubeService youtubeService;
 
     @Transactional
     public List<FindSocialResponse> findSocial(FindSocialRequest findSocialRequest) {
@@ -137,47 +141,76 @@ public class AnalyzeService {
         return FindSocialResponse.toList(socialList);
     }
 
-    public FindRelationContentResponse findRelationContent(FindRelationContentRequest findRelationContentRequest) {
+    public List<FindRelationContentResponse> findRelationContent(FindRelationContentRequest findRelationContentRequest) {
         String keyword = findRelationContentRequest.getKeyword();
+        String code = findRelationContentRequest.getCode();
+        Integer page = findRelationContentRequest.getPage();
+        Integer perPage = findRelationContentRequest.getPerPage();
         LocalDate startDate = findRelationContentRequest.getStartDate();
         LocalDate endDate = findRelationContentRequest.getEndDate();
 
-        String ARTICLE = commonService.getLocalCode(CommonCode.ARTICLE.getName()).getCode();
-        String BLOG = commonService.getLocalCode(CommonCode.BLOG.getName()).getCode();
-        String YOUTUBE = commonService.getLocalCode(CommonCode.YOUTUBE.getName()).getCode();
+        String YOUTUBE = commonService.getLocalCode(Code.YOUTUBE);
 
-        List<Keyword> keywordList = keywordService.getKeyword(keyword, startDate, endDate);
+        List<FindRelationContentResponse> findRelationContentResponseList = null;
+        // 유튜브
+        if (code.equals(YOUTUBE)) {
+            // 캐시서버에 유튜브 원본이 있는지 확인
+            String key = String.format("%s_%s", Code.YOUTUBE.getName(), keyword);
 
-        List<Source> article = commonService.getSource(keyword,
-                keywordList.stream()
-                .map(Keyword::getSourceId)
-                .distinct()
-                .collect(Collectors.toList()), ARTICLE);
+            List<YoutubeSource> youtubeSourceList = youtubeSourceRepository.findById(key)
+                    .orElseGet(() -> {
+                        // 없으면 API 호출
+                        List<Source> now = youtubeService.getYoutubeSource(keyword);
+                        List<YoutubeSource> youtubeNow = YoutubeSource.toList(now);
+                        youtubeSourceRepository.saveResult(key, youtubeNow, 6000);
+                        return youtubeNow;
+                    });
 
-        List<Source> blog = commonService.getSource(keyword,
-                keywordList.stream()
-                .map(Keyword::getSourceId)
-                .distinct()
-                .collect(Collectors.toList()), BLOG);
+            if (page * perPage <= youtubeSourceList.size()) {
+                // page 별로 짤라서 반환
+                PageRequest pageRequest = PageRequest.of((page - 1), perPage);
+                int start = (int) pageRequest.getOffset();
+                int end = Math.min((start + pageRequest.getPageSize()), youtubeSourceList.size());
+                Page<YoutubeSource> youtubeSourcePage = new PageImpl<>(youtubeSourceList.subList(start, end), pageRequest, youtubeSourceList.size());
 
-        List<Source> youtube = commonService.getSource(keyword,
-                keywordList.stream()
-                .map(Keyword::getSourceId)
-                .distinct()
-                .collect(Collectors.toList()), YOUTUBE);
+                List<Source> sourceList = Source.toList(youtubeSourcePage.toList());
+                findRelationContentResponseList = FindRelationContentResponse.toList(Code.YOUTUBE.getName(), code, sourceList);
+            } else {
+                findRelationContentResponseList = new ArrayList<>();
+            }
+        } else {
+            // 키워드 리스트 요청
+            List<Keyword> keywordList = keywordService.getKeywordPage(keyword, code, page, perPage, startDate, endDate);
+            // 원본 데이터 요청
+            List<Source> sourceList = commonService.getSource(keywordList.stream()
+                    .map(Keyword::getSourceId)
+                    .distinct()
+                    .collect(Collectors.toList()));
 
-        return FindRelationContentResponse.builder()
-                .article(article)
-                .blog(blog)
-                .youtube(youtube)
-                .build();
+            String DAUM_NEWS = commonService.getLocalCode(Code.DAUM_NEWS);
+            String NAVER_NEWS = commonService.getLocalCode(Code.NAVER_NEWS);
+            String NAVER_BLOG = commonService.getLocalCode(Code.NAVER_BLOG);
+
+            AtomicLong id = new AtomicLong();
+            findRelationContentResponseList = sourceList.stream().map(source -> {
+                if (source.getPlatformCode().equals(DAUM_NEWS)) {
+                    return FindRelationContentResponse.of(id.getAndIncrement() + 1, Code.DAUM.getName(), code, source);
+                } else if (source.getPlatformCode().equals(NAVER_NEWS) || source.getPlatformCode().equals(NAVER_BLOG)) {
+                    return FindRelationContentResponse.of(id.getAndIncrement() + 1, Code.NAVER.getName(), code, source);
+                } else {
+                    return FindRelationContentResponse.of(id.getAndIncrement() + 1, null, code, source);
+                }
+            }).collect(Collectors.toList());
+        }
+        return findRelationContentResponseList;
     }
 
-    public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {
-        System.out.println("findYoutubeRequest = " + findYoutubeRequest);
+    public Payload findYoutube(FindYoutubeRequest findYoutubeRequest) {
+
+
+
         kafkaService.sendYoutubeUrl(findYoutubeRequest.getLink());
-        Payload payload = kafkaService.consumeYoutubeAnalyze();
-        return null;
+        return kafkaService.consumeYoutubeAnalyze();
     }
 
     public List<FindYoutubeCommentResponse> findYoutubeComment(FindYoutubeCommentRequest findYoutubeCommentRequest) {
@@ -188,7 +221,6 @@ public class AnalyzeService {
     public FindCompareKeywordResponse findCompareKeyword(FindCompareKeywordRequest findCompareKeywordRequest) {
         String keywordA = findCompareKeywordRequest.getKeywordA();
         String keywordB = findCompareKeywordRequest.getKeywordB();
-
         LocalDate startDate = findCompareKeywordRequest.getStartDate();
         LocalDate endDate = findCompareKeywordRequest.getEndDate();
 
@@ -211,13 +243,9 @@ public class AnalyzeService {
         while (now.isBefore(end) || now.isEqual(end)) {
             CountCompare mentionCountCompare = CountCompare.builder()
                     .date(now)
-                    .keyword1(keywordA)
-                    .keyword2(keywordB)
                     .build();
             CountCompare grapeQuotientCompare = CountCompare.builder()
                     .date(now)
-                    .keyword1(keywordA)
-                    .keyword2(keywordB)
                     .build();
 
             Integer countA = 0;
@@ -242,6 +270,8 @@ public class AnalyzeService {
                 mentionCountCompare.setType(SocialCacheCode.TYPE_DOWN.getCode());
                 mentionCountCompare.setDifference(countB - countA);
             }
+            mentionCountCompare.setKeyword1(countA);
+            mentionCountCompare.setKeyword2(countB);
 
             countA = 0;
             countB = 0;
@@ -265,6 +295,8 @@ public class AnalyzeService {
                 grapeQuotientCompare.setType(SocialCacheCode.TYPE_DOWN.getCode());
                 grapeQuotientCompare.setDifference(countB - countA);
             }
+            grapeQuotientCompare.setKeyword1(countA);
+            grapeQuotientCompare.setKeyword2(countB);
 
             findCompareKeywordResponse.getMentionCountCompare().add(mentionCountCompare);
             findCompareKeywordResponse.getGrapeQuotientCompare().add(grapeQuotientCompare);
@@ -279,7 +311,7 @@ public class AnalyzeService {
     public List<FindRelationKeywordResponse> findRelationKeyword(List<Long> keywordIdList) {
         List<Relation> relationList = relationRepository.findByKeywordIdList(keywordIdList, 8);
         return relationList.stream()
-                .map(FindRelationKeywordResponse::fromEntity)
+                .map(FindRelationKeywordResponse::of)
                 .collect(Collectors.toList());
     }
 
@@ -287,7 +319,7 @@ public class AnalyzeService {
     public List<FindWordCloudKeywordResponse> findWordCloudKeyword(List<Long> keywordIdList) {
         List<Relation> relationList = relationRepository.findByKeywordIdList(keywordIdList, 100);
         return relationList.stream()
-                .map(FindWordCloudKeywordResponse::fromEntity)
+                .map(FindWordCloudKeywordResponse::of)
                 .collect(Collectors.toList());
     }
 
@@ -337,8 +369,6 @@ public class AnalyzeService {
                         .build(), score, count));
             else sentimentCountMap.put(now, setGrapeQuotientInfo(sentimentCountMap.get(now), score, count));
         }
-
-
 
         return SocialMap.builder()
                 .keywordCountMap(keywordCountMap)
@@ -395,10 +425,10 @@ public class AnalyzeService {
     }
 
     private MentionCountInfo setMentionCountInfo(MentionCountInfo mentionCountInfo, String platformCode, Long count) {
-        String DAUM_NEWS = commonService.getLocalCode(CommonCode.DAUM_NEWS.getName()).getCode();
-        String NAVER_NEWS = commonService.getLocalCode(CommonCode.NAVER_NEWS.getName()).getCode();
-        String NAVER_BLOG = commonService.getLocalCode(CommonCode.NAVER_BLOG.getName()).getCode();
-        String TWITTER = commonService.getLocalCode(CommonCode.TWITTER.getName()).getCode();
+        String DAUM_NEWS = commonService.getLocalCode(Code.DAUM_NEWS);
+        String NAVER_NEWS = commonService.getLocalCode(Code.NAVER_NEWS);
+        String NAVER_BLOG = commonService.getLocalCode(Code.NAVER_BLOG);
+        String TWITTER = commonService.getLocalCode(Code.TWITTER);
 
         Integer daumNews = 0;
         Integer naverNews = 0;
@@ -419,8 +449,8 @@ public class AnalyzeService {
     }
 
     private GrapeQuotientInfo setGrapeQuotientInfo(GrapeQuotientInfo grapeQuotientInfo, Double score, Long count) {
-        if (score > 0.0) grapeQuotientInfo.setPositive(count.intValue());
-        else if (score < 0.0) grapeQuotientInfo.setNegative(count.intValue());
+        if (score == 1.0) grapeQuotientInfo.setPositive(count.intValue());
+        else if (score == 0.0) grapeQuotientInfo.setNegative(count.intValue());
         else grapeQuotientInfo.setNeutral(count.intValue());
 
         return grapeQuotientInfo;

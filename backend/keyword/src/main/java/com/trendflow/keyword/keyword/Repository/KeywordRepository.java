@@ -3,6 +3,7 @@ package com.trendflow.keyword.keyword.Repository;
 import com.trendflow.keyword.keyword.entity.Keyword;
 import com.trendflow.keyword.keyword.entity.KeywordCount;
 import com.trendflow.keyword.keyword.entity.KeywordDistinct;
+import com.trendflow.keyword.keyword.entity.RelatedKeywordCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -54,13 +55,29 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
             "FROM keyword k " +
             "WHERE k.keyword = :keyword " +
             "AND k.platform_code IN (:codeList) " +
-            "OFFSET :perPage * (page - 1) ROWS " +
-            "FETCH NEXT :perPage ROWS ONLY;", nativeQuery = true)
+            "AND k.reg_dt >= :startDate " +
+            "AND k.reg_dt <= :endDate " +
+            "LIMIT :limit " +
+            "OFFSET :offset ;", nativeQuery = true)
     List<Keyword> findByKeywordAndDatePage(@Param("keyword") String keyword,
                                            @Param("codeList") List<String> codeList,
-                                           @Param("page") Integer page,
-                                           @Param("perPage") Integer perPage,
+                                           @Param("offset") Integer offset,
+                                           @Param("limit") Integer limit,
                                            @Param("startDate") Integer startDate,
                                            @Param("endDate") Integer endDate);
 
+    @Query(value = "SELECT keyword, sum(count) as cnt FROM keyword "+
+            "WHERE source_id IN" +
+            "(  SELECT source_id FROM keyword "+
+                "WHERE keyword = :keyword "
+                +"AND reg_dt >= :fromDate "+
+                "AND reg_dt <= :toDate "+
+            ") " +
+            "GROUP BY keyword " +
+            "ORDER BY cnt "+
+            "DESC limit 100; ",
+            nativeQuery = true)
+    List<RelatedKeywordCount> findByKeywordAndFromToDate(@Param("keyword")String keyword,
+                                                   @Param("fromDate") int fromDate,
+                                                   @Param("toDate") int toDate );
 }

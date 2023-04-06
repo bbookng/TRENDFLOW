@@ -7,6 +7,7 @@ import com.trendflow.keyword.keyword.dto.response.*;
 import com.trendflow.keyword.keyword.entity.Keyword;
 import com.trendflow.keyword.keyword.entity.KeywordCount;
 import com.trendflow.keyword.keyword.entity.KeywordDistinct;
+import com.trendflow.keyword.keyword.entity.RelatedKeywordCount;
 import com.trendflow.keyword.msa.service.AnalyzeService;
 import com.trendflow.keyword.msa.service.CommonService;
 import com.trendflow.keyword.msa.vo.RelateCode;
@@ -16,9 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -148,6 +149,70 @@ public class KeywordService {
 
     @Transactional
     public List<FindRelateKeywordResponse> findRelateKeyword(String keyword) throws RuntimeException {
+
+        // 포맷 정의
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        // 현재 날짜 구하기
+        LocalDate today = LocalDate.now();
+        int todayInt = Integer.parseInt(today.format(formatter));
+
+        // 한 달 전 날짜
+        LocalDate monthAgo = today.minus(1, ChronoUnit.MONTHS);
+        int monthAgoInt = Integer.parseInt(monthAgo.format(formatter));
+
+        
+        List<RelatedKeywordCount> latestRelatedList = keywordRepository.findByKeywordAndFromToDate(keyword, monthAgoInt,todayInt);
+
+        //보름전
+        LocalDate halfAgo = today.minus(15, ChronoUnit.DAYS);
+        int halfAgoInt = Integer.parseInt(halfAgo.format(formatter));
+        
+        //보름전 등수
+        Map<String, Integer> map = new HashMap<>();
+        List<RelatedKeywordCount> halfRelatedList = keywordRepository.findByKeywordAndFromToDate(keyword, monthAgoInt,halfAgoInt);
+        for(int i=0; i<halfRelatedList.size(); i++){
+            RelatedKeywordCount halfRelated = halfRelatedList.get(i);
+            map.put(halfRelated.getKeyword(), i);
+        }
+        
+        //최신과 이전 등수비교
+        List<RelateKeyword> relateKeywordList = new ArrayList<>();
+        for(int i=0; i<Math.min(latestRelatedList.size(),8); i++){
+            String word = latestRelatedList.get(i).getKeyword();
+            if(map.containsKey(word)){
+                int updown = map.get(word) - i;
+                
+                String typeCode =null;
+                if (updown>0) typeCode = KeywordCacheCode.TYPE_UP.getCode();
+                else if(updown<0) typeCode = KeywordCacheCode.TYPE_DOWN.getCode();
+                else typeCode = KeywordCacheCode.TYPE_SAME.getCode();
+                
+                relateKeywordList.add(
+                        RelateKeyword.builder()
+                                .rank(i + 1)
+                                .keyword(word)
+                                .type(typeCode)
+                                .step(Math.abs(updown))
+                                .relatedCount(latestRelatedList.get(i).getCnt())
+                                .build()
+                );
+                
+            }else{
+                relateKeywordList.add(
+                        RelateKeyword.builder()
+                                .rank(i+ 1)
+                                .keyword(word)
+                                .type(KeywordCacheCode.TYPE_NEW.getCode())
+                                .step(0)
+                                .relatedCount(latestRelatedList.get(i).getCnt())
+                                .build()
+                );
+            }
+        }
+        //최종 결과 : relateKeywordList
+        return FindRelateKeywordResponse.toList(relateKeywordList);
+       /* List<Keyword> keywordIdList = keywordRepository.findByKeyword(keyword);
+
         List<Keyword> keywordIdList = keywordRepository.findAllByKeyword(keyword);
 
         String key = String.format("%s_%s", KeywordCacheCode.RELATE_KEYWORD_RESULT.getCode(), keyword);
@@ -181,12 +246,54 @@ public class KeywordService {
                     return now;
                 });
 
-        return FindRelateKeywordResponse.toList(relateKeywordList);
+        return FindRelateKeywordResponse.toList(relateKeywordList);*/
+
+
+
     }
 
     @Transactional
     public List<FindWordCloudResponse> findWordCloudKeyword(String keyword) throws RuntimeException {
-        List<Keyword> keywordList = keywordRepository.findAllByKeyword(keyword);
+        // 포맷 정의
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        // 현재 날짜 구하기
+        LocalDate today = LocalDate.now();
+        int todayInt = Integer.parseInt(today.format(formatter));
+
+        // 한 달 전 날짜
+        LocalDate monthAgo = today.minus(1, ChronoUnit.MONTHS);
+        int monthAgoInt = Integer.parseInt(monthAgo.format(formatter));
+
+        List<RelatedKeywordCount> relatedList = keywordRepository.findByKeywordAndFromToDate(keyword, monthAgoInt,todayInt);
+
+        List<WordCloudKeyword> wordCloudKeywordList = new ArrayList<>();
+        long maxv=300L, minv=100L;
+        long max=0, min=0;
+        if (relatedList.size()>=1){
+            max = relatedList.get(0).getCnt();
+            min = relatedList.get(relatedList.size()-1).getCnt();
+            if (relatedList.size()==1) minv=500L;
+        }
+        else{
+            return FindWordCloudResponse.toList(wordCloudKeywordList);
+        }
+
+
+        for(RelatedKeywordCount relatedKeywordCount : relatedList){
+            long cnt = relatedKeywordCount.getCnt();
+            double ratio = (double)(cnt - min) / Math.max((double)(max - min), 0.001);
+            int count = (int)(ratio * (maxv-minv) + minv);
+            wordCloudKeywordList.add(
+                WordCloudKeyword.builder()
+                        .text(relatedKeywordCount.getKeyword())
+                        .value(count)
+                        .build()
+            );
+        }
+        //최종 결과 : wordCloudKeywordList
+        return FindWordCloudResponse.toList(wordCloudKeywordList);
+
+        /*List<Keyword> keywordList = keywordRepository.findAllByKeyword(keyword);
 
         String key = String.format("%s_%s", KeywordCacheCode.WORDCLOUD_KEYWORD.getCode(), keyword);
 
@@ -208,7 +315,7 @@ public class KeywordService {
                     return now;
                 });
 
-        return FindWordCloudResponse.toList(wordCloudKeywordList);
+        return FindWordCloudResponse.toList(wordCloudKeywordList);*/
     }
 
     // feign 서비스
@@ -232,7 +339,7 @@ public class KeywordService {
         return keywordRepository.findByKeywordAndDatePage(keyword,
                 codeList.stream()
                         .map(RelateCode::getPlatformCode)
-                        .collect(Collectors.toList()), page, perPage, start, end);
+                        .collect(Collectors.toList()), perPage * (page - 1), perPage, start, end);
     }
 
     @Transactional

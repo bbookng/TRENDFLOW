@@ -12,10 +12,8 @@ import java.util.List;
 @Repository
 public interface SourceRepository extends JpaRepository<Source, Long> {
 
-    @Query(value = "SELECT s.source_id, s.brand_id, s.platform_code, s.title, s.link, s.content, DATE(s.reg_dt), thumb_img " +
+    @Query(value = "SELECT s.source_id, s.brand_id, s.platform_code, s.title, s.link, s.content, DATE(s.reg_dt) as reg_dt, thumb_img " +
             "FROM source s " +
-            "WHERE s.platform_code IN (:platformCodeList) " +
-            "AND s.source_id IN (:sourceIdList);", nativeQuery = true)
-    List<Source> findByPlatformCodeInAndSourceIdIn(@Param("platformCodeList") List<String> platformCodeList,
-                                                   @Param("sourceIdList") List<Long> sourceIdList);
+            "WHERE s.source_id IN (:sourceIdList);", nativeQuery = true)
+    List<Source> findByPlatformCodeInAndSourceIdIn(@Param("sourceIdList") List<Long> sourceIdList);
 }
