@@ -267,7 +267,7 @@ public class KeywordService {
         List<RelatedKeywordCount> relatedList = keywordRepository.findByKeywordAndFromToDate(keyword, monthAgoInt,todayInt);
 
         List<WordCloudKeyword> wordCloudKeywordList = new ArrayList<>();
-        long maxv=500L, minv=100L;
+        long maxv=300L, minv=100L;
         long max=0, min=0;
         if (relatedList.size()>=1){
             max = relatedList.get(0).getCnt();
