@@ -14,11 +14,12 @@ import * as S from './index.styles';
 
 const MainPage = () => {
   const token = getToken();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const {
     data: bookmark,
     error: bookmarkError,
     isLoading: bookmarkLoading,
+    isSuccess: bookmarkSuccess,
   } = useGetBookmarkQuery(undefined, { refetchOnMountOrArgChange: true, skip: !token });
 
   const {
@@ -35,13 +36,13 @@ const MainPage = () => {
     isLoading: socialAnalysisLoading,
   } = useGetSocialAnalysisQuery(
     {
-      keyword: bookmark!.bookmark,
+      keyword: bookmarkSuccess ? bookmark!.bookmark : '',
       startDate: getDateToYYYYDDMM(getSevenDaysAgoDate()),
       endDate: getDateToYYYYDDMM(new Date()),
     },
     {
       refetchOnMountOrArgChange: true,
-      skip: !!bookmarkLoading || !!bookmarkError,
+      skip: !bookmarkSuccess,
     }
   );
 
@@ -51,11 +52,11 @@ const MainPage = () => {
     isLoading: relatedKeywordsLoading,
   } = useGetRelatedKeywordsQuery(
     {
-      keyword: bookmark!.bookmark,
+      keyword: bookmarkSuccess ? bookmark!.bookmark : '',
     },
     {
       refetchOnMountOrArgChange: true,
-      skip: !!bookmarkLoading || !!bookmarkError,
+      skip: !bookmarkSuccess,
     }
   );
 
