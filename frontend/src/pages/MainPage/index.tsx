@@ -58,9 +58,6 @@ const MainPage = () => {
       skip: !bookmark,
     }
   );
-  // useEffect(() => {
-  //   dispatch(setHotKeyword(hotKeywords?.week[0].keyword));
-  // }, [hotKeywords]);
   return (
     <S.Wrapper>
       <SearchBar placeholder="키워드를 입력하세요" />

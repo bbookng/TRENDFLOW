@@ -32,7 +32,7 @@ const CommentAnalysis = ({ link }: Props): React.ReactElement => {
   useEffect(() => {
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, code]);
+  }, [link, page, code]);
   return (
     <S.Wrapper>
       <S.Title>댓글 분석</S.Title>
