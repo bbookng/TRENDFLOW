@@ -19,7 +19,7 @@ const MainPage = () => {
     data: bookmark,
     error: bookmarkError,
     isLoading: bookmarkLoading,
-  } = useGetBookmarkQuery({ Authorization: `Bearer ${token!}` }, { skip: !token });
+  } = useGetBookmarkQuery({ token: token! }, { skip: !token });
 
   const {
     data: hotKeywords,
