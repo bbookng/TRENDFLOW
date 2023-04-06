@@ -14,7 +14,7 @@ public class FindYoutubeResponse {
 
     @Data
     @Builder
-    public class Reaction {
+    public static class Reaction {
         private Integer viewCount;
         private Integer likeCount;
         private Integer commentCount;
@@ -22,7 +22,7 @@ public class FindYoutubeResponse {
 
     @Data
     @Builder
-    public class AffinityInfo {
+    public static class AffinityInfo {
         private Double positive;
         private Double negative;
         private Double neutral;
@@ -30,7 +30,7 @@ public class FindYoutubeResponse {
 
     @Data
     @Builder
-    public class Owner {
+    public static class Owner {
         private String name;
         private Integer subscribeCount;
     }
