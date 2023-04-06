@@ -149,8 +149,6 @@ public class AnalyzeService {
         LocalDate startDate = findRelationContentRequest.getStartDate();
         LocalDate endDate = findRelationContentRequest.getEndDate();
 
-        System.out.println("keyword = " + keyword);
-
         String YOUTUBE = commonService.getLocalCode(Code.YOUTUBE);
 
         List<FindRelationContentResponse> findRelationContentResponseList = null;
