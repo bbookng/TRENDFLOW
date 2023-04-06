@@ -118,7 +118,7 @@ const ComparisonResultPage = () => {
             barNaverData={keyword1SocialAnalysis?.map((item) => item.mentionCountInfo.naver)}
             barDaumLabel="다음 언급량"
             barDaumData={keyword1SocialAnalysis?.map((item) => item.mentionCountInfo.daum)}
-            lineLabel="피치 지수"
+            lineLabel="포도알 지수"
             lineData={keyword1SocialAnalysis?.map((item) =>
               Number(item.grapeQuotientInfo.grape.toFixed(2))
             )}
@@ -133,7 +133,7 @@ const ComparisonResultPage = () => {
             barNaverData={keyword2SocialAnalysis?.map((item) => item.mentionCountInfo.naver)}
             barDaumLabel="다음 언급량"
             barDaumData={keyword2SocialAnalysis?.map((item) => item.mentionCountInfo.daum)}
-            lineLabel="피치 지수"
+            lineLabel="포도알 지수"
             lineData={keyword2SocialAnalysis?.map((item) =>
               Number(item.grapeQuotientInfo.grape.toFixed(2))
             )}
@@ -146,7 +146,7 @@ const ComparisonResultPage = () => {
       {comparisonAnalysis && (
         <TrendChartContentsWrapper>
           <ComparisonLineChart
-            title="피치 지수 비교"
+            title="포도알 지수 비교"
             keyword1={keyword1}
             keyword2={keyword2}
             comparisonData={comparisonAnalysis!.grapeQuotientCompare}

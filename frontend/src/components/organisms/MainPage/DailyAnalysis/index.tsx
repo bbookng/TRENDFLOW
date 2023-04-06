@@ -18,10 +18,10 @@ const DailyAnalysis = ({
   socialAnalysis,
   relatedKeywords,
 }: DailyAnalysisPropsInterface) => {
-  const todayInfo = socialAnalysis[6];
+  const todayInfo = socialAnalysis[29];
   const grapeBadgeProps = {
-    count: `${todayInfo?.grapeQuotientInfo?.positive}%`,
-    changed: `${todayInfo?.compareInfo?.grapeQuotient?.changed}%p`,
+    count: `${Number(todayInfo?.grapeQuotientInfo?.grape.toFixed(2))}%`,
+    changed: `${Number(todayInfo?.compareInfo?.grapeQuotient?.changed.toFixed(2))}%p`,
     type: `${todayInfo?.compareInfo?.grapeQuotient?.type}` as BadgeType,
     width: '120px',
   };
@@ -46,7 +46,7 @@ const DailyAnalysis = ({
           barNaverData={socialAnalysis?.map((item) => item.mentionCountInfo.naver)}
           barDaumLabel="다음 언급량"
           barDaumData={socialAnalysis?.map((item) => item.mentionCountInfo.daum)}
-          lineLabel="포도알 지수 지수"
+          lineLabel="포도알 지수"
           lineData={socialAnalysis?.map((item) => Number(item.grapeQuotientInfo.grape.toFixed(2)))}
         />
 
