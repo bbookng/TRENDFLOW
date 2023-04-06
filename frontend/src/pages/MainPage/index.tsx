@@ -42,7 +42,6 @@ const MainPage = () => {
     },
     {
       refetchOnMountOrArgChange: true,
-      skip: !bookmarkSuccess,
     }
   );
 
@@ -56,10 +55,9 @@ const MainPage = () => {
     },
     {
       refetchOnMountOrArgChange: true,
-      skip: !bookmarkSuccess,
     }
   );
-  console.log(socialAnalysis);
+  console.log(bookmark);
   return (
     <S.Wrapper>
       <SearchBar placeholder="키워드를 입력하세요" />
@@ -78,11 +76,13 @@ const MainPage = () => {
         </S.HotKeywordsWrapper>
       )}
 
-      {!token && !bookmark && <NoBookmark />}
+      {!bookmarkLoading && !token && !bookmark && <NoBookmark />}
 
-      {socialAnalysis && relatedKeywords && (
+      {!bookmarkLoading && bookmark && (
         <DailyAnalysis
-          keyword={bookmark!.bookmark}
+          keyword="시장"
+          socialAnalysisLoading={socialAnalysisLoading}
+          relatedKeywordsLoading={relatedKeywordsLoading}
           socialAnalysis={socialAnalysis!}
           relatedKeywords={relatedKeywords!}
         />

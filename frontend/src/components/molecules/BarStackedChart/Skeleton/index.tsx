@@ -1,8 +1,12 @@
 import * as S from './index.styles';
 
-const ChartSkeleton = (): React.ReactElement => {
+interface Props {
+  desktopWidth?: string;
+}
+
+const ChartSkeleton = ({ desktopWidth }: Props): React.ReactElement => {
   return (
-    <S.Wrapper>
+    <S.Wrapper desktopWidth={desktopWidth}>
       <S.BarPaper>
         <S.Bar></S.Bar>
       </S.BarPaper>

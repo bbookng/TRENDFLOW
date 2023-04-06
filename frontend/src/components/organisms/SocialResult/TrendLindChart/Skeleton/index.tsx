@@ -4,7 +4,9 @@ const TrendLineChartSkeleton = () => {
   return (
     <S.Container>
       <S.Title>긍부정 추이</S.Title>
-      <S.LineChartSkeleton />
+      <S.Wrapper>
+        <S.LineChartSkeleton />
+      </S.Wrapper>
     </S.Container>
   );
 };

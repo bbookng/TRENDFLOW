@@ -7,9 +7,9 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-
+  height: 281px;
   @media ${MEDIA_QUERY.DESKTOP} {
-    height: 448px;
+    height: 440px;
   }
 `;
 export const Title = styled.div`

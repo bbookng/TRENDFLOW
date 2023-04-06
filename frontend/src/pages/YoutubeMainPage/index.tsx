@@ -21,7 +21,6 @@ const YoutubeMainPage = () => {
   const { bestHotKeyword } = useAppSelector((state) => state);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [youtubeList, setYoutubeList] = useState<Array<SocialContentInterface>>([]);
-  console.log(bestHotKeyword);
   const getData = async (keyword: string) => {
     setIsLoading(true);
     const { data } = await getContents(
