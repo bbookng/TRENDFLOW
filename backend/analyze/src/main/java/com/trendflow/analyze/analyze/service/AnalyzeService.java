@@ -112,6 +112,8 @@ public class AnalyzeService {
                 Integer negative = nowGrapeQuotient.getNegative();
                 Integer neutral = nowGrapeQuotient.getNeutral();
 
+                System.out.println(positive + " " + negative + " " + neutral);
+
                 if (sum != 0) {
                     positive /= sum * 100;
                     negative /= sum * 100;
@@ -422,7 +424,7 @@ public class AnalyzeService {
         Map<LocalDate, GrapeQuotientInfo> sentimentCountMap = new HashMap<>();
         for (SentimentCount sentimentCount : sentimentList) {
             LocalDate now = sentimentCount.getRegDt();
-            Double score = sentimentCount.getScore();
+            Long score = sentimentCount.getScore();
             Long count = sentimentCount.getCount();
 
             if (!sentimentCountMap.containsKey(now))
@@ -517,10 +519,10 @@ public class AnalyzeService {
         return mentionCountInfo;
     }
 
-    private GrapeQuotientInfo setGrapeQuotientInfo(GrapeQuotientInfo grapeQuotientInfo, Double score, Long count) {
-        if (score == 1.0) grapeQuotientInfo.setPositive(grapeQuotientInfo.getPositive() + count.intValue());
-        else if (score == 0.0) grapeQuotientInfo.setNegative(grapeQuotientInfo.getNegative() + count.intValue());
-        else grapeQuotientInfo.setNeutral(grapeQuotientInfo.getNeutral() + count.intValue());
+    private GrapeQuotientInfo setGrapeQuotientInfo(GrapeQuotientInfo grapeQuotientInfo, Long score, Long count) {
+        if (score == 1L) grapeQuotientInfo.setPositive(count.intValue());
+        else if (score == 0L) grapeQuotientInfo.setNegative(count.intValue());
+        else grapeQuotientInfo.setNeutral(count.intValue());
 
         return grapeQuotientInfo;
     }
