@@ -1,10 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RankingListInterface, RankingListItemInterface } from '@/types/ranking';
-import {
-  CombineKeywordsInterface,
-  RecommendKeywordInterface,
-  WordCloudInterface,
-} from '@/types/keyword';
+import { RecommendKeywordInterface, WordCloudInterface } from '@/types/keyword';
 import { api } from '@/apis/utils/axios';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
