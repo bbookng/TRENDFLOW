@@ -42,7 +42,6 @@ const CommentAnalysis = ({ link }: Props): React.ReactElement => {
     setPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [link]);
-  console.log(comments);
   return (
     <S.Wrapper>
       <S.Title>댓글 분석</S.Title>

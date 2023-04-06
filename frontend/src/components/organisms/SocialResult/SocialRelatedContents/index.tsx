@@ -58,13 +58,12 @@ const SocialRelatedContents = ({
       setCode(CONTENT_CODE.ARTICLE);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword]);
+  }, [keyword, startDate, endDate]);
 
   useDidMountEffect(() => {
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, code]);
-
   return (
     <S.Wrapper>
       <S.Title>관련 컨텐츠</S.Title>

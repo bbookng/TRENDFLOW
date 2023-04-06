@@ -22,6 +22,7 @@ const CommentItem = ({
 
   useEffect(() => {
     if (!commentRef?.current) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (isLast && entry.isIntersecting) {
