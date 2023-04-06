@@ -23,6 +23,9 @@ const SocialRelatedContents = ({
 
   const getData = async () => {
     setIsLoading(true);
+    if (page === 1) {
+      setContentList([]);
+    }
     const { data } = await getContents(keyword, code, page, 10, startDate, endDate);
     setContentList((prev) => prev.concat(data));
     setIsLoading(false);
@@ -42,7 +45,13 @@ const SocialRelatedContents = ({
   useEffect(() => {
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword, page, code]);
+  }, [page, code]);
+
+  useEffect(() => {
+    setPage(1);
+    setCode(CONTENT_CODE.ARTICLE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyword]);
 
   return (
     <S.Wrapper>
@@ -74,7 +83,8 @@ const SocialRelatedContents = ({
         {contentList?.map((content, index) => {
           return (
             <ContentItem
-              key={content.id}
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
               isLast={index === contentList.length - 1}
               nextPage={nextPage}
               content={content}
