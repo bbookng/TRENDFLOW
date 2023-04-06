@@ -208,6 +208,9 @@ public class AnalyzeService {
     }
 
     public Payload findYoutube(FindYoutubeRequest findYoutubeRequest) {
+
+
+
         kafkaService.sendYoutubeUrl(findYoutubeRequest.getLink());
         return kafkaService.consumeYoutubeAnalyze();
     }
