@@ -35,7 +35,7 @@ const MainPage = () => {
     isLoading: socialAnalysisLoading,
   } = useGetSocialAnalysisQuery(
     {
-      keyword: bookmark!,
+      keyword: bookmark!.bookmark,
       startDate: getDateToYYYYDDMM(getSevenDaysAgoDate()),
       endDate: getDateToYYYYDDMM(new Date()),
     },
@@ -51,7 +51,7 @@ const MainPage = () => {
     isLoading: relatedKeywordsLoading,
   } = useGetRelatedKeywordsQuery(
     {
-      keyword: bookmark!,
+      keyword: bookmark!.bookmark,
     },
     {
       refetchOnMountOrArgChange: true,
@@ -88,7 +88,7 @@ const MainPage = () => {
 
       {socialAnalysis && relatedKeywords && (
         <DailyAnalysis
-          keyword={bookmark!}
+          keyword={bookmark!.bookmark}
           socialAnalysis={socialAnalysis!}
           relatedKeywords={relatedKeywords!}
         />
