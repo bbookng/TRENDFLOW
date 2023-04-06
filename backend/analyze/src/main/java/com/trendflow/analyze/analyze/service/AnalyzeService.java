@@ -112,13 +112,16 @@ public class AnalyzeService {
                 Integer negative = nowGrapeQuotient.getNegative();
                 Integer neutral = nowGrapeQuotient.getNeutral();
 
-                System.out.println(positive + " " + negative + " " + neutral);
+                System.out.println(sum + " " + positive + " " + negative + " " + neutral);
 
                 if (sum != 0) {
+                    System.out.println("sum == 0");
                     positive = positive / sum * 100;
                     negative = negative / sum * 100;
                     neutral = neutral / sum * 100;
                 }
+
+                System.out.println(sum + " " + positive + " " + negative + " " + neutral);
 
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
                     .positive(positive)
