@@ -19,7 +19,7 @@ const MainPage = () => {
     data: bookmark,
     error: bookmarkError,
     isLoading: bookmarkLoading,
-  } = useGetBookmarkQuery(undefined, { skip: !token });
+  } = useGetBookmarkQuery(undefined, { refetchOnMountOrArgChange: true, skip: !token });
 
   const {
     data: hotKeywords,
