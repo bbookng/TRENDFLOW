@@ -80,12 +80,7 @@ const SocialResultPage = () => {
       dispatch(showToast('💥 로그인이 필요합니다.'));
       return;
     }
-
-    const req = {
-      token: token!,
-      keyword: keyword!,
-    };
-    postBookmark(req);
+    postBookmark({ token: token!, keyword: keyword! });
     setIsBookmarked((prev) => !prev);
   };
 
