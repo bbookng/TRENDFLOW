@@ -22,13 +22,11 @@ export const memberApi = createApi({
       providesTags: ['bookmark'],
     }),
     postBookmark: builder.mutation<string | null, PostBookmarkReqInterface>({
-      query: (req) => ({
+      query: ({ headers, params }) => ({
         url: 'bookmark',
         method: 'POST',
-        prepareHeaders: (headers: any) => {
-          headers.set('Authorization', req.headers.Authorization);
-        },
-        params: req.params,
+        headers,
+        params,
       }),
       invalidatesTags: ['bookmark'],
     }),
