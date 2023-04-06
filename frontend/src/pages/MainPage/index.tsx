@@ -57,12 +57,11 @@ const MainPage = () => {
       refetchOnMountOrArgChange: true,
       skip: !bookmark,
     }
-
+  );
 
   console.log('북마크', bookmark, bookmarkLoading, bookmarkError);
   console.log('소셜', socialAnalysis, socialAnalysisLoading, socialAnalysisError);
   console.log('연관 키워드', relatedKeywords, relatedKeywordsLoading, relatedKeywordsError);
-
   // useEffect(() => {
   //   dispatch(setHotKeyword(hotKeywords?.week[0].keyword));
   // }, [hotKeywords]);
