@@ -74,6 +74,7 @@ public class AnalyzeService {
                     .positive(0D)
                     .negative(0D)
                     .neutral(0D)
+                    .grape(0D)
                     .build());
         }
 
@@ -110,24 +111,28 @@ public class AnalyzeService {
                 Double positive = nowGrapeQuotient.getPositive();
                 Double negative = nowGrapeQuotient.getNegative();
                 Double neutral = nowGrapeQuotient.getNeutral();
+                Double grape = positive + neutral;
                 Double sum = positive + negative + neutral;
 
                 if (sum != 0) {
                     positive = positive / sum * 100;
                     negative = negative / sum * 100;
                     neutral = neutral / sum * 100;
+                    grape = grape / sum * 100;
                 }
 
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
                     .positive(positive)
                     .negative(negative)
                     .neutral(neutral)
+                    .grape(grape)
                     .build();
             } else {
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
                         .positive(0D)
                         .negative(0D)
                         .neutral(0D)
+                        .grape(0D)
                         .build();
                 sentimentCountMap.put(now, grapeQuotientInfo);
             }
@@ -340,7 +345,7 @@ public class AnalyzeService {
                 Double sum = nowGrapeQuotient.getPositive().doubleValue() +
                                 nowGrapeQuotient.getNegative().doubleValue() +
                                     nowGrapeQuotient.getNeutral().doubleValue();
-                senA = nowGrapeQuotient.getPositive().doubleValue();
+                senA = nowGrapeQuotient.getPositive().doubleValue() + nowGrapeQuotient.getNeutral().doubleValue();
                 if (sum != 0) senA = senA / sum * 100;
             }
             if (sentimentCountMapB.containsKey(now)){
@@ -348,7 +353,7 @@ public class AnalyzeService {
                 Double sum = nowGrapeQuotient.getPositive().doubleValue() +
                                 nowGrapeQuotient.getNegative().doubleValue() +
                                     nowGrapeQuotient.getNeutral().doubleValue();
-                senB = nowGrapeQuotient.getPositive().doubleValue();;
+                senB = nowGrapeQuotient.getPositive().doubleValue() + nowGrapeQuotient.getNeutral().doubleValue();
                 if (sum != 0) senB = senB / sum * 100;
             }
 
@@ -473,11 +478,11 @@ public class AnalyzeService {
         Double changed;
 
         Double pastSum = past.getPositive() + past.getNegative() + past.getNeutral();
-        Double pastGrape = past.getPositive();
+        Double pastGrape = past.getPositive() + past.getNeutral();
         if (pastSum != 0D) pastGrape = pastGrape / pastSum * 100;
 
         Double nowSum = now.getPositive() + now.getNegative() + now.getNeutral();
-        Double nowGrape = now.getPositive();
+        Double nowGrape = now.getPositive() + now.getNeutral();
         if (nowSum != 0D) nowGrape = nowGrape / nowSum * 100;
 
         if (nowGrape > pastGrape) {

@@ -13,4 +13,5 @@ public class GrapeQuotientInfo {
     private Double positive;
     private Double negative;
     private Double neutral;
+    private Double grape;
 }
