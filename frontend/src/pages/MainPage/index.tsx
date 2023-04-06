@@ -7,7 +7,7 @@ import { HotKeywords, NoBookmark, DailyAnalysis } from '@/components/organisms/M
 import HotKeywordsSkeleton from '@/components/organisms/MainPage/HotKeywords/Skeleton';
 import { useGetBookmarkQuery } from '@/apis/member';
 import { getToken } from '@/utils/token';
-import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
+import { getDateToYYYYDDMM, getOneDaysAgoDate, getSevenDaysAgoDate } from '@/utils/date';
 import { useAppDispatch } from '@/hooks/storeHook';
 import { setHotKeyword } from '@/store/slices/keywordSlice';
 import * as S from './index.styles';
@@ -38,7 +38,7 @@ const MainPage = () => {
     {
       keyword: bookmarkSuccess ? bookmark!.bookmark : '',
       startDate: getDateToYYYYDDMM(getSevenDaysAgoDate()),
-      endDate: getDateToYYYYDDMM(new Date()),
+      endDate: getDateToYYYYDDMM(getOneDaysAgoDate()),
     },
     {
       refetchOnMountOrArgChange: true,

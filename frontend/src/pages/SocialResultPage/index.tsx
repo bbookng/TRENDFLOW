@@ -38,7 +38,7 @@ const SocialResultPage = () => {
   } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
-  const [isBookmarked, setIsBookmarked] = useState(bookmark === keyword);
+  const [isBookmarked, setIsBookmarked] = useState(bookmark?.bookmark === keyword);
 
   const [endDate, setEndDate] = useState<Date>(getOneDaysAgoDate());
   const [startDate, setStartDate] = useState<Date>(getSevenDaysAgoDate());
