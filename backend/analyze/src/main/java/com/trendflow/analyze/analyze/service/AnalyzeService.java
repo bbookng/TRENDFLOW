@@ -295,6 +295,7 @@ public class AnalyzeService {
                     .date(now)
                     .build();
 
+            // 워드 카운트
             Integer countA = 0;
             Integer countB = 0;
             if (keywordCountMapA.containsKey(now)){
@@ -320,6 +321,7 @@ public class AnalyzeService {
             mentionCountCompare.setKeyword1(countA);
             mentionCountCompare.setKeyword2(countB);
 
+            // 긍 부정
             countA = 0;
             countB = 0;
             if (sentimentCountMapA.containsKey(now)){
@@ -452,10 +454,12 @@ public class AnalyzeService {
         Integer changed;
 
         Integer pastSum = past.getPositive() + past.getNegative() + past.getNeutral();
-        Integer pastGrape = past.getPositive() / pastSum * 100;
+        Integer pastGrape = past.getPositive();
+        if (pastSum != 0) pastGrape /= pastSum * 100;
 
         Integer nowSum = now.getPositive() + now.getNegative() + now.getNeutral();
-        Integer nowGrape = now.getPositive() / nowSum * 100;
+        Integer nowGrape = now.getPositive();
+        if (nowSum != 0) nowGrape /= nowSum * 100;
 
         if (nowGrape > pastGrape) {
             type = SocialCacheCode.TYPE_UP.getCode();
