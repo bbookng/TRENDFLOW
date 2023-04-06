@@ -29,7 +29,7 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
                     "WHERE keyword = :keyword " +
                     "AND k.reg_dt >= :startDate " +
                     "AND k.reg_dt <= :endDate " +
-                    "AND k.platform_code != SU300 " +
+                    "AND k.platform_code != 'SU300' " +
                     "GROUP BY k.platform_code, k.reg_dt " +
                     "ORDER BY k.reg_dt, platformCode;",
             nativeQuery = true)
