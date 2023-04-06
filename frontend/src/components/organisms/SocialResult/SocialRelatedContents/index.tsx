@@ -27,7 +27,9 @@ const SocialRelatedContents = ({
       setContentList([]);
     }
     const { data } = await getContents(keyword, code, page, 10, startDate, endDate);
-    setContentList((prev) => prev.concat(data));
+    setContentList((prev) => {
+      return prev.concat(data);
+    });
     setIsLoading(false);
   };
 
@@ -43,15 +45,19 @@ const SocialRelatedContents = ({
   };
 
   useEffect(() => {
+    if (page === 1 && code === CONTENT_CODE.ARTICLE) {
+      getData();
+    } else {
+      setPage(1);
+      setCode(CONTENT_CODE.ARTICLE);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyword]);
+
+  useEffect(() => {
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, code]);
-
-  useEffect(() => {
-    setPage(1);
-    setCode(CONTENT_CODE.ARTICLE);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword]);
 
   return (
     <S.Wrapper>
