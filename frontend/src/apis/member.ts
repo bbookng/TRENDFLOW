@@ -14,11 +14,11 @@ export const memberApi = createApi({
     getBookmark: builder.query<string | null, GetBookmarkReqInterface>({
       query: ({ token }) => ({
         url: 'bookmark',
-        prepareHeaders: (headers: any) => {
-          headers.set('Authorization', `Bearer ${token}`);
-          console.log(headers);
-          return headers;
-        },
+        headers: { Authorization: `Bearer ${token}` },
+        // prepareHeaders: (headers: any) => {
+        //   headers.set('Authorization', `Bearer ${token}`);
+        //   return headers;
+        // },
       }),
       providesTags: ['bookmark'],
     }),
