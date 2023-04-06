@@ -80,7 +80,7 @@ const MainPage = () => {
 
       {!bookmarkLoading && bookmark && (
         <DailyAnalysis
-          keyword="시장"
+          keyword={bookmark.bookmark}
           socialAnalysisLoading={socialAnalysisLoading}
           relatedKeywordsLoading={relatedKeywordsLoading}
           socialAnalysis={socialAnalysis!}
