@@ -27,7 +27,7 @@ const SocialResultPage = () => {
     data: bookmark,
     error: bookmarkError,
     isLoading: bookmarkLoading,
-  } = useGetBookmarkQuery({ token: token! }, { refetchOnMountOrArgChange: true, skip: !token });
+  } = useGetBookmarkQuery(undefined, { refetchOnMountOrArgChange: true, skip: !token });
 
   const {
     state: { keyword },
@@ -80,7 +80,7 @@ const SocialResultPage = () => {
       dispatch(showToast('💥 로그인이 필요합니다.'));
       return;
     }
-    postBookmark({ token: token!, keyword: keyword! });
+    postBookmark({ keyword: keyword! });
     setIsBookmarked((prev) => !prev);
   };
 
