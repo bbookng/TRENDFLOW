@@ -58,6 +58,25 @@ const MainPage = () => {
       skip: !bookmarkSuccess,
     }
   );
+
+  function a() {
+    if (token) {
+      if (socialAnalysis && relatedKeywords) {
+        return (
+          <DailyAnalysis
+            keyword={bookmark!.bookmark}
+            socialAnalysis={socialAnalysis!}
+            relatedKeywords={relatedKeywords!}
+          />
+        );
+        // eslint-disable-next-line no-else-return
+      } else {
+        return <DailyAnalysisSkeleton keyword="키워드" />;
+      }
+    }
+    // eslint-disable-next-line no-useless-return, consistent-return
+    return;
+  }
   return (
     <S.Wrapper>
       <SearchBar placeholder="키워드를 입력하세요" />
@@ -78,15 +97,7 @@ const MainPage = () => {
 
       {!token && !bookmark && <NoBookmark />}
 
-      {socialAnalysis && relatedKeywords ? (
-        <DailyAnalysis
-          keyword={bookmark!.bookmark}
-          socialAnalysis={socialAnalysis!}
-          relatedKeywords={relatedKeywords!}
-        />
-      ) : (
-        <DailyAnalysisSkeleton keyword="키워드" />
-      )}
+      {a()}
     </S.Wrapper>
   );
 };

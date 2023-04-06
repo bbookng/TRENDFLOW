@@ -70,13 +70,6 @@ const SocialResultPage = () => {
     setIsBookmarked((prev) => !prev);
   };
 
-  const isShow = () => {
-    if (!isSocialAnalysisDataLoading && isWordCloudKeywordsSuccess) {
-      return <RelatedKeywordWordCloud wordCloudKeywords={wordCloudKeywords} />;
-    }
-    return <RelatedKeywordWordCloudSkeleton />;
-  };
-
   return (
     <S.Wrapper>
       <S.TitleWrapper>
