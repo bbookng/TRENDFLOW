@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-unstable-nested-components */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ko } from 'date-fns/esm/locale';
 import DatePicker from 'react-datepicker';
@@ -24,14 +24,14 @@ import * as S from './index.styles';
 const SocialResultPage = () => {
   const token = getToken();
   const {
+    state: { keyword },
+  } = useLocation();
+
+  const {
     data: bookmark,
     error: bookmarkError,
     isLoading: bookmarkLoading,
-  } = useGetBookmarkQuery(undefined, { refetchOnMountOrArgChange: true, skip: !token });
-
-  const {
-    state: { keyword },
-  } = useLocation();
+  } = useGetBookmarkQuery(undefined, { refetchOnMountOrArgChange: false, skip: !token });
 
   const {
     user: { isLoggedIn },
@@ -47,18 +47,10 @@ const SocialResultPage = () => {
     useGetWordCloudKeywordsQuery(
       { keyword },
       {
-        refetchOnMountOrArgChange: true,
+        refetchOnMountOrArgChange: false,
         skip: !keyword,
       }
     );
-
-  const { data: relatedKeywords, isSuccess: isRelatedKeywordsSuccess } = useGetRelatedKeywordsQuery(
-    { keyword },
-    {
-      refetchOnMountOrArgChange: true,
-      skip: !keyword,
-    }
-  );
 
   const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
     useGetSocialAnalysisQuery(
@@ -68,7 +60,7 @@ const SocialResultPage = () => {
         endDate: getDateToYYYYDDMM(endDate!),
       },
       {
-        refetchOnMountOrArgChange: true,
+        refetchOnMountOrArgChange: false,
         skip: !keyword,
       }
     );
@@ -139,12 +131,7 @@ const SocialResultPage = () => {
 
         {/* 워드 클라우드 */}
         <S.RelatedKeywordContentsWrapper>
-          {isWordCloudKeywordsSuccess && isRelatedKeywordsSuccess && (
-            <RelatedKeyword
-              wordCloudKeywords={wordCloudKeywords}
-              relatedKeywords={relatedKeywords}
-            />
-          )}
+          {isWordCloudKeywordsSuccess && <RelatedKeyword wordCloudKeywords={wordCloudKeywords} />}
         </S.RelatedKeywordContentsWrapper>
       </S.KeywordContentsWrapper>
       {/* 긍부정, 트렌드 LineChart */}

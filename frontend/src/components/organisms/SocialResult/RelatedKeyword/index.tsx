@@ -8,11 +8,9 @@ import { wordCloud } from '@/mocks/data';
 
 interface Props {
   wordCloudKeywords: WordCloudInterface[];
-  relatedKeywords: RankingListItemInterface[];
 }
-const RelatedKeyword = ({ wordCloudKeywords, relatedKeywords }: Props) => {
+const RelatedKeyword = ({ wordCloudKeywords }: Props) => {
   // 워드클라우드 deppCopy
-
   const wordCloudData = useMemo(() => {
     return _.cloneDeep(wordCloudKeywords);
   }, [wordCloudKeywords]);

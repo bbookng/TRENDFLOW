@@ -16,8 +16,7 @@ const YoutubeResultPage = () => {
     state: { link },
   } = useLocation();
 
-  const { data: youtubeData } = useGetYoutubeAnalysisQuery(link);
-
+  const { data: youtubeData, isLoading } = useGetYoutubeAnalysisQuery(link);
   return (
     <S.Wrapper>
       <TitleWrapper>
@@ -28,28 +27,26 @@ const YoutubeResultPage = () => {
       </TitleWrapper>
       <S.YoutubeInfo>
         <S.VideoInfo>
-          <IFrame videoLink={youtubeData?.video.url} />
+          <IFrame videoLink={youtubeData?.url} />
           <Paper>
-            <S.Title>{youtubeData?.video.title}</S.Title>
+            <S.Title>{youtubeData?.title}</S.Title>
             <S.OwnerInfo>
-              <S.OwnerName>{youtubeData?.video.owner.name}</S.OwnerName>
-              <S.OwnerSubscribe>
-                {convertCount(youtubeData?.video.owner.subscribeCount)}
-              </S.OwnerSubscribe>
+              <S.OwnerName>{youtubeData?.owner.name}</S.OwnerName>
+              <S.OwnerSubscribe>{convertCount(youtubeData?.owner.subscribeCount)}</S.OwnerSubscribe>
             </S.OwnerInfo>
           </Paper>
         </S.VideoInfo>
         <S.FlexBox>
           <YoutubeReaction
-            viewCount={youtubeData?.video.reaction.viewCount}
-            likeCount={youtubeData?.video.reaction.likeCount}
-            commentCount={youtubeData?.video.reaction.commentCount}
+            viewCount={youtubeData?.reaction.viewCount}
+            likeCount={youtubeData?.reaction.likeCount}
+            commentCount={youtubeData?.reaction.commentCount}
           />
 
           <CommentAffinity
-            positive={youtubeData?.video.affinityInfo.positive}
-            negative={youtubeData?.video.affinityInfo.negative}
-            neutral={youtubeData?.video.affinityInfo.neutral}
+            positive={youtubeData?.affinityInfo.positive}
+            negative={youtubeData?.affinityInfo.negative}
+            neutral={youtubeData?.affinityInfo.neutral}
           />
         </S.FlexBox>
       </S.YoutubeInfo>

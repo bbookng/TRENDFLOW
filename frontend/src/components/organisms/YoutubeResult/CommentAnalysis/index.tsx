@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CommentItem } from '@/components/molecules';
 import * as S from './index.styles';
@@ -59,7 +60,7 @@ const CommentAnalysis = ({ link }: Props): React.ReactElement => {
         {comments?.map((comment, index) => {
           return (
             <CommentItem
-              key={comment.id}
+              key={index}
               comment={comment.comment}
               upCount={comment.upCount}
               downCount={comment.downCount}
