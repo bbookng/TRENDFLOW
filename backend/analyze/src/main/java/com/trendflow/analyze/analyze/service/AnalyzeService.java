@@ -107,14 +107,21 @@ public class AnalyzeService {
             // 긍부정 지수 일자별 정리
             if (sentimentCountMap.containsKey(now)) {
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMap.get(now);
+                Integer sum = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
                 Integer positive = nowGrapeQuotient.getPositive();
                 Integer negative = nowGrapeQuotient.getNegative();
                 Integer neutral = nowGrapeQuotient.getNeutral();
 
+                if (sum != 0) {
+                    positive /= sum * 100;
+                    negative /= sum * 100;
+                    neutral /= sum * 100;
+                }
+
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
-                    .positive(positive + negative + neutral)
-                    .negative(0)
-                    .neutral(0)
+                    .positive(positive)
+                    .negative(negative)
+                    .neutral(neutral)
                     .build();
             } else {
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
@@ -330,11 +337,15 @@ public class AnalyzeService {
             countB = 0;
             if (sentimentCountMapA.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapA.get(now);
-                countA = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
+                Integer sum = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
+                countA = nowGrapeQuotient.getPositive();
+                if (sum != 0) countA /= sum * 100;
             }
             if (sentimentCountMapB.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapB.get(now);
-                countB = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
+                Integer sum = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
+                countB = nowGrapeQuotient.getPositive();
+                if (sum != 0) countB /= sum * 100;
             }
 
             // 비교
