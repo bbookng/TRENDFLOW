@@ -128,7 +128,6 @@ const SocialResultPage = () => {
       <S.KeywordContentsWrapper>
         {/* 막대기 차트 */}
         <S.ChartWrapper>
-          <S.Title>분석 그래프</S.Title>
           <BarChart
             labels={socialAnalysisData?.map((item) => item.date.slice(5))}
             barLabel="언급량"
