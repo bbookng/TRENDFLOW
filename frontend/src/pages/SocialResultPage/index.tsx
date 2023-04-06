@@ -6,20 +6,21 @@ import { ko } from 'date-fns/esm/locale';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
-import { useGetRelatedKeywordsQuery, useGetWordCloudKeywordsQuery } from '@/apis/keyword';
+import { useGetWordCloudKeywordsQuery } from '@/apis/keyword';
 import { useGetBookmarkQuery, usePostBookmarkMutation } from '@/apis/member';
 import { Star, StarFill } from '@/assets';
 import { Typography } from '@/components/atoms';
-import { SearchBar, BarChart } from '@/components/molecules';
+import { SearchBar } from '@/components/molecules';
 import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
 import SocialRelatedContents from '@/components/organisms/SocialResult/SocialRelatedContents';
-import { getDateToYYYYDDMM, getOneDaysAgoDate, getSevenDaysAgoDate } from '@/utils/date';
+import { getDateToYYYYDDMM, getOneMonthAgoDate, getOneDaysAgoDate } from '@/utils/date';
 import { getToken } from '@/utils/token';
 import { useAppSelector, useAppDispatch } from '@/hooks/storeHook';
 import { showToast } from '@/store/slices/toastSlice';
 import * as S from './index.styles';
+import BarStackedChart from '@/components/molecules/BarStackedChart';
 
 const SocialResultPage = () => {
   const token = getToken();
@@ -41,7 +42,7 @@ const SocialResultPage = () => {
   const [isBookmarked, setIsBookmarked] = useState(bookmark?.bookmark === keyword);
 
   const [endDate, setEndDate] = useState<Date>(getOneDaysAgoDate());
-  const [startDate, setStartDate] = useState<Date>(getSevenDaysAgoDate());
+  const [startDate, setStartDate] = useState<Date>(getOneMonthAgoDate());
 
   const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
     useGetWordCloudKeywordsQuery(
@@ -120,12 +121,16 @@ const SocialResultPage = () => {
       <S.KeywordContentsWrapper>
         {/* 막대기 차트 */}
         <S.ChartWrapper>
-          <BarChart
+          <BarStackedChart
             labels={socialAnalysisData?.map((item) => item.date.slice(5))}
-            barLabel="언급량"
-            barData={socialAnalysisData?.map((item) => item.mentionCountInfo.total)}
-            lineLabel="피치 지수"
-            lineData={socialAnalysisData?.map((item) => item.grapeQuotientInfo.positive)}
+            barNaverLabel="네이버 언급량"
+            barNaverData={socialAnalysisData?.map((item) => item.mentionCountInfo.naver)}
+            barDaumLabel="다음 언급량"
+            barDaumData={socialAnalysisData?.map((item) => item.mentionCountInfo.daum)}
+            lineLabel="포도알 지수"
+            lineData={socialAnalysisData?.map((item) =>
+              Number(item.grapeQuotientInfo.grape.toFixed(2))
+            )}
           />
         </S.ChartWrapper>
 

@@ -10,6 +10,10 @@ import { Paper, Typography } from '@/components/atoms';
 import { TitleWrapper } from '@/pages/SocialResultPage/index.styles';
 import CommentAffinity from '@/components/organisms/YoutubeResult/CommentAffinity';
 import CommentAnalysis from '@/components/organisms/YoutubeResult/CommentAnalysis';
+import IFrameSkeleton from '@/components/atoms/Iframe/Skeleton';
+import YoutubeReactSkeleton from '@/components/organisms/YoutubeResult/YoutubeReaction/Skeleton';
+import CommentAffinitySkeleton from '@/components/organisms/YoutubeResult/CommentAffinity/Skeleton';
+import CommentAnalysisSkeleton from '@/components/organisms/YoutubeResult/CommentAnalysis/Skeleton';
 
 const YoutubeResultPage = () => {
   const {
@@ -27,30 +31,50 @@ const YoutubeResultPage = () => {
       </TitleWrapper>
       <S.YoutubeInfo>
         <S.VideoInfo>
-          <IFrame videoLink={youtubeData?.url} />
+          {isLoading ? <IFrameSkeleton /> : <IFrame videoLink={youtubeData?.url} />}
+
           <Paper>
-            <S.Title>{youtubeData?.title}</S.Title>
-            <S.OwnerInfo>
-              <S.OwnerName>{youtubeData?.owner.name}</S.OwnerName>
-              <S.OwnerSubscribe>{convertCount(youtubeData?.owner.subscribeCount)}</S.OwnerSubscribe>
-            </S.OwnerInfo>
+            {isLoading ? (
+              <>
+                <S.TitleSkeleton />
+                <S.OwnerInfoSkeleton />
+              </>
+            ) : (
+              <>
+                <S.Title>{youtubeData?.title}</S.Title>
+                <S.OwnerInfo>
+                  <S.OwnerName>{youtubeData?.owner.name}</S.OwnerName>
+                  <S.OwnerSubscribe>
+                    {convertCount(youtubeData?.owner.subscribeCount)}
+                  </S.OwnerSubscribe>
+                </S.OwnerInfo>
+              </>
+            )}
           </Paper>
         </S.VideoInfo>
         <S.FlexBox>
-          <YoutubeReaction
-            viewCount={youtubeData?.reaction.viewCount}
-            likeCount={youtubeData?.reaction.likeCount}
-            commentCount={youtubeData?.reaction.commentCount}
-          />
+          {isLoading ? (
+            <YoutubeReactSkeleton />
+          ) : (
+            <YoutubeReaction
+              viewCount={youtubeData?.reaction.viewCount}
+              likeCount={youtubeData?.reaction.likeCount}
+              commentCount={youtubeData?.reaction.commentCount}
+            />
+          )}
 
-          <CommentAffinity
-            positive={youtubeData?.affinityInfo.positive}
-            negative={youtubeData?.affinityInfo.negative}
-            neutral={youtubeData?.affinityInfo.neutral}
-          />
+          {isLoading ? (
+            <CommentAffinitySkeleton />
+          ) : (
+            <CommentAffinity
+              positive={youtubeData?.affinityInfo.positive}
+              negative={youtubeData?.affinityInfo.negative}
+              neutral={youtubeData?.affinityInfo.neutral}
+            />
+          )}
         </S.FlexBox>
       </S.YoutubeInfo>
-      <CommentAnalysis link={link} />
+      {isLoading ? <CommentAnalysisSkeleton /> : <CommentAnalysis link={link} />}
     </S.Wrapper>
   );
 };

@@ -4,6 +4,7 @@ import * as S from './index.styles';
 import { getContents } from '@/apis/analyze';
 import { CONTENT_CODE } from '@/constants/code';
 import { ContentItem } from '@/components/molecules';
+import useDidMountEffect from '@/hooks/useDidMountEffect';
 
 export interface SocialRelatedContentsInterface {
   keyword: string;
@@ -54,7 +55,7 @@ const SocialRelatedContents = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword]);
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, code]);

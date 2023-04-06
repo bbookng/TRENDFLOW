@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { MEDIA_QUERY, MOBILE_MAX_WIDTH } from '@/constants/media';
 import { FONT_SIZE } from '@/constants/styles';
 import { TypeWrapper } from '@/pages/SocialResultPage/index.styles';
+import { Skeleton } from '@/components/atoms/Skeleton/index.styles';
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -52,6 +53,18 @@ export const Title = styled.div`
   -webkit-line-clamp: 2; // 원하는 라인수
   -webkit-box-orient: vertical;
 `;
+
+export const TitleSkeleton = styled(Skeleton)`
+  width: 100%;
+  height: 28.8px;
+`;
+
+export const OwnerInfoSkeleton = styled(Skeleton)`
+  width: 100%;
+  height: 16px;
+  margin-top: 1rem;
+`;
+
 export const OwnerInfo = styled.div`
   display: flex;
   gap: 0.5rem;

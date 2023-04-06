@@ -31,5 +31,5 @@ export const darkTheme = {
   navNotSelected: PALETTE.WHITE300,
   positive: PALETTE.BLUE400,
   negative: PALETTE.RED400,
-  neutrality: PALETTE.BRAND500,
+  neutrality: PALETTE.BRAND400,
 };

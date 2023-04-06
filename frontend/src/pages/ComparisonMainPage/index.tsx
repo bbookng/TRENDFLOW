@@ -14,8 +14,7 @@ const ComparisonMainPage = () => {
           <Typography variant="H4">한 번에 비교해보세요!</Typography>
         </S.TextWrapper>
         <S.TextWrapper>
-          <Typography variant="BASE">차이점을 한눈에 확인할 수 있을 거임띠</Typography>
-          <Typography variant="BASE">우와 편리해</Typography>
+          <Typography variant="BASE">차이점을 한눈에 확인해 볼 수 있습니다.</Typography>
         </S.TextWrapper>
 
         <S.LottieWrapper>

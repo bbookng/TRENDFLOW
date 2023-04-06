@@ -1,5 +1,7 @@
+import * as S from './index.styles';
+
 const IFrameSkeleton = (): React.ReactElement => {
-  return <div></div>;
+  return <S.Wrapper></S.Wrapper>;
 };
 
 export default IFrameSkeleton;

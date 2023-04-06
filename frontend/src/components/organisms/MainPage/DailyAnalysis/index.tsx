@@ -1,11 +1,11 @@
 import { Label } from '@/components/atoms';
 import { BadgeType } from '@/components/atoms/Badge';
 import { BadgeContent, RankingItem } from '@/components/molecules';
-import BarChart from '@/components/molecules/BarChart';
 import { PALETTE } from '@/constants/palette';
 import { RankingListItemInterface } from '@/types/ranking';
 import { SocialAnalysisItemInterface } from '@/types/social';
 import * as S from './index.styles';
+import BarStackedChart from '@/components/molecules/BarStackedChart';
 
 interface DailyAnalysisPropsInterface {
   keyword: string;
@@ -40,12 +40,14 @@ const DailyAnalysis = ({
       </S.TitleWrapper>
 
       <S.ContentWrapper>
-        <BarChart
+        <BarStackedChart
           labels={socialAnalysis?.map((item) => item.date.slice(5))}
-          barLabel="언급량"
-          barData={socialAnalysis?.map((item) => item.mentionCountInfo.total)}
-          lineLabel="피치 지수"
-          lineData={socialAnalysis?.map((item) => item.grapeQuotientInfo.positive)}
+          barNaverLabel="네이버 언급량"
+          barNaverData={socialAnalysis?.map((item) => item.mentionCountInfo.naver)}
+          barDaumLabel="다음 언급량"
+          barDaumData={socialAnalysis?.map((item) => item.mentionCountInfo.daum)}
+          lineLabel="포도알 지수 지수"
+          lineData={socialAnalysis?.map((item) => Number(item.grapeQuotientInfo.grape.toFixed(2)))}
         />
 
         <S.BadgeWrapper>
