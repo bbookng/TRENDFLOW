@@ -16,7 +16,7 @@ public class CommonService {
     public String getLocalCode(Code code){
         String codeName = code.getName();
         LocalCode localCode = commonServiceClient.getLocalCode(codeName);
-        return localCode.getName();
+        return localCode.getCode();
 }
     public List<Source> getSource(List<Long> sourceIdList){
         return commonServiceClient.getSource(sourceIdList);

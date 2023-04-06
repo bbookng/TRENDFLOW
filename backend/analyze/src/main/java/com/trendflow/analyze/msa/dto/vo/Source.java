@@ -3,8 +3,10 @@ package com.trendflow.analyze.msa.dto.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.trendflow.analyze.global.code.Code;
 import com.trendflow.analyze.global.redis.YoutubeSource;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Source {
     private String platformCode;
     private String thumbnail;
