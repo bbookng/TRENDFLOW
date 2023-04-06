@@ -107,10 +107,23 @@ public class AnalyzeService {
             // 긍부정 지수 일자별 정리
             if (sentimentCountMap.containsKey(now)) {
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMap.get(now);
+
+                Integer sum = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
+                Integer positive = nowGrapeQuotient.getPositive();
+                Integer negative = nowGrapeQuotient.getNegative();
+                Integer neutral = nowGrapeQuotient.getNeutral();
+
+                if (sum != 0) {
+                    positive /= sum * 100;
+                    negative /= sum * 100;
+                    neutral /= sum * 100;
+                }
+
+
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
-                        .positive(nowGrapeQuotient.getPositive())
-                        .negative(nowGrapeQuotient.getNegative())
-                        .neutral(nowGrapeQuotient.getNeutral())
+                        .positive(positive)
+                        .negative(negative)
+                        .neutral(neutral)
                         .build();
             } else {
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
