@@ -2,9 +2,21 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.dummy_operator import DummyOperator
 from datetime import datetime, timedelta
+import pytz
+
+
+def task_failed(context):
+    task_instance = context['task_instance']
+    task_name = task_instance.task_id
+    dag_id = task_instance.dag_id
+    print(f'Task {task_name} failed in DAG {dag_id}. Retrying...')
+
 
 default_args = {
-    'start_date': datetime(2023, 4, 1)
+    'start_date': datetime(2023, 4, 1, 0, 0, 0, tzinfo=pytz.timezone('Asia/Seoul')),
+    'retries': 3,
+    'retry_delay': timedelta(minutes=5),
+    'on_failure_callback': task_failed
 }
 
 dag = DAG('trendflow',
@@ -12,12 +24,6 @@ dag = DAG('trendflow',
           catchup=False,
           default_args=default_args
           )
-
-ssh_task = BashOperator(
-    task_id='run_ls',
-    bash_command='ls -al',
-    dag=dag,
-)
 
 naver_blog_crawling_task = BashOperator(
     task_id='naver_blog_crawling',
@@ -46,7 +52,7 @@ sentimental_analyze_task = BashOperator(
 date = datetime.today() - timedelta(days=1)
 naver_news_task = BashOperator(
     task_id='naver_news',
-    bash_command=f"/bin/bash hadoop.sh \
+    bash_command=f"/bin/bash hdfsBatchSource/hadoop.sh \
             navernews \
             {date.date()}",
     dag=dag
@@ -54,22 +60,19 @@ naver_news_task = BashOperator(
 
 naver_blog_task = BashOperator(
     task_id='naver_blog',
-    bash_command=f'/bin/bash hadoop.sh \
+    bash_command=f'/bin/bash hdfsBatchSource/hadoop.sh \
             navernews \
             {date.date()}',
     dag=dag
-    )
+)
 
 daum_news_task = BashOperator(
     task_id='daum_news',
-    bash_command=f'/bin/bash hadoop.sh \
+    bash_command=f'/bin/bash hdfsBatchSource/hadoop.sh \
             daum \
             {date.date()}',
     dag=dag
-    )
+)
 
-naver_news_crawling_task >> naver_blog_crawling_task >> daum_news_crawling_task >> DummyOperator(task_id='start_ssh_task', dag=dag)
-naver_news_crawling_task >> naver_blog_crawling_task >> daum_news_crawling_task >> sentimental_analyze_task
-map_reduce = [naver_blog_task, naver_news_task, daum_news_task]
-for task in map_reduce:
-    DummyOperator(task_id=f'start_{task.task_id}', dag=dag) >> task
+analyze_functions = [naver_blog_task, naver_news_task, daum_news_task, sentimental_analyze_task]
+naver_news_crawling_task >> naver_blog_crawling_task >> daum_news_crawling_task >> analyze_functions

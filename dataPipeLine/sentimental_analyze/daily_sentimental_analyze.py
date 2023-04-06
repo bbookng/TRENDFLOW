@@ -203,9 +203,20 @@ today = datetime.today() - timedelta(days=1)
 for keyword in keywords:
     files_path = [f"hdfs://cluster.p.ssafy.io:9000/user/j8e205/json/input/{platform}/{today.date()}/{keyword}.json" for platform in platforms]
 
+    schema = StructType([
+        StructField("title", StringType(), True),
+        StructField("content", StringType(), True),
+        StructField("date", StringType(), True),
+        StructField("id", StringType(), True)
+    ])
+
+
     for file in files_path:
         try:
-            df = spark.read.option("multiline", "true").json(file)
+            df = spark.read \
+                .option("multiline", "true") \
+                .schema(schema) \
+                .json(file)
         except:
             continue
 
