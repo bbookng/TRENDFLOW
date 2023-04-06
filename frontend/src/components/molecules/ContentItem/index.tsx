@@ -38,7 +38,7 @@ const ContentItem = ({ content, isLast, nextPage }: ContentItemProps): React.Rea
   };
 
   const getDefaultThumbnail = (kind: string) => {
-    if (kind === 'naver') {
+    if (kind === 'NAVER') {
       if (code === CONTENT_CODE.ARTICLE) {
         return (
           <Svg size={60}>
@@ -51,7 +51,7 @@ const ContentItem = ({ content, isLast, nextPage }: ContentItemProps): React.Rea
           <NaverBlog />
         </Svg>
       );
-    } else if (kind === 'daum') {
+    } else if (kind === 'DAUM') {
       return (
         <Svg size={60}>
           <Daum />

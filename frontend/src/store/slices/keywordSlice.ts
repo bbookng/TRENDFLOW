@@ -5,10 +5,11 @@ type KeywordType = string;
 const initialState: KeywordType = '싸피';
 
 export const keywordSlice = createSlice({
-  name: 'hot',
+  name: 'keyword',
   initialState,
   reducers: {
     setHotKeyword: (_, { payload }) => {
+      console.log(payload);
       return payload;
     },
   },

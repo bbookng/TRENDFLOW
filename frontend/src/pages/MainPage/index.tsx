@@ -57,7 +57,7 @@ const MainPage = () => {
       refetchOnMountOrArgChange: true,
       skip: !bookmark,
     }
-  );
+
 
   console.log('북마크', bookmark, bookmarkLoading, bookmarkError);
   console.log('소셜', socialAnalysis, socialAnalysisLoading, socialAnalysisError);
@@ -65,6 +65,7 @@ const MainPage = () => {
   // useEffect(() => {
   //   dispatch(setHotKeyword(hotKeywords?.week[0].keyword));
   // }, [hotKeywords]);
+
   return (
     <S.Wrapper>
       <SearchBar placeholder="키워드를 입력하세요" />

@@ -123,6 +123,7 @@ export const FlexBox = styled.div`
   gap: 2rem;
   @media ${MEDIA_QUERY.DESKTOP} {
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
     max-width: 1082px;
   }
 `;
@@ -149,12 +150,17 @@ export const YoutubeItem = styled.div`
   }
 `;
 
-export const Thumbnail = styled.img``;
-
-export const TextBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+export const Thumbnail = styled.img`
+  width: 50px;
+  height: 50px;
+  @media ${MEDIA_QUERY.DESKTOP} {
+    transition: transform 200ms;
+    width: 60px;
+    height: 60px;
+    :hover {
+      transform: translateY(5px);
+    }
+  }
 `;
 
 export const Title = styled.div`

@@ -13,6 +13,7 @@ import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
 import { getContents } from '@/apis/analyze';
 import { Youtube2 } from '@/assets';
 import Svg from '@/components/atoms/Svg';
+import YoutubeItemSkeleton from '@/pages/YoutubeMainPage/YoutubeItemSkeleton';
 
 const YoutubeMainPage = () => {
   const theme = useTheme();
@@ -20,7 +21,7 @@ const YoutubeMainPage = () => {
   const { bestHotKeyword } = useAppSelector((state) => state);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [youtubeList, setYoutubeList] = useState<Array<SocialContentInterface>>([]);
-
+  console.log(bestHotKeyword);
   const getData = async (keyword: string) => {
     setIsLoading(true);
     const { data } = await getContents(
@@ -32,7 +33,9 @@ const YoutubeMainPage = () => {
       getDateToYYYYDDMM(getSevenDaysAgoDate())
     );
     setYoutubeList(data);
-    setIsLoading(false);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 700);
   };
 
   useEffect(() => {
@@ -80,26 +83,31 @@ const YoutubeMainPage = () => {
         </S.Right>
       </S.Contents>
       <S.FlexBox>
-        {youtubeList.map((item) => {
-          return item.thumbnail ? (
-            <S.YoutubeItem
-              key={item.id}
-              onClick={() => navi('result', { state: { link: item.link } })}
-            >
-              <S.Thumbnail src={item.thumbnail} />
-            </S.YoutubeItem>
-          ) : (
-            <S.YoutubeItem
-              key={item.id}
-              onClick={() => navi('result', { state: { link: item.link } })}
-            >
-              <Svg size={50}>
-                <Youtube2 />
-              </Svg>
-              <S.Title>{item.title}</S.Title>
-            </S.YoutubeItem>
-          );
-        })}
+        {isLoading
+          ? youtubeList.map((item) => {
+              return <YoutubeItemSkeleton mSize={50} dSize={60} key={item.id} />;
+            })
+          : youtubeList.map((item) => {
+              return item.thumbnail ? (
+                <S.YoutubeItem
+                  key={item.id}
+                  onClick={() => navi('result', { state: { link: item.link } })}
+                >
+                  <S.Thumbnail src={item.thumbnail} />
+                  <S.Title>{item.title}</S.Title>
+                </S.YoutubeItem>
+              ) : (
+                <S.YoutubeItem
+                  key={item.id}
+                  onClick={() => navi('result', { state: { link: item.link } })}
+                >
+                  <Svg size={50}>
+                    <Youtube2 />
+                  </Svg>
+                  <S.Title>{item.title}</S.Title>
+                </S.YoutubeItem>
+              );
+            })}
       </S.FlexBox>
     </>
   );

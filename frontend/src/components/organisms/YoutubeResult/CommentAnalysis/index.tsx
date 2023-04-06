@@ -24,15 +24,23 @@ const CommentAnalysis = ({ link }: Props): React.ReactElement => {
     setPage(page + 1);
   };
 
-  const handleClickFilter = (code: number) => {
+  const handleClickFilter = (kind: number) => {
     setComments([]);
-    setCode(code);
+    setCode(kind);
     setPage(1);
   };
   useEffect(() => {
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, code]);
+
+  useEffect(() => {
+    setComments([]);
+    setCode(0);
+    setPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [link]);
+
   return (
     <S.Wrapper>
       <S.Title>댓글 분석</S.Title>
