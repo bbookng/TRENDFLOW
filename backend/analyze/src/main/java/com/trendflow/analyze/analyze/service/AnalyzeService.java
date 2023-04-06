@@ -231,25 +231,25 @@ public class AnalyzeService {
                     YoutubueAnalyze now = youtubeService.getYoutubeVideo(link);
                     youtubueAnalyzeRepository.save(key, now, 60000);
 
-                    ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-                    taskExecutor.initialize();
-                    taskExecutor.execute(() -> {
-                        try {
-                            kafkaService.sendYoutubeUrl(link);
-                            Payload payload = kafkaService.consumeYoutubeAnalyze();
-
-                            YoutubueAnalyze nowThread = youtubueAnalyzeRepository.findById(key)
-                                    .orElseThrow(() -> new NotFoundException());
-
-                            nowThread.setCommentList(payload.getCommentDf());
-                            nowThread.setAnalyzeResultList(payload.getCntDf());
-
-                            youtubueAnalyzeRepository.save(key, now, 60000);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+//                    ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+//                    taskExecutor.initialize();
+//                    taskExecutor.execute(() -> {
+//                        try {
+//                            kafkaService.sendYoutubeUrl(link);
+//                            Payload payload = kafkaService.consumeYoutubeAnalyze();
+//
+//                            YoutubueAnalyze nowThread = youtubueAnalyzeRepository.findById(key)
+//                                    .orElseThrow(() -> new NotFoundException());
+//
+//                            nowThread.setCommentList(payload.getCommentDf());
+//                            nowThread.setAnalyzeResultList(payload.getCntDf());
+//
+//                            youtubueAnalyzeRepository.save(key, now, 60000);
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    });
 
                     return now;
                 });

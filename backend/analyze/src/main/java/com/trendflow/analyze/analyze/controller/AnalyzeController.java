@@ -88,9 +88,11 @@ public class AnalyzeController {
             FindYoutubeResponse findYoutubeResponse = analyzeService.findYoutube(link);
             return ResponseEntity.ok().body(findYoutubeResponse);
         } catch (NotFoundException e){
+            e.printStackTrace();
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
+            e.printStackTrace();
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().body(null);
         }
@@ -114,9 +116,11 @@ public class AnalyzeController {
 
             return ResponseEntity.ok().body(findYoutubeCommentResponseList);
         } catch (NotFoundException e){
+            e.printStackTrace();
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
+            e.printStackTrace();
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().body(null);
         }
