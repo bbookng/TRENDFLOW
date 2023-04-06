@@ -106,7 +106,7 @@ public class YoutubeService {
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(YOUTUBE_VIDEO_URI)
                     .queryParam("part", "snippet,statistics")
-                    .queryParam("id", link.split("watch?v=")[1])
+                    .queryParam("id", link.split("=")[1])
                     .queryParam("key", YOUTUBE_KEY)
                     .build(false);
             HttpEntity<MultiValueMap<String, String>> youtubeRequest = new HttpEntity<>(body, headers);
@@ -157,7 +157,7 @@ public class YoutubeService {
             body = new LinkedMultiValueMap<>();
             uriBuilder = UriComponentsBuilder.fromHttpUrl(YOUTUBE_COMMENTS_URI)
                     .queryParam("part", "snippet")
-                    .queryParam("videoId", link.split("watch?v=")[1])
+                    .queryParam("videoId", link.split("=")[1])
                     .queryParam("key", YOUTUBE_KEY)
                         .build(false);
             youtubeRequest = new HttpEntity<>(body, headers);
