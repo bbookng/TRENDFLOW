@@ -20,6 +20,7 @@ export const SpaceTypography = styled(Typography)`
   }
 `;
 export const WordCloudPaper = styled(Paper)`
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -37,6 +38,7 @@ export const WordCloudContentsWrapper = styled.div`
   width: 100%;
   height: 50%;
   & > div > svg > g {
+    transform: translate(100, 100);
     & > text {
       cursor: pointer;
     }
