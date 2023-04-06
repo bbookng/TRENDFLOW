@@ -231,26 +231,6 @@ public class AnalyzeService {
                     YoutubueAnalyze now = youtubeService.getYoutubeVideo(link);
                     youtubueAnalyzeRepository.save(key, now, 60000);
 
-//                    ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-//                    taskExecutor.initialize();
-//                    taskExecutor.execute(() -> {
-//                        try {
-//                            kafkaService.sendYoutubeUrl(link);
-//                            Payload payload = kafkaService.consumeYoutubeAnalyze();
-//
-//                            YoutubueAnalyze nowThread = youtubueAnalyzeRepository.findById(key)
-//                                    .orElseThrow(() -> new NotFoundException());
-//
-//                            nowThread.setCommentList(payload.getCommentDf());
-//                            nowThread.setAnalyzeResultList(payload.getCntDf());
-//
-//                            youtubueAnalyzeRepository.save(key, now, 60000);
-//
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    });
-
                     return now;
                 });
 
@@ -272,13 +252,28 @@ public class AnalyzeService {
                                 .subscribeCount(youtubueAnalyze.getSubscribeCount())
                                 .build())
                         .build();
-//        kafkaService.sendYoutubeUrl(findYoutubeRequest.getLink());
-//        return kafkaService.consumeYoutubeAnalyze();
     }
 
     public List<FindYoutubeCommentResponse> findYoutubeComment(FindYoutubeCommentRequest findYoutubeCommentRequest) {
-        System.out.println("findYoutubeCommentRequest = " + findYoutubeCommentRequest);
-        return null;
+
+        String link = findYoutubeCommentRequest.getLink();
+        Integer page = findYoutubeCommentRequest.getPage();
+        Integer perPage = findYoutubeCommentRequest.getPerPage();
+        String key = "YOUTUBE_ANALYZE_" + link;
+
+        YoutubueAnalyze youtubueAnalyze = youtubueAnalyzeRepository.findById(key)
+                .orElseGet(() -> {
+                    YoutubueAnalyze now = youtubeService.getYoutubeVideo(link);
+                    youtubueAnalyzeRepository.save(key, now, 60000);
+                    return now;
+                });
+
+        PageRequest pageRequest = PageRequest.of((page - 1), perPage);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), youtubueAnalyze.getCommentList().size());
+        Page<Payload.Comment> commentPage = new PageImpl<>(youtubueAnalyze.getCommentList().subList(start, end), pageRequest, youtubueAnalyze.getCommentList().size());
+
+        return FindYoutubeCommentResponse.toList(commentPage.toList());
     }
 
     public FindCompareKeywordResponse findCompareKeyword(FindCompareKeywordRequest findCompareKeywordRequest) {
