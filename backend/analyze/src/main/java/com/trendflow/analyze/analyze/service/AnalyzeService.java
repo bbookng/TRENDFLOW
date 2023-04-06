@@ -165,14 +165,19 @@ public class AnalyzeService {
                         youtubeSourceRepository.saveResult(key, youtubeNow, 6000);
                         return youtubeNow;
                     });
-            // page 별로 짤라서 반환
-            PageRequest pageRequest = PageRequest.of(page, perPage);
-            int start = (int) pageRequest.getOffset();
-            int end = Math.min((start + pageRequest.getPageSize()), youtubeSourceList.size());
-            Page<YoutubeSource> youtubeSourcePage = new PageImpl<>(youtubeSourceList.subList(start, end), pageRequest, youtubeSourceList.size());
 
-            List<Source> sourceList = Source.toList(youtubeSourcePage.toList());
-            findRelationContentResponseList = FindRelationContentResponse.toList(Code.YOUTUBE.getName(), code, sourceList);
+            if (page * perPage <= youtubeSourceList.size()) {
+                // page 별로 짤라서 반환
+                PageRequest pageRequest = PageRequest.of((page - 1), perPage);
+                int start = (int) pageRequest.getOffset();
+                int end = Math.min((start + pageRequest.getPageSize()), youtubeSourceList.size());
+                Page<YoutubeSource> youtubeSourcePage = new PageImpl<>(youtubeSourceList.subList(start, end), pageRequest, youtubeSourceList.size());
+
+                List<Source> sourceList = Source.toList(youtubeSourcePage.toList());
+                findRelationContentResponseList = FindRelationContentResponse.toList(Code.YOUTUBE.getName(), code, sourceList);
+            } else {
+                findRelationContentResponseList = new ArrayList<>();
+            }
         } else {
             // 키워드 리스트 요청
             List<Keyword> keywordList = keywordService.getKeywordPage(keyword, code, page, perPage, startDate, endDate);
@@ -200,11 +205,12 @@ public class AnalyzeService {
         return findRelationContentResponseList;
     }
 
-    public List<FindYoutubeResponse> findYoutube(FindYoutubeRequest findYoutubeRequest) {
-        System.out.println("findYoutubeRequest = " + findYoutubeRequest);
+    public Payload findYoutube(FindYoutubeRequest findYoutubeRequest) {
+
+
+
         kafkaService.sendYoutubeUrl(findYoutubeRequest.getLink());
-        Payload payload = kafkaService.consumeYoutubeAnalyze();
-        return null;
+        return kafkaService.consumeYoutubeAnalyze();
     }
 
     public List<FindYoutubeCommentResponse> findYoutubeComment(FindYoutubeCommentRequest findYoutubeCommentRequest) {
@@ -237,13 +243,9 @@ public class AnalyzeService {
         while (now.isBefore(end) || now.isEqual(end)) {
             CountCompare mentionCountCompare = CountCompare.builder()
                     .date(now)
-                    .keyword1(keywordA)
-                    .keyword2(keywordB)
                     .build();
             CountCompare grapeQuotientCompare = CountCompare.builder()
                     .date(now)
-                    .keyword1(keywordA)
-                    .keyword2(keywordB)
                     .build();
 
             Integer countA = 0;
@@ -268,6 +270,8 @@ public class AnalyzeService {
                 mentionCountCompare.setType(SocialCacheCode.TYPE_DOWN.getCode());
                 mentionCountCompare.setDifference(countB - countA);
             }
+            mentionCountCompare.setKeyword1(countA);
+            mentionCountCompare.setKeyword2(countB);
 
             countA = 0;
             countB = 0;
@@ -291,6 +295,8 @@ public class AnalyzeService {
                 grapeQuotientCompare.setType(SocialCacheCode.TYPE_DOWN.getCode());
                 grapeQuotientCompare.setDifference(countB - countA);
             }
+            grapeQuotientCompare.setKeyword1(countA);
+            grapeQuotientCompare.setKeyword2(countB);
 
             findCompareKeywordResponse.getMentionCountCompare().add(mentionCountCompare);
             findCompareKeywordResponse.getGrapeQuotientCompare().add(grapeQuotientCompare);
@@ -363,8 +369,6 @@ public class AnalyzeService {
                         .build(), score, count));
             else sentimentCountMap.put(now, setGrapeQuotientInfo(sentimentCountMap.get(now), score, count));
         }
-
-
 
         return SocialMap.builder()
                 .keywordCountMap(keywordCountMap)
@@ -445,8 +449,8 @@ public class AnalyzeService {
     }
 
     private GrapeQuotientInfo setGrapeQuotientInfo(GrapeQuotientInfo grapeQuotientInfo, Double score, Long count) {
-        if (score > 0.0) grapeQuotientInfo.setPositive(count.intValue());
-        else if (score < 0.0) grapeQuotientInfo.setNegative(count.intValue());
+        if (score == 1.0) grapeQuotientInfo.setPositive(count.intValue());
+        else if (score == 0.0) grapeQuotientInfo.setNegative(count.intValue());
         else grapeQuotientInfo.setNeutral(count.intValue());
 
         return grapeQuotientInfo;

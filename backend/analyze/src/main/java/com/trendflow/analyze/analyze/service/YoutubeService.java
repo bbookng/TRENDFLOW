@@ -42,11 +42,13 @@ public class YoutubeService {
 
             UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(YOUTUBE_URI)
                     .queryParam("part", "snippet")
-                    .queryParam("maxResults", 20)
+                    .queryParam("maxResults", 50)
                     .queryParam("q", keyword)
                     .queryParam("type", "video")
                     .queryParam("key", YOUTUBE_KEY)
-                    .build(true);
+                    .build(false);
+
+            System.out.println(uriBuilder.toString());
 
             HttpEntity<MultiValueMap<String, String>> youtubeRequest = new HttpEntity<>(body, headers);
             RestTemplate rt = new RestTemplate();
