@@ -451,8 +451,11 @@ public class AnalyzeService {
         String type;
         Integer changed;
 
-        Integer pastGrape = past.getPositive() + past.getNegative() + past.getNeutral();
-        Integer nowGrape = now.getPositive() + now.getNegative() + now.getNeutral();
+        Integer pastSum = past.getPositive() + past.getNegative() + past.getNeutral();
+        Integer pastGrape = past.getPositive() / pastSum * 100;
+
+        Integer nowSum = now.getPositive() + now.getNegative() + now.getNeutral();
+        Integer nowGrape = now.getPositive() / nowSum * 100;
 
         if (nowGrape > pastGrape) {
             type = SocialCacheCode.TYPE_UP.getCode();
