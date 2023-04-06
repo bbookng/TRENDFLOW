@@ -9,6 +9,7 @@ import { useGetBookmarkQuery } from '@/apis/member';
 import { getToken } from '@/utils/token';
 import { getDateToYYYYDDMM, getOneDaysAgoDate, getOneMonthAgoDate } from '@/utils/date';
 import * as S from './index.styles';
+import DailyAnalysisSkeleton from '@/components/organisms/MainPage/DailyAnalysis/Skeleton';
 
 const MainPage = () => {
   const token = getToken();
@@ -84,6 +85,7 @@ const MainPage = () => {
           relatedKeywords={relatedKeywords!}
         />
       )}
+      {bookmarkLoading && <DailyAnalysisSkeleton keyword="키워드" />}
     </S.Wrapper>
   );
 };
