@@ -1,10 +1,10 @@
 export interface HeaderInterface {
-  token: string;
+  Authorization: string;
 }
 
 export interface PostBookmarkReqInterface {
-  header: {
-    token: string;
+  headers: {
+    Authorization: string;
   };
   params: {
     keyword: string;

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { ButtonSkeleton } from '@/components/atoms/Button/Skeleton/index.styles';
 import { BoxInterface } from '@/pages/SocialMainPage';
 import { Button } from '@/components/atoms/Button/index.styles';
 import { MEDIA_QUERY } from '@/constants/media';
@@ -113,4 +114,15 @@ export const Keyword = styled(Button)`
   margin: 5px;
   padding: 0.375rem 0.7rem;
   font-weight: 600;
+`;
+
+export const KeywordSkeleton = styled(ButtonSkeleton)`
+  border-radius: 12px;
+  margin: 5px;
+  font-weight: 600;
+`;
+
+export const KeywordInvisible = styled(Keyword)`
+  visibility: hidden;
+  padding: 0.5rem 1rem;
 `;
