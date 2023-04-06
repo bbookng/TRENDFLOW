@@ -8,8 +8,6 @@ import HotKeywordsSkeleton from '@/components/organisms/MainPage/HotKeywords/Ske
 import { useGetBookmarkQuery } from '@/apis/member';
 import { getToken } from '@/utils/token';
 import { getDateToYYYYDDMM, getOneDaysAgoDate, getOneMonthAgoDate } from '@/utils/date';
-import { useAppDispatch } from '@/hooks/storeHook';
-import { setHotKeyword } from '@/store/slices/keywordSlice';
 import * as S from './index.styles';
 
 const MainPage = () => {
@@ -42,6 +40,7 @@ const MainPage = () => {
     },
     {
       refetchOnMountOrArgChange: true,
+      skip: !bookmarkSuccess,
     }
   );
 
@@ -55,9 +54,9 @@ const MainPage = () => {
     },
     {
       refetchOnMountOrArgChange: true,
+      skip: !bookmarkSuccess,
     }
   );
-  console.log(bookmark);
   return (
     <S.Wrapper>
       <SearchBar placeholder="키워드를 입력하세요" />
@@ -76,13 +75,11 @@ const MainPage = () => {
         </S.HotKeywordsWrapper>
       )}
 
-      {!bookmarkLoading && !token && !bookmark && <NoBookmark />}
+      {!token && !bookmark && <NoBookmark />}
 
-      {!bookmarkLoading && bookmark && (
+      {socialAnalysis && relatedKeywords && (
         <DailyAnalysis
-          keyword={bookmark.bookmark}
-          socialAnalysisLoading={socialAnalysisLoading}
-          relatedKeywordsLoading={relatedKeywordsLoading}
+          keyword={bookmark!.bookmark}
           socialAnalysis={socialAnalysis!}
           relatedKeywords={relatedKeywords!}
         />
