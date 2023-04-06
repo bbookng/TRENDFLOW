@@ -107,26 +107,21 @@ public class AnalyzeService {
             // 긍부정 지수 일자별 정리
             if (sentimentCountMap.containsKey(now)) {
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMap.get(now);
-                Integer sum = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
-                Integer positive = nowGrapeQuotient.getPositive();
-                Integer negative = nowGrapeQuotient.getNegative();
-                Integer neutral = nowGrapeQuotient.getNeutral();
-
-                System.out.println(sum + " " + positive + " " + negative + " " + neutral);
+                Double positive = nowGrapeQuotient.getPositive().doubleValue();
+                Double negative = nowGrapeQuotient.getNegative().doubleValue();
+                Double neutral = nowGrapeQuotient.getNeutral().doubleValue();
+                Double sum = positive + negative + neutral;
 
                 if (sum != 0) {
-                    System.out.println("sum == 0");
                     positive = positive / sum * 100;
                     negative = negative / sum * 100;
                     neutral = neutral / sum * 100;
                 }
 
-                System.out.println(sum + " " + positive + " " + negative + " " + neutral);
-
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
-                    .positive(positive)
-                    .negative(negative)
-                    .neutral(neutral)
+                    .positive(positive.intValue())
+                    .negative(negative.intValue())
+                    .neutral(neutral.intValue())
                     .build();
             } else {
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
@@ -338,34 +333,38 @@ public class AnalyzeService {
             mentionCountCompare.setKeyword2(countB);
 
             // 긍 부정
-            countA = 0;
-            countB = 0;
+            Double senA = 0D;
+            Double senB = 0D;
             if (sentimentCountMapA.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapA.get(now);
-                Integer sum = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
-                countA = nowGrapeQuotient.getPositive();
-                if (sum != 0) countA = countA / sum * 100;
+                Double sum = nowGrapeQuotient.getPositive().doubleValue() +
+                                nowGrapeQuotient.getNegative().doubleValue() +
+                                    nowGrapeQuotient.getNeutral().doubleValue();
+                senA = nowGrapeQuotient.getPositive().doubleValue();
+                if (sum != 0) senA = senA / sum * 100;
             }
             if (sentimentCountMapB.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapB.get(now);
-                Integer sum = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
-                countB = nowGrapeQuotient.getPositive();
-                if (sum != 0) countB = countB / sum * 100;
+                Double sum = nowGrapeQuotient.getPositive().doubleValue() +
+                                nowGrapeQuotient.getNegative().doubleValue() +
+                                    nowGrapeQuotient.getNeutral().doubleValue();
+                senB = nowGrapeQuotient.getPositive().doubleValue();;
+                if (sum != 0) senB = senB / sum * 100;
             }
 
             // 비교
-            if (countA > countB) {
+            if (senA > senB) {
                 grapeQuotientCompare.setType(SocialCacheCode.TYPE_UP.getCode());
-                grapeQuotientCompare.setDifference(countA - countB);
-            } else if (countA == countB) {
+                grapeQuotientCompare.setDifference(new Double(senA - senB).intValue());
+            } else if (senA == senB) {
                 grapeQuotientCompare.setType(SocialCacheCode.TYPE_SAME.getCode());
                 grapeQuotientCompare.setDifference(0);
             } else {
                 grapeQuotientCompare.setType(SocialCacheCode.TYPE_DOWN.getCode());
-                grapeQuotientCompare.setDifference(countB - countA);
+                grapeQuotientCompare.setDifference(new Double(senB - senA).intValue());
             }
-            grapeQuotientCompare.setKeyword1(countA);
-            grapeQuotientCompare.setKeyword2(countB);
+            grapeQuotientCompare.setKeyword1(senA.intValue());
+            grapeQuotientCompare.setKeyword2(senB.intValue());
 
             findCompareKeywordResponse.getMentionCountCompare().add(mentionCountCompare);
             findCompareKeywordResponse.getGrapeQuotientCompare().add(grapeQuotientCompare);
