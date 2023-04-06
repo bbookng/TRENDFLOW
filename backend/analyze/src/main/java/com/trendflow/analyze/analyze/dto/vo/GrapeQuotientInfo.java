@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GrapeQuotientInfo {
-    private Integer positive;
-    private Integer negative;
-    private Integer neutral;
+    private Double positive;
+    private Double negative;
+    private Double neutral;
 }

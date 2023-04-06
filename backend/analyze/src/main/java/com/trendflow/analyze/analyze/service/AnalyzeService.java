@@ -71,9 +71,9 @@ public class AnalyzeService {
         }
         if (!sentimentCountMap.containsKey(now.minusDays(1))) {
             sentimentCountMap.put(now.minusDays(1), GrapeQuotientInfo.builder()
-                    .positive(0)
-                    .negative(0)
-                    .neutral(0)
+                    .positive(0D)
+                    .negative(0D)
+                    .neutral(0D)
                     .build());
         }
 
@@ -107,12 +107,10 @@ public class AnalyzeService {
             // 긍부정 지수 일자별 정리
             if (sentimentCountMap.containsKey(now)) {
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMap.get(now);
-                Double positive = nowGrapeQuotient.getPositive().doubleValue();
-                Double negative = nowGrapeQuotient.getNegative().doubleValue();
-                Double neutral = nowGrapeQuotient.getNeutral().doubleValue();
+                Double positive = nowGrapeQuotient.getPositive();
+                Double negative = nowGrapeQuotient.getNegative();
+                Double neutral = nowGrapeQuotient.getNeutral();
                 Double sum = positive + negative + neutral;
-
-                System.out.println(sum + " " + positive + " " + negative + " " + neutral);
 
                 if (sum != 0) {
                     positive = positive / sum * 100;
@@ -120,18 +118,16 @@ public class AnalyzeService {
                     neutral = neutral / sum * 100;
                 }
 
-                System.out.println(sum + " " + positive + " " + negative + " " + neutral);
-
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
-                    .positive(positive.intValue())
-                    .negative(negative.intValue())
-                    .neutral(neutral.intValue())
+                    .positive(positive)
+                    .negative(negative)
+                    .neutral(neutral)
                     .build();
             } else {
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
-                        .positive(0)
-                        .negative(0)
-                        .neutral(0)
+                        .positive(0D)
+                        .negative(0D)
+                        .neutral(0D)
                         .build();
                 sentimentCountMap.put(now, grapeQuotientInfo);
             }
@@ -435,9 +431,9 @@ public class AnalyzeService {
 
             if (!sentimentCountMap.containsKey(now))
                 sentimentCountMap.put(now, setGrapeQuotientInfo(GrapeQuotientInfo.builder()
-                        .positive(0)
-                        .negative(0)
-                        .neutral(0)
+                        .positive(0D)
+                        .negative(0D)
+                        .neutral(0D)
                         .build(), score, count));
             else sentimentCountMap.put(now, setGrapeQuotientInfo(sentimentCountMap.get(now), score, count));
         }
@@ -450,17 +446,17 @@ public class AnalyzeService {
 
     private CompareInfoVo compareKeywrodCount(MentionCountInfo past, MentionCountInfo now) {
         String type;
-        Integer changed;
+        Double changed;
 
-        Integer pastTotal = past.getTotal();
-        Integer nowTotal = now.getTotal();
+        Double pastTotal = past.getTotal().doubleValue();
+        Double nowTotal = now.getTotal().doubleValue();
 
         if (nowTotal > pastTotal) {
             type = SocialCacheCode.TYPE_UP.getCode();
             changed = nowTotal - pastTotal;
         } else if (nowTotal == pastTotal) {
             type = SocialCacheCode.TYPE_SAME.getCode();
-            changed = 0;
+            changed = 0D;
         } else {
             type = SocialCacheCode.TYPE_DOWN.getCode();
             changed = pastTotal - nowTotal;
@@ -474,22 +470,22 @@ public class AnalyzeService {
 
     private CompareInfoVo compareSentimentCount(GrapeQuotientInfo past, GrapeQuotientInfo now) {
         String type;
-        Integer changed;
+        Double changed;
 
-        Integer pastSum = past.getPositive() + past.getNegative() + past.getNeutral();
-        Integer pastGrape = past.getPositive();
-        if (pastSum != 0) pastGrape /= pastSum * 100;
+        Double pastSum = past.getPositive() + past.getNegative() + past.getNeutral();
+        Double pastGrape = past.getPositive();
+        if (pastSum != 0D) pastGrape = pastGrape / pastSum * 100;
 
-        Integer nowSum = now.getPositive() + now.getNegative() + now.getNeutral();
-        Integer nowGrape = now.getPositive();
-        if (nowSum != 0) nowGrape /= nowSum * 100;
+        Double nowSum = now.getPositive() + now.getNegative() + now.getNeutral();
+        Double nowGrape = now.getPositive();
+        if (nowSum != 0D) nowGrape = nowGrape / nowSum * 100;
 
         if (nowGrape > pastGrape) {
             type = SocialCacheCode.TYPE_UP.getCode();
             changed = nowGrape - pastGrape;
         } else if (nowGrape == pastGrape) {
             type = SocialCacheCode.TYPE_SAME.getCode();
-            changed = 0;
+            changed = 0D;
         } else {
             type = SocialCacheCode.TYPE_DOWN.getCode();
             changed = pastGrape - nowGrape;
@@ -526,9 +522,9 @@ public class AnalyzeService {
     }
 
     private GrapeQuotientInfo setGrapeQuotientInfo(GrapeQuotientInfo grapeQuotientInfo, Long score, Long count) {
-        if (score == 1L) grapeQuotientInfo.setPositive(count.intValue());
-        else if (score == 0L) grapeQuotientInfo.setNegative(count.intValue());
-        else grapeQuotientInfo.setNeutral(count.intValue());
+        if (score == 1L) grapeQuotientInfo.setPositive(count.doubleValue());
+        else if (score == 0L) grapeQuotientInfo.setNegative(count.doubleValue());
+        else grapeQuotientInfo.setNeutral(count.doubleValue());
 
         return grapeQuotientInfo;
     }
