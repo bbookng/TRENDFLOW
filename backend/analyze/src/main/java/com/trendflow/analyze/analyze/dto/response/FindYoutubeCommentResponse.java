@@ -14,14 +14,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FindYoutubeCommentResponse {
-    private Integer id;
+    private String id;
     private Integer upCount;
     private Integer downCount;
     private String comment;
 
     public static FindYoutubeCommentResponse of (Payload.Comment comment) {
         return FindYoutubeCommentResponse.builder()
-                .id(Integer.parseInt(comment.getId()))
+                .id(comment.getId())
                 .upCount(comment.getLikes())
                 .downCount(comment.getDislikes())
                 .comment(comment.getComments())

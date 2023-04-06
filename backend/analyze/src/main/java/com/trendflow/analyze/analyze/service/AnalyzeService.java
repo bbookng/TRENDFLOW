@@ -257,6 +257,7 @@ public class AnalyzeService {
     public List<FindYoutubeCommentResponse> findYoutubeComment(FindYoutubeCommentRequest findYoutubeCommentRequest) {
 
         String link = findYoutubeCommentRequest.getLink();
+        Integer code = findYoutubeCommentRequest.getCode();
         Integer page = findYoutubeCommentRequest.getPage();
         Integer perPage = findYoutubeCommentRequest.getPerPage();
         String key = "YOUTUBE_ANALYZE_" + link;
