@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CountCompare {
     private LocalDate date;
-    private String keyword1;
-    private String keyword2;
+    private Integer keyword1;
+    private Integer keyword2;
     private String type;
     private Integer difference;
 }
