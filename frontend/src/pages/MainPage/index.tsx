@@ -41,7 +41,7 @@ const MainPage = () => {
     },
     {
       refetchOnMountOrArgChange: true,
-      skip: !bookmark?.bookmark,
+      skip: !!bookmarkLoading || !!bookmarkError,
     }
   );
 
@@ -55,7 +55,7 @@ const MainPage = () => {
     },
     {
       refetchOnMountOrArgChange: true,
-      skip: !bookmark?.bookmark,
+      skip: !!bookmarkLoading || !!bookmarkError,
     }
   );
 
