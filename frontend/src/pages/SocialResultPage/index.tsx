@@ -27,7 +27,7 @@ const SocialResultPage = () => {
     data: bookmark,
     error: bookmarkError,
     isLoading: bookmarkLoading,
-  } = useGetBookmarkQuery({ Authorization: `Bearer ${token!}` }, { skip: !token });
+  } = useGetBookmarkQuery({ token: token! }, { refetchOnMountOrArgChange: true, skip: !token });
 
   const {
     state: { keyword },
@@ -76,16 +76,16 @@ const SocialResultPage = () => {
   const [postBookmark] = usePostBookmarkMutation();
 
   const handleBookmarkBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!isLoggedIn) {
-      dispatch(showToast('💥 로그인이 필요합니다.'));
-      return;
-    }
+    // if (!isLoggedIn) {
+    //   dispatch(showToast('💥 로그인이 필요합니다.'));
+    //   return;
+    // }
 
     const req = {
       headers: { Authorization: `Bearer ${token!}` },
       params: { keyword: keyword! },
     };
-    postBookmark(req);
+    postBookmark({ headers: req.headers, params: req.params });
     setIsBookmarked((prev) => !prev);
   };
 

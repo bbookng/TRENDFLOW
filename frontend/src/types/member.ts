@@ -1,5 +1,5 @@
-export interface HeaderInterface {
-  Authorization: string;
+export interface GetBookmarkReqInterface {
+  token: string;
 }
 
 export interface PostBookmarkReqInterface {
