@@ -39,6 +39,11 @@ export const BookmarkBtn = styled.button`
   width: 1.75rem;
   margin-left: 1rem;
   background-color: transparent;
+
+  & > svg {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 export const HighLight = styled.span`
@@ -105,11 +110,14 @@ export const TrendChartContentsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 3rem;
+
   @media ${MEDIA_QUERY.DESKTOP} {
     flex: 1;
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+    margin-top: 0;
+
     & > div:first-of-type {
       margin-right: 2.5rem;
       margin-bottom: 0;
