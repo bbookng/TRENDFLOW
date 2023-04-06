@@ -2,16 +2,19 @@ package com.trendflow.analyze.analyze.controller;
 
 import com.trendflow.analyze.analyze.dto.request.*;
 import com.trendflow.analyze.analyze.dto.response.*;
+import com.trendflow.analyze.analyze.dto.vo.Payload;
 import com.trendflow.analyze.analyze.service.AnalyzeService;
-import com.trendflow.analyze.global.code.AnalyzeCode;
+import com.trendflow.analyze.global.config.SseEmitters;
 import com.trendflow.analyze.global.exception.NotFoundException;
-import com.trendflow.analyze.global.response.BasicResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,6 +24,7 @@ import java.util.List;
 @RequestMapping("/analyze")
 public class AnalyzeController {
     private final AnalyzeService analyzeService;
+    private final SseEmitters sseEmitters;
 
     @GetMapping("/social")
     public ResponseEntity<List<FindSocialResponse>> findSocial(@RequestParam String keyword,
@@ -50,11 +54,11 @@ public class AnalyzeController {
 
     @GetMapping("/related")
     public ResponseEntity<List<FindRelationContentResponse>> findRelationContent(@RequestParam String keyword,
-                                                                           @RequestParam String code,
-                                                                           @RequestParam Integer page,
-                                                                           @RequestParam Integer perPage,
-                                                                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
+                                                                                 @RequestParam String code,
+                                                                                 @RequestParam Integer page,
+                                                                                 @RequestParam Integer perPage,
+                                                                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
         log.info("findRelationContent - Call");
 
         try {
@@ -79,16 +83,24 @@ public class AnalyzeController {
     }
 
     @GetMapping("/youtube")
-    public ResponseEntity<List<FindYoutubeResponse>> findYoutube(@RequestParam String link){
+    public ResponseEntity<Payload> findYoutube(@RequestParam String link){
         log.info("findYoutube - Call");
 
         try {
-            List<FindYoutubeResponse> findYoutubeResponseList
-                    = analyzeService.findYoutube(FindYoutubeRequest.builder()
-                                                    .link(link)
-                                                    .build());
+            ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+            taskExecutor.initialize();
+            taskExecutor.execute(() -> {
+                try {
+                    Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
+                            .link(link)
+                            .build());
+                    System.out.println("payload = " + payload);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
 
-            return ResponseEntity.ok().body(findYoutubeResponseList);
+            return ResponseEntity.ok().body(null);
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);

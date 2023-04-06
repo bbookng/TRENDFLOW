@@ -6,8 +6,10 @@ import com.trendflow.analyze.analyze.dto.vo.GrapeQuotientInfo;
 import com.trendflow.analyze.analyze.dto.vo.MentionCountInfo;
 
 import com.trendflow.analyze.global.redis.Social;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class FindSocialResponse {
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate date;
