@@ -1,6 +1,7 @@
 package com.trendflow.analyze.global.code;
 
-public enum CommonCode {
+public enum Code {
+
     DAUM_NEWS("DAUM_NEWS"),
     NAVER_NEWS("NAVER_NEWS"),
     NAVER_BLOG("NAVER_BLOG"),
@@ -8,11 +9,13 @@ public enum CommonCode {
 
     ARTICLE("ARTICLE"),
     BLOG("BLOG"),
-    YOUTUBE("YOUTUBE");
+    YOUTUBE("YOUTUBE"),
+    DAUM("DAUM"),
+    NAVER("NAVER");
 
     private String name;
 
-    CommonCode(String name){
+    Code(String name){
         this.name = name;
     }
 
