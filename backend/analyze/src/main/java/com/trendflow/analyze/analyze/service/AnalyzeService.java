@@ -281,11 +281,11 @@ public class AnalyzeService {
             countB = 0;
             if (sentimentCountMapA.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapA.get(now);
-                countA = nowGrapeQuotient.getPositive() - nowGrapeQuotient.getNegative();
+                countA = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
             }
             if (sentimentCountMapB.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapB.get(now);
-                countB = nowGrapeQuotient.getPositive() - nowGrapeQuotient.getNegative();
+                countB = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
             }
 
             // 비교
@@ -406,8 +406,8 @@ public class AnalyzeService {
         String type;
         Integer changed;
 
-        Integer pastGrape = past.getPositive() - past.getNegative();
-        Integer nowGrape = now.getPositive() - now.getNegative();
+        Integer pastGrape = past.getPositive() + past.getNegative() + past.getNeutral();
+        Integer nowGrape = now.getPositive() + now.getNegative() + now.getNeutral();
 
         if (nowGrape > pastGrape) {
             type = SocialCacheCode.TYPE_UP.getCode();
