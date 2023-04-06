@@ -76,16 +76,16 @@ const SocialResultPage = () => {
   const [postBookmark] = usePostBookmarkMutation();
 
   const handleBookmarkBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // if (!isLoggedIn) {
-    //   dispatch(showToast('💥 로그인이 필요합니다.'));
-    //   return;
-    // }
+    if (!isLoggedIn) {
+      dispatch(showToast('💥 로그인이 필요합니다.'));
+      return;
+    }
 
     const req = {
-      headers: { Authorization: `Bearer ${token!}` },
-      params: { keyword: keyword! },
+      token: token!,
+      keyword: keyword!,
     };
-    postBookmark({ headers: req.headers, params: req.params });
+    postBookmark(req);
     setIsBookmarked((prev) => !prev);
   };
 

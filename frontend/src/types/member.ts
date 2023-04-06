@@ -3,10 +3,6 @@ export interface GetBookmarkReqInterface {
 }
 
 export interface PostBookmarkReqInterface {
-  headers: {
-    Authorization: string;
-  };
-  params: {
-    keyword: string;
-  };
+  token: string;
+  keyword: string;
 }
