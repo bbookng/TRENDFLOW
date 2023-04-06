@@ -149,8 +149,6 @@ public class AnalyzeService {
         LocalDate startDate = findRelationContentRequest.getStartDate();
         LocalDate endDate = findRelationContentRequest.getEndDate();
 
-        System.out.println("keyword = " + keyword);
-
         String YOUTUBE = commonService.getLocalCode(Code.YOUTUBE);
 
         List<FindRelationContentResponse> findRelationContentResponseList = null;
@@ -245,13 +243,9 @@ public class AnalyzeService {
         while (now.isBefore(end) || now.isEqual(end)) {
             CountCompare mentionCountCompare = CountCompare.builder()
                     .date(now)
-                    .keyword1(keywordA)
-                    .keyword2(keywordB)
                     .build();
             CountCompare grapeQuotientCompare = CountCompare.builder()
                     .date(now)
-                    .keyword1(keywordA)
-                    .keyword2(keywordB)
                     .build();
 
             Integer countA = 0;
@@ -276,6 +270,8 @@ public class AnalyzeService {
                 mentionCountCompare.setType(SocialCacheCode.TYPE_DOWN.getCode());
                 mentionCountCompare.setDifference(countB - countA);
             }
+            mentionCountCompare.setKeyword1(countA);
+            mentionCountCompare.setKeyword2(countB);
 
             countA = 0;
             countB = 0;
@@ -299,6 +295,8 @@ public class AnalyzeService {
                 grapeQuotientCompare.setType(SocialCacheCode.TYPE_DOWN.getCode());
                 grapeQuotientCompare.setDifference(countB - countA);
             }
+            grapeQuotientCompare.setKeyword1(countA);
+            grapeQuotientCompare.setKeyword2(countB);
 
             findCompareKeywordResponse.getMentionCountCompare().add(mentionCountCompare);
             findCompareKeywordResponse.getGrapeQuotientCompare().add(grapeQuotientCompare);
