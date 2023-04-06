@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { bookmark } from '@/mocks/data/member/bookmark.json';
 import { PostBookmarkReqInterface } from '@/types/member';
 import { getToken } from '@/utils/token';
 
@@ -18,11 +19,11 @@ export const memberApi = createApi({
   }),
   tagTypes: ['bookmark'],
   endpoints: (builder) => ({
-    getBookmark: builder.query<string | null, void>({
+    getBookmark: builder.query<{ bookmark: string } | null, void>({
       query: () => 'bookmark',
       providesTags: ['bookmark'],
     }),
-    postBookmark: builder.mutation<string | null, Partial<PostBookmarkReqInterface>>({
+    postBookmark: builder.mutation<{ bookmark: string } | null, Partial<PostBookmarkReqInterface>>({
       query: ({ keyword }) => {
         return {
           url: 'bookmark',
