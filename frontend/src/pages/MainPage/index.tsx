@@ -78,14 +78,15 @@ const MainPage = () => {
 
       {!token && !bookmark && <NoBookmark />}
 
-      {socialAnalysis && relatedKeywords && (
+      {socialAnalysis && relatedKeywords ? (
         <DailyAnalysis
           keyword={bookmark!.bookmark}
           socialAnalysis={socialAnalysis!}
           relatedKeywords={relatedKeywords!}
         />
+      ) : (
+        <DailyAnalysisSkeleton keyword="키워드" />
       )}
-      {bookmarkLoading && <DailyAnalysisSkeleton keyword="키워드" />}
     </S.Wrapper>
   );
 };
