@@ -267,11 +267,26 @@ public class KeywordService {
         List<RelatedKeywordCount> relatedList = keywordRepository.findByKeywordAndFromToDate(keyword, monthAgoInt,todayInt);
 
         List<WordCloudKeyword> wordCloudKeywordList = new ArrayList<>();
+        long maxv=500L, minv=100L;
+        long max=0, min=0;
+        if (relatedList.size()>=1){
+            max = relatedList.get(0).getCnt();
+            min = relatedList.get(relatedList.size()-1).getCnt();
+            if (relatedList.size()==1) minv=500L;
+        }
+        else{
+            return FindWordCloudResponse.toList(wordCloudKeywordList);
+        }
+
+
         for(RelatedKeywordCount relatedKeywordCount : relatedList){
+            long cnt = relatedKeywordCount.getCnt();
+            double ratio = (double)(cnt - min) / Math.max((double)(max - min), 0.001);
+            int count = (int)(ratio * (maxv-minv) + minv);
             wordCloudKeywordList.add(
                 WordCloudKeyword.builder()
                         .text(relatedKeywordCount.getKeyword())
-                        .value((int)relatedKeywordCount.getCnt())
+                        .value(count)
                         .build()
             );
         }
