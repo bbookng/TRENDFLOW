@@ -17,6 +17,7 @@ export const memberApi = createApi({
         url: 'bookmark',
         prepareHeaders: (headers: any) => {
           headers.set('Authorization', req.Authorization);
+          return headers;
         },
       }),
       providesTags: ['bookmark'],
