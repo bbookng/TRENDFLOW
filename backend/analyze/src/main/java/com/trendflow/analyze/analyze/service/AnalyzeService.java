@@ -9,9 +9,8 @@ import com.trendflow.analyze.analyze.repository.RelationRepository;
 import com.trendflow.analyze.analyze.repository.SentimentRepository;
 import com.trendflow.analyze.global.code.Code;
 import com.trendflow.analyze.global.code.SocialCacheCode;
-import com.trendflow.analyze.global.redis.Social;
-import com.trendflow.analyze.global.redis.YoutubeSource;
-import com.trendflow.analyze.global.redis.YoutubeSourceRepository;
+import com.trendflow.analyze.global.exception.NotFoundException;
+import com.trendflow.analyze.global.redis.*;
 import com.trendflow.analyze.msa.dto.vo.Keyword;
 import com.trendflow.analyze.msa.dto.vo.KeywordCount;
 import com.trendflow.analyze.msa.dto.vo.Source;
@@ -21,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +38,7 @@ public class AnalyzeService {
     private final RelationRepository relationRepository;
     private final SentimentRepository sentimentRepository;
     private final YoutubeSourceRepository youtubeSourceRepository;
+    private final YoutubueAnalyzeRepository youtubueAnalyzeRepository;
 
     private final CommonService commonService;
     private final KeywordService keywordService;
@@ -205,12 +206,58 @@ public class AnalyzeService {
         return findRelationContentResponseList;
     }
 
-    public Payload findYoutube(FindYoutubeRequest findYoutubeRequest) {
+    public FindYoutubeResponse findYoutube(String link) {
 
+        String key = "YOUTUBE_ANALYZE_" + link;
 
+        YoutubueAnalyze youtubueAnalyze = youtubueAnalyzeRepository.findById(key)
+                .orElseGet(() -> {
+                    YoutubueAnalyze now = youtubeService.getYoutubeVideo(link);
+                    youtubueAnalyzeRepository.save(key, now, 60000);
 
-        kafkaService.sendYoutubeUrl(findYoutubeRequest.getLink());
-        return kafkaService.consumeYoutubeAnalyze();
+                    ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+                    taskExecutor.initialize();
+                    taskExecutor.execute(() -> {
+                        try {
+                            kafkaService.sendYoutubeUrl(link);
+                            Payload payload = kafkaService.consumeYoutubeAnalyze();
+
+                            YoutubueAnalyze nowThread = youtubueAnalyzeRepository.findById(key)
+                                    .orElseThrow(() -> new NotFoundException());
+
+                            nowThread.setCommentList(payload.getCommentDf());
+                            nowThread.setAnalyzeResultList(payload.getCntDf());
+
+                            youtubueAnalyzeRepository.save(key, now, 60000);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+
+                    return now;
+                });
+
+        return FindYoutubeResponse.builder()
+                        .title(youtubueAnalyze.getTitle())
+                        .url(youtubueAnalyze.getUrl())
+                        .reaction(FindYoutubeResponse.Reaction.builder()
+                                .viewCount(youtubueAnalyze.getViewCount())
+                                .likeCount(youtubueAnalyze.getLikeCOunt())
+                                .commentCount(youtubueAnalyze.getCommentCount())
+                                .build())
+                        .affinityInfo(FindYoutubeResponse.AffinityInfo.builder()
+                                .positive(youtubueAnalyze.getPositive())
+                                .negative(youtubueAnalyze.getNegative())
+                                .neutral(youtubueAnalyze.getNeutral())
+                                .build())
+                        .owner(FindYoutubeResponse.Owner.builder()
+                                .name(youtubueAnalyze.getName())
+                                .subscribeCount(youtubueAnalyze.getSubscribeCount())
+                                .build())
+                        .build();
+//        kafkaService.sendYoutubeUrl(findYoutubeRequest.getLink());
+//        return kafkaService.consumeYoutubeAnalyze();
     }
 
     public List<FindYoutubeCommentResponse> findYoutubeComment(FindYoutubeCommentRequest findYoutubeCommentRequest) {

@@ -81,24 +81,12 @@ public class AnalyzeController {
     }
 
     @GetMapping("/youtube")
-    public ResponseEntity<Payload> findYoutube(@RequestParam String link){
+    public ResponseEntity<FindYoutubeResponse> findYoutube(@RequestParam String link){
         log.info("findYoutube - Call");
 
         try {
-            ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-            taskExecutor.initialize();
-            taskExecutor.execute(() -> {
-                try {
-                    Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
-                            .link(link)
-                            .build());
-                    System.out.println("payload = " + payload);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-
-            return ResponseEntity.ok().body(null);
+            FindYoutubeResponse findYoutubeResponse = analyzeService.findYoutube(link);
+            return ResponseEntity.ok().body(findYoutubeResponse);
         } catch (NotFoundException e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);
