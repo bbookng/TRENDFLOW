@@ -16,7 +16,7 @@ export interface SocialAnalysisItemInterface {
       type: string;
       changed: number;
     };
-    grape: {
+    grapeQuotient: {
       type: string;
       changed: number;
     };
