@@ -124,9 +124,9 @@ const ComparisonResultPage = () => {
         <S.ChartWrapper>
           <Label>{keyword2}</Label>
           <BarChart
-            labels={keyword1SocialAnalysis?.map((item) => item.date.slice(5))}
+            labels={keyword2SocialAnalysis?.map((item) => item.date.slice(5))}
             barLabel="언급량"
-            barData={keyword1SocialAnalysis?.map((item) => item.mentionCountInfo.total)}
+            barData={keyword2SocialAnalysis?.map((item) => item.mentionCountInfo.total)}
             lineLabel="피치 지수"
             lineData={keyword2SocialAnalysis?.map((item) => item.grapeQuotientInfo.positive)}
             barColor={PALETTE.BLUE400}
