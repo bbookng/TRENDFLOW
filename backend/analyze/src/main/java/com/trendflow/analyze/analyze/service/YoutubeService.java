@@ -31,10 +31,17 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class YoutubeService {
-    @Value("${youtube.uri}")
+    @Value("${youtube.search.uri}")
     private String YOUTUBE_URI;
     @Value("${youtube.key}")
     private String YOUTUBE_KEY;
+    @Value("${youtube.video.uri}")
+    private String YOUTUBE_VIDEO_URI;
+    @Value("${youtube.channels.uri}")
+    private String YOUTUBE_CHANNELS_URI;
+    @Value("${youtube.comments.uri}")
+    private String YOUTUBE_COMMENTS_URI;
+    private final String EMBED_VIDEO = "https://www.youtube.com/embed/";
 
     public List<Source> getYoutubeSource(String keyword) {
         try {
@@ -94,74 +101,110 @@ public class YoutubeService {
     }
 
     public YoutubueAnalyze getYoutubeVideo(String link) {
-//        try {
-//            HttpHeaders headers = new HttpHeaders();
-//            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-//
-//            UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(YOUTUBE_URI)
-//                    .queryParam("part", "snippet")
-//                    .queryParam("maxResults", 50)
-//                    .queryParam("q", keyword)
-//                    .queryParam("type", "video")
-//                    .queryParam("key", YOUTUBE_KEY)
-//                    .build(false);
-//
-//            System.out.println(uriBuilder.toString());
-//
-//            HttpEntity<MultiValueMap<String, String>> youtubeRequest = new HttpEntity<>(body, headers);
-//            RestTemplate rt = new RestTemplate();
-//            ResponseEntity<String> response = rt.exchange(
-//                    uriBuilder.toString(),
-//                    HttpMethod.GET,
-//                    youtubeRequest,
-//                    String.class
-//            );
-//
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            JsonNode jsonNode = objectMapper.readTree(response.getBody()).get("items");
-//
-//            Iterator<JsonNode> items = jsonNode.elements();
-//
-//            List<Source> sourceList = new ArrayList<>();
-//            while(items.hasNext()){
-//                JsonNode item = items.next();
-//                JsonNode snippet = item.get("snippet");
-//                String title = snippet.get("title").asText();
-//                String link = "https://www.youtube.com/watch?v=" + item.get("id").get("videoId").asText();
-//                String content = snippet.get("description").asText();
-//                LocalDate date = ZonedDateTime.parse(snippet.get("publishedAt").asText()).toLocalDate();
-//                String thumbnail = snippet.get("thumbnails").get("medium").get("url").asText();
-//
-//                sourceList.add(Source.builder()
-//                        .title(title)
-//                        .link(link)
-//                        .desc(content)
-//                        .date(date)
-//                        .thumbnail(thumbnail)
-//                        .build());
-//            }
-//
-//            return sourceList;
-//
-//        } catch (JsonProcessingException | HttpClientErrorException e) {
-//            throw new NotFoundException();
-//        }
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+            UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(YOUTUBE_VIDEO_URI)
+                    .queryParam("part", "snippet,statistics")
+                    .queryParam("id", link.split("watch?v=")[1])
+                    .queryParam("key", YOUTUBE_KEY)
+                    .build(false);
+            HttpEntity<MultiValueMap<String, String>> youtubeRequest = new HttpEntity<>(body, headers);
+            RestTemplate rt = new RestTemplate();
+            ResponseEntity<String> response = rt.exchange(
+                    uriBuilder.toString(),
+                    HttpMethod.GET,
+                    youtubeRequest,
+                    String.class
+            );
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(response.getBody()).get("items");
+            JsonNode item = jsonNode.elements().next();
+            JsonNode snippet = item.get("snippet");
+            JsonNode statistics = item.get("statistics");
+            String channelId = snippet.get("channelId").asText();
+            String title = snippet.get("title").asText();
+            String url = String.format("%s%s", EMBED_VIDEO, item.get("id").asText());
+            Integer viewCount = statistics.get("viewCount").asInt();
+            Integer likeCOunt = statistics.get("likeCount").asInt();
+            Integer commentCount = statistics.get("commentCount").asInt();
+            String name = snippet.get("channelTitle").asText();
 
-        List<Comment> commentList = new ArrayList<>();
-        commentList.add(new Comment("1", "댓글", 500, 600, 9.0, 9));
+            // 채널
+            headers = new HttpHeaders();
+            body = new LinkedMultiValueMap<>();
+            uriBuilder = UriComponentsBuilder.fromHttpUrl(YOUTUBE_CHANNELS_URI)
+                    .queryParam("part", "statistics")
+                    .queryParam("id", channelId)
+                    .queryParam("key", YOUTUBE_KEY)
+                    .build(false);
+            youtubeRequest = new HttpEntity<>(body, headers);
+            rt = new RestTemplate();
+            response = rt.exchange(
+                    uriBuilder.toString(),
+                    HttpMethod.GET,
+                    youtubeRequest,
+                    String.class
+            );
+            objectMapper = new ObjectMapper();
+            jsonNode = objectMapper.readTree(response.getBody()).get("items");
+            item = jsonNode.elements().next();
+            statistics = item.get("statistics");
+            Integer subscribeCount = statistics.get("subscriberCount").asInt();
 
-        return YoutubueAnalyze.builder()
-                .title("SSAFY")
-                .url(link)
-                .viewCount(100)
-                .likeCOunt(200)
-                .commentCount(300)
-                .positive(5.0)
-                .negative(1.0)
-                .neutral(2.0)
-                .name("삼성")
-                .subscribeCount(400)
-                .commentList(commentList)
-                .build();
+            // 댓글
+            headers = new HttpHeaders();
+            body = new LinkedMultiValueMap<>();
+            uriBuilder = UriComponentsBuilder.fromHttpUrl(YOUTUBE_COMMENTS_URI)
+                    .queryParam("part", "snippet")
+                    .queryParam("videoId", link.split("watch?v=")[1])
+                    .queryParam("key", YOUTUBE_KEY)
+                        .build(false);
+            youtubeRequest = new HttpEntity<>(body, headers);
+            rt = new RestTemplate();
+            response = rt.exchange(
+                    uriBuilder.toString(),
+                    HttpMethod.GET,
+                    youtubeRequest,
+                    String.class
+            );
+            objectMapper = new ObjectMapper();
+            jsonNode = objectMapper.readTree(response.getBody()).get("items");
+
+            Iterator<JsonNode> items = jsonNode.elements();
+            List<Comment> commentList = new ArrayList<>();
+
+            while(items.hasNext()) {
+                item = items.next();
+                JsonNode topLevelComment = item.get("snippet").get("topLevelComment");
+                String id = topLevelComment.get("id").asText();
+                String comments = topLevelComment.get("snippet").get("textDisplay").asText();
+                Integer likes = topLevelComment.get("snippet").get("likeCount").asInt();
+                Integer dislikes = 0;
+                Double sentiment = 0D;
+                Integer label = 0;
+
+                commentList.add(new Comment(id, comments, likes, dislikes, sentiment, label));
+            }
+            Double positive = 0D;
+            Double negative = 0D;
+            Double neutral = 0D;
+
+            return YoutubueAnalyze.builder()
+                    .title(title)
+                    .url(url)
+                    .viewCount(viewCount)
+                    .likeCOunt(likeCOunt)
+                    .commentCount(commentCount)
+                    .name(name)
+                    .subscribeCount(subscribeCount)
+                    .commentList(commentList)
+                    .positive(5.0)
+                    .negative(1.0)
+                    .neutral(2.0)
+                    .build();
+        } catch (JsonProcessingException | HttpClientErrorException e) {
+            throw new NotFoundException();
+        }
     }
 }
