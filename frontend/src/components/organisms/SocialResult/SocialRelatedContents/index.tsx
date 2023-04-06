@@ -42,7 +42,7 @@ const SocialRelatedContents = ({
   useEffect(() => {
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, code]);
+  }, [keyword, page, code]);
 
   return (
     <S.Wrapper>
