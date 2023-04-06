@@ -186,9 +186,45 @@ public class YoutubeService {
 
                 commentList.add(new Comment(id, comments, likes, dislikes, sentiment, label));
             }
+
             Double positive = 0D;
             Double negative = 0D;
             Double neutral = 0D;
+
+            try {
+                for (Comment comment : commentList) {
+                    headers = new HttpHeaders();
+                    body = new LinkedMultiValueMap<>();
+                    uriBuilder = UriComponentsBuilder.fromHttpUrl("http://trendflow.site:9999")
+                            .queryParam("new_sentence", comment.getComments())
+                            .build(false);
+                    youtubeRequest = new HttpEntity<>(body, headers);
+                    rt = new RestTemplate();
+                    response = rt.exchange(
+                            uriBuilder.toString(),
+                            HttpMethod.GET,
+                            youtubeRequest,
+                            String.class
+                    );
+                    objectMapper = new ObjectMapper();
+                    jsonNode = objectMapper.readTree(response.getBody());
+                    Integer score = jsonNode.get("result").asInt();
+                    comment.setSentiment(score.doubleValue());
+
+                    if (score == 0) negative++;
+                    else if (score == 1) positive++;
+                    else neutral++;
+                }
+
+                Double sum = positive + negative + neutral;
+                if (sum != 0) {
+                    positive = positive / sum * 100;
+                    negative = negative / sum * 100;
+                    neutral = neutral / sum * 100;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             return YoutubueAnalyze.builder()
                     .title(title)
@@ -199,9 +235,9 @@ public class YoutubeService {
                     .name(name)
                     .subscribeCount(subscribeCount)
                     .commentList(commentList)
-                    .positive(5.0)
-                    .negative(1.0)
-                    .neutral(2.0)
+                    .positive(positive)
+                    .negative(negative)
+                    .neutral(neutral)
                     .build();
         } catch (JsonProcessingException | HttpClientErrorException e) {
             throw new NotFoundException();

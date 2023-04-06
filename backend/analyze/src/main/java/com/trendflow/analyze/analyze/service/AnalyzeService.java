@@ -269,10 +269,14 @@ public class AnalyzeService {
                     return now;
                 });
 
+        List<Payload.Comment> commentList =  youtubueAnalyze.getCommentList().stream().filter(comment -> comment.getSentiment() == code.doubleValue()).collect(Collectors.toList());
+
+        System.out.println(commentList);
+
         PageRequest pageRequest = PageRequest.of((page - 1), perPage);
         int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), youtubueAnalyze.getCommentList().size());
-        Page<Payload.Comment> commentPage = new PageImpl<>(youtubueAnalyze.getCommentList().subList(start, end), pageRequest, youtubueAnalyze.getCommentList().size());
+        int end = Math.min((start + pageRequest.getPageSize()), commentList.size());
+        Page<Payload.Comment> commentPage = new PageImpl<>(commentList.subList(start, end), pageRequest, commentList.size());
 
         return FindYoutubeCommentResponse.toList(commentPage.toList());
     }
