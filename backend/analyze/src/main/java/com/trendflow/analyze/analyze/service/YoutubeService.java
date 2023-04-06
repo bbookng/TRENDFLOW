@@ -195,7 +195,7 @@ public class YoutubeService {
                 for (Comment comment : commentList) {
                     headers = new HttpHeaders();
                     body = new LinkedMultiValueMap<>();
-                    uriBuilder = UriComponentsBuilder.fromHttpUrl("http://trendflow.site:9999")
+                    uriBuilder = UriComponentsBuilder.fromHttpUrl("http://trendflow.site:9999/analyze")
                             .queryParam("new_sentence", comment.getComments())
                             .build(false);
                     youtubeRequest = new HttpEntity<>(body, headers);
