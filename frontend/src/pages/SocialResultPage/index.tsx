@@ -17,6 +17,8 @@ import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePick
 import SocialRelatedContents from '@/components/organisms/SocialResult/SocialRelatedContents';
 import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
 import { getToken } from '@/utils/token';
+import { useAppSelector, useAppDispatch } from '@/hooks/storeHook';
+import { showToast } from '@/store/slices/toastSlice';
 import * as S from './index.styles';
 
 const SocialResultPage = () => {
@@ -25,11 +27,16 @@ const SocialResultPage = () => {
     data: bookmark,
     error: bookmarkError,
     isLoading: bookmarkLoading,
-  } = useGetBookmarkQuery({ token: token! }, { skip: !token });
+  } = useGetBookmarkQuery({ Authorization: `Bearer ${token!}` }, { skip: !token });
 
   const {
     state: { keyword },
   } = useLocation();
+
+  const {
+    user: { isLoggedIn },
+  } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
 
   const [isBookmarked, setIsBookmarked] = useState(bookmark === keyword);
 
@@ -69,8 +76,13 @@ const SocialResultPage = () => {
   const [postBookmark] = usePostBookmarkMutation();
 
   const handleBookmarkBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!isLoggedIn) {
+      dispatch(showToast('💥 로그인이 필요합니다.'));
+      return;
+    }
+
     const req = {
-      header: { token: token! },
+      headers: { Authorization: `Bearer ${token!}` },
       params: { keyword: keyword! },
     };
     postBookmark(req);
