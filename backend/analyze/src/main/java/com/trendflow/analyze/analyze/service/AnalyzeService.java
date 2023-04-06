@@ -119,12 +119,11 @@ public class AnalyzeService {
                     neutral /= sum * 100;
                 }
 
-
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
-                        .positive(positive)
-                        .negative(negative)
-                        .neutral(neutral)
-                        .build();
+                    .positive(positive)
+                    .negative(negative)
+                    .neutral(neutral)
+                    .build();
             } else {
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
                         .positive(0)
@@ -336,7 +335,14 @@ public class AnalyzeService {
 
             // 긍 부정
             countA = 0;
+            Integer negetiveCountA = 0;
+            Integer neutralCountA = 0;
+
             countB = 0;
+            Integer negetiveCountB = 0;
+            Integer neutralCountB = 0;
+
+
             if (sentimentCountMapA.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapA.get(now);
                 countA = nowGrapeQuotient.getPositive() + nowGrapeQuotient.getNegative() + nowGrapeQuotient.getNeutral();
@@ -507,18 +513,18 @@ public class AnalyzeService {
         else if (platformCode.equals(NAVER_BLOG)) naverBlog = count.intValue();
         else if (platformCode.equals(TWITTER)) twitter = count.intValue();
 
-        mentionCountInfo.setDaum(daumNews);
-        mentionCountInfo.setNaver(naverNews + naverBlog);
-        mentionCountInfo.setTwitter(twitter);
-        mentionCountInfo.setTotal(daumNews + naverNews + naverBlog + twitter);
+        mentionCountInfo.setDaum(mentionCountInfo.getDaum() + daumNews);
+        mentionCountInfo.setNaver(mentionCountInfo.getNaver() + naverNews + naverBlog);
+        mentionCountInfo.setTwitter(mentionCountInfo.getTwitter() + twitter);
+        mentionCountInfo.setTotal(mentionCountInfo.getTotal() + daumNews + naverNews + naverBlog + twitter);
 
         return mentionCountInfo;
     }
 
     private GrapeQuotientInfo setGrapeQuotientInfo(GrapeQuotientInfo grapeQuotientInfo, Double score, Long count) {
-        if (score == 1.0) grapeQuotientInfo.setPositive(count.intValue());
-        else if (score == 0.0) grapeQuotientInfo.setNegative(count.intValue());
-        else grapeQuotientInfo.setNeutral(count.intValue());
+        if (score == 1.0) grapeQuotientInfo.setPositive(grapeQuotientInfo.getPositive() + count.intValue());
+        else if (score == 0.0) grapeQuotientInfo.setNegative(grapeQuotientInfo.getNegative() + count.intValue());
+        else grapeQuotientInfo.setNeutral(grapeQuotientInfo.getNeutral() + count.intValue());
 
         return grapeQuotientInfo;
     }
