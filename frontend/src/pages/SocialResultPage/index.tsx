@@ -15,7 +15,7 @@ import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
 import SocialRelatedContents from '@/components/organisms/SocialResult/SocialRelatedContents';
-import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
+import { getDateToYYYYDDMM, getOneDaysAgoDate, getSevenDaysAgoDate } from '@/utils/date';
 import { getToken } from '@/utils/token';
 import { useAppSelector, useAppDispatch } from '@/hooks/storeHook';
 import { showToast } from '@/store/slices/toastSlice';
@@ -40,7 +40,7 @@ const SocialResultPage = () => {
 
   const [isBookmarked, setIsBookmarked] = useState(bookmark === keyword);
 
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(getOneDaysAgoDate());
   const [startDate, setStartDate] = useState<Date>(getSevenDaysAgoDate());
 
   const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =

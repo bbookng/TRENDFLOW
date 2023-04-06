@@ -14,7 +14,7 @@ import {
   SpaceTypography,
   TrendChartContentsWrapper,
 } from '@/pages/SocialResultPage/index.styles';
-import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
+import { getDateToYYYYDDMM, getOneDaysAgoDate, getSevenDaysAgoDate } from '@/utils/date';
 import { useGetComparisonAnalysisQuery, useGetSocialAnalysisQuery } from '@/apis/analyze';
 import ComparisonLineChart from '@/components/organisms/ComparisonResult/ComparisonLineChart';
 import * as S from './index.styles';
@@ -26,7 +26,7 @@ const ComparisonResultPage = () => {
 
   // 날짜
   const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(getOneDaysAgoDate());
 
   // 키워드1 소셜 분석
   const { data: keyword1SocialAnalysis, isSuccess: keyword1SocialAnalysisSuccess } =
