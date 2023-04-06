@@ -21,8 +21,8 @@ const DailyAnalysis = ({
   const todayInfo = socialAnalysis[6];
   const grapeBadgeProps = {
     count: `${todayInfo?.grapeQuotientInfo?.positive}%`,
-    changed: `${todayInfo?.compareInfo?.grape?.changed}%p`,
-    type: `${todayInfo?.compareInfo?.grape?.type}` as BadgeType,
+    changed: `${todayInfo?.compareInfo?.grapeQuotient?.changed}%p`,
+    type: `${todayInfo?.compareInfo?.grapeQuotient?.type}` as BadgeType,
     width: '120px',
   };
   const mentionBadgeProps = {
