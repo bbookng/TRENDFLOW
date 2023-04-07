@@ -20,6 +20,7 @@ public class FindRelationContentResponse {
     private Long id;
     private String social;
     private String code;
+    private String thumbnail;
     private String title;
     private String desc;
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
@@ -31,6 +32,7 @@ public class FindRelationContentResponse {
                 .id(id)
                 .social(social)
                 .code(code)
+                .thumbnail(source.getThumbnail())
                 .title(source.getTitle())
                 .desc(source.getDesc())
                 .date(source.getDate())

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.trendflow.analyze.global.redis.Social;
 import com.trendflow.analyze.global.redis.YoutubeSource;
+import com.trendflow.analyze.global.redis.YoutubueAnalyze;
 import com.trendflow.analyze.msa.dto.vo.Source;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -68,6 +69,27 @@ public class RedisConfig {
     }
 
     @Bean
+    public Jackson2JsonRedisSerializer youtubeAnalyzeObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .findAndRegisterModules()
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .registerModules(new JavaTimeModule());
+
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(YoutubueAnalyze.class);
+        serializer.setObjectMapper(objectMapper);
+
+//        TypeFactory typeFactory = objectMapper.getTypeFactory();
+//        CollectionType collectionType = typeFactory.constructCollectionType(List.class, YoutubueAnalyze.class);
+//        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(collectionType);
+
+        serializer.setObjectMapper(objectMapper);
+        return serializer;
+    }
+
+
+    @Bean
     public RedisTemplate<?, ?> redisYoutubeSourceTemplate(
             @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
             @Qualifier("youtubeSourceObjectMapper") Jackson2JsonRedisSerializer serializer) {
@@ -78,6 +100,13 @@ public class RedisConfig {
     public RedisTemplate<?, ?> redisSocialTemplate(
             @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
             @Qualifier("socialObjectMapper") Jackson2JsonRedisSerializer serializer) {
+        return getRedisTemplate(redisConnectionFactory, serializer);
+    }
+
+    @Bean
+    public RedisTemplate<?, ?> redisYoutubueAnalyzeTemplate(
+            @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
+            @Qualifier("youtubeAnalyzeObjectMapper") Jackson2JsonRedisSerializer serializer) {
         return getRedisTemplate(redisConnectionFactory, serializer);
     }
 

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CompareInfoVo {
     private String type;
-    private Integer changed;
+    private Double changed;
 }
