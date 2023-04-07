@@ -9,12 +9,12 @@ import {
 import { api } from '@/apis/utils/axios';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
-const port = window.location.href.split(':', 3)[2].substring(0, 4);
+// const port = window.location.href.split(':', 3)[2].substring(0, 4);
 
 export const analyzeApi = createApi({
   reducerPath: 'analyzeApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: port === '6006' ? 'http://localhost:6006/analyze/' : `${BASE_URL}/analyze/`,
+    baseUrl: `${BASE_URL}/analyze/`,
   }),
   tagTypes: ['analyze'],
   endpoints: (builder) => ({
