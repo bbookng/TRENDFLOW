@@ -218,9 +218,15 @@ public class KakaoAuthService {
             String kakaoUserId = String.valueOf(jsonNode.get("id").asLong());
             String name = jsonNode.get("kakao_account").get("profile").get("nickname").asText();
             String email = jsonNode.get("kakao_account").get("email").asText();
-            String gender = jsonNode.get("kakao_account").get("gender").asText();
-            String age = jsonNode.get("kakao_account").get("age_range").asText();
-            String birthday = jsonNode.get("kakao_account").get("birthday").asText();
+
+
+            String gender = "";
+            String age = "";
+            String birthday = "";
+            if (jsonNode.get("kakao_account").has("gender")) gender = jsonNode.get("kakao_account").get("gender").asText();
+            if (jsonNode.get("kakao_account").has("age")) gender = jsonNode.get("kakao_account").get("age_range").asText();
+            if (jsonNode.get("kakao_account").has("birthday")) gender = jsonNode.get("kakao_account").get("birthday").asText();
+
 
             return SocialUser.builder()
                     .userId(kakaoUserId)
