@@ -211,8 +211,8 @@ public class YoutubeService {
                     Integer score = jsonNode.get("result").asInt();
                     comment.setSentiment(score.doubleValue());
 
-                    if (score == 0) negative++;
-                    else if (score == 1) positive++;
+                    if (score == 0) positive++;
+                    else if (score == 1) negative++;
                     else neutral++;
                 }
 

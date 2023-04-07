@@ -230,7 +230,6 @@ public class AnalyzeService {
                 .orElseGet(() -> {
                     YoutubueAnalyze now = youtubeService.getYoutubeVideo(link);
                     youtubueAnalyzeRepository.save(key, now, 60000);
-
                     return now;
                 });
 
@@ -270,8 +269,6 @@ public class AnalyzeService {
                 });
 
         List<Payload.Comment> commentList =  youtubueAnalyze.getCommentList().stream().filter(comment -> comment.getSentiment() == code.doubleValue()).collect(Collectors.toList());
-
-        System.out.println(commentList);
 
         PageRequest pageRequest = PageRequest.of((page - 1), perPage);
         int start = (int) pageRequest.getOffset();
