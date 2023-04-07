@@ -20,6 +20,7 @@ export const Comment = styled.div`
 
 export const CommentTextBox = styled.div`
   width: 100%;
+  max-width: 1086px;
   font-weight: 400;
   font-size: 0.875rem;
   margin-bottom: 0.5rem;
