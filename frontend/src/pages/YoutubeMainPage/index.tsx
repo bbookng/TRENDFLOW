@@ -21,6 +21,7 @@ const YoutubeMainPage = () => {
   const { bestHotKeyword } = useAppSelector((state) => state);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [youtubeList, setYoutubeList] = useState<Array<SocialContentInterface>>([]);
+
   const getData = async (keyword: string) => {
     setIsLoading(true);
     const { data } = await getContents(
@@ -44,7 +45,7 @@ const YoutubeMainPage = () => {
   return (
     <>
       <S.SearchWrapper>
-        <SearchBar placeholder="키워드를 입력하세요" />
+        <SearchBar placeholder="유튜브 링크를 입력하세요" />
       </S.SearchWrapper>
       <S.Contents>
         <S.Left>

@@ -27,7 +27,7 @@ const YoutubeResultPage = () => {
         <S.TitleWrapper>
           <Typography variant="H3">유튜브 분석 레포트</Typography>
         </S.TitleWrapper>
-        <SearchBar placeholder="키워드를 입력하세요" searched={link} />
+        <SearchBar placeholder="유튜브 링크를 입력하세요" searched={link} />
       </TitleWrapper>
       <S.YoutubeInfo>
         <S.VideoInfo>
