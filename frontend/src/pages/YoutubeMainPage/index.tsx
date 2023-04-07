@@ -18,7 +18,6 @@ import YoutubeItemSkeleton from '@/pages/YoutubeMainPage/YoutubeItemSkeleton';
 const YoutubeMainPage = () => {
   const theme = useTheme();
   const navi = useNavigate();
-  const { bestHotKeyword } = useAppSelector((state) => state);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [youtubeList, setYoutubeList] = useState<Array<SocialContentInterface>>([]);
   const getData = async (keyword: string) => {
@@ -38,8 +37,8 @@ const YoutubeMainPage = () => {
   };
 
   useEffect(() => {
-    getData(bestHotKeyword);
-  }, [bestHotKeyword]);
+    getData('삼성');
+  }, []);
 
   return (
     <>
