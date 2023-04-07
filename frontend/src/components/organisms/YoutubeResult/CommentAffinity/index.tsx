@@ -13,6 +13,10 @@ function convertPercentage(value: number, total: number) {
 }
 
 const CommentAffinity = ({ positive, negative, neutral }: AffinityProps): React.ReactElement => {
+  console.log(positive);
+  console.log(negative);
+  console.log(neutral);
+
   return (
     <S.Wrapper>
       <S.Title>댓글 선호도 분석</S.Title>
