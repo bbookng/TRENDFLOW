@@ -29,11 +29,12 @@ const LineChart = ({ socialAnalysisData }: Partial<LineChartPropsInterface>) => 
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom' as const,
+        position: 'top' as const,
         labels: {
           font: { family: 'PRETENDARD', size: 14 },
           boxWidth: 20,
           boxHeight: 2,
+          color: theme.text,
         },
       },
       interaction: {
@@ -82,7 +83,7 @@ const LineChart = ({ socialAnalysisData }: Partial<LineChartPropsInterface>) => 
     datasets: [
       {
         label: '긍정',
-        data: socialAnalysisData?.map((data) => data.grapeQuotientInfo.positive),
+        data: socialAnalysisData?.map((data) => Number(data.grapeQuotientInfo.positive.toFixed(2))),
         borderColor: theme.positive,
         backgroundColor: theme.positive,
         pointBorderColor: theme.positive,
@@ -90,7 +91,7 @@ const LineChart = ({ socialAnalysisData }: Partial<LineChartPropsInterface>) => 
       },
       {
         label: '중립',
-        data: socialAnalysisData?.map((data) => data.grapeQuotientInfo.neutral),
+        data: socialAnalysisData?.map((data) => Number(data.grapeQuotientInfo.neutral.toFixed(2))),
         borderColor: theme.neutrality,
         backgroundColor: theme.neutrality,
         pointBorderColor: theme.neutrality,
@@ -98,7 +99,7 @@ const LineChart = ({ socialAnalysisData }: Partial<LineChartPropsInterface>) => 
       },
       {
         label: '부정',
-        data: socialAnalysisData?.map((data) => data.grapeQuotientInfo.negative),
+        data: socialAnalysisData?.map((data) => Number(data.grapeQuotientInfo.negative.toFixed(2))),
         borderColor: theme.negative,
         backgroundColor: theme.negative,
         pointBorderColor: theme.negative,

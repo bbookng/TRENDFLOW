@@ -6,20 +6,24 @@ import { ko } from 'date-fns/esm/locale';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useGetSocialAnalysisQuery } from '@/apis/analyze';
-import { useGetRelatedKeywordsQuery, useGetWordCloudKeywordsQuery } from '@/apis/keyword';
+import { useGetWordCloudKeywordsQuery } from '@/apis/keyword';
 import { useGetBookmarkQuery, usePostBookmarkMutation } from '@/apis/member';
 import { Star, StarFill } from '@/assets';
 import { Typography } from '@/components/atoms';
-import { SearchBar, BarChart } from '@/components/molecules';
-import RelatedKeyword from '@/components/organisms/SocialResult/RelatedKeyword';
+import { SearchBar } from '@/components/molecules';
 import TrendLineChart from '@/components/organisms/SocialResult/TrendLindChart';
 import CustomDatePicker from '@/components/organisms/SocialResult/CustomDatePicker';
 import SocialRelatedContents from '@/components/organisms/SocialResult/SocialRelatedContents';
-import { getDateToYYYYDDMM, getOneDaysAgoDate, getSevenDaysAgoDate } from '@/utils/date';
+import { getDateToYYYYDDMM, getOneMonthAgoDate, getOneDaysAgoDate } from '@/utils/date';
 import { getToken } from '@/utils/token';
 import { useAppSelector, useAppDispatch } from '@/hooks/storeHook';
 import { showToast } from '@/store/slices/toastSlice';
 import * as S from './index.styles';
+import BarStackedChart from '@/components/molecules/BarStackedChart';
+import ChartSkeleton from '@/components/molecules/BarStackedChart/Skeleton';
+import RelatedKeywordWordCloud from '@/components/organisms/SocialResult/RelatedKeywordWordCloud';
+import RelatedKeywordWordCloudSkeleton from '@/components/organisms/SocialResult/RelatedKeywordWordCloud/Skeleton';
+import TrendLineChartSkeleton from '@/components/organisms/SocialResult/TrendLindChart/Skeleton';
 
 const SocialResultPage = () => {
   const token = getToken();
@@ -27,11 +31,7 @@ const SocialResultPage = () => {
     state: { keyword },
   } = useLocation();
 
-  const {
-    data: bookmark,
-    error: bookmarkError,
-    isLoading: bookmarkLoading,
-  } = useGetBookmarkQuery(undefined, { refetchOnMountOrArgChange: false, skip: !token });
+  const { data: bookmark, isLoading: bookmarkLoading } = useGetBookmarkQuery();
 
   const {
     user: { isLoggedIn },
@@ -41,29 +41,23 @@ const SocialResultPage = () => {
   const [isBookmarked, setIsBookmarked] = useState(bookmark?.bookmark === keyword);
 
   const [endDate, setEndDate] = useState<Date>(getOneDaysAgoDate());
-  const [startDate, setStartDate] = useState<Date>(getSevenDaysAgoDate());
+  const [startDate, setStartDate] = useState<Date>(getOneMonthAgoDate());
 
-  const { data: wordCloudKeywords, isSuccess: isWordCloudKeywordsSuccess } =
-    useGetWordCloudKeywordsQuery(
-      { keyword },
-      {
-        refetchOnMountOrArgChange: false,
-        skip: !keyword,
-      }
-    );
+  const {
+    data: wordCloudKeywords,
+    isLoading: isWordCloudKeywordsLoading,
+    isSuccess: isWordCloudKeywordsSuccess,
+  } = useGetWordCloudKeywordsQuery({ keyword });
 
-  const { data: socialAnalysisData, isSuccess: isSocialAnalysisDataSuccess } =
-    useGetSocialAnalysisQuery(
-      {
-        keyword,
-        startDate: getDateToYYYYDDMM(startDate!),
-        endDate: getDateToYYYYDDMM(endDate!),
-      },
-      {
-        refetchOnMountOrArgChange: false,
-        skip: !keyword,
-      }
-    );
+  const {
+    data: socialAnalysisData,
+    isLoading: isSocialAnalysisDataLoading,
+    isSuccess: isSocialAnalysisDataSuccess,
+  } = useGetSocialAnalysisQuery({
+    keyword,
+    startDate: getDateToYYYYDDMM(startDate!),
+    endDate: getDateToYYYYDDMM(endDate!),
+  });
 
   const [postBookmark] = usePostBookmarkMutation();
 
@@ -120,28 +114,44 @@ const SocialResultPage = () => {
       <S.KeywordContentsWrapper>
         {/* 막대기 차트 */}
         <S.ChartWrapper>
-          <BarChart
-            labels={socialAnalysisData?.map((item) => item.date.slice(5))}
-            barLabel="언급량"
-            barData={socialAnalysisData?.map((item) => item.mentionCountInfo.total)}
-            lineLabel="피치 지수"
-            lineData={socialAnalysisData?.map((item) => item.grapeQuotientInfo.positive)}
-          />
+          {!isSocialAnalysisDataLoading && isWordCloudKeywordsSuccess ? (
+            <BarStackedChart
+              labels={socialAnalysisData?.map((item) => item.date.slice(5))}
+              barNaverLabel="네이버 언급량"
+              barNaverData={socialAnalysisData?.map((item) => item.mentionCountInfo.naver)}
+              barDaumLabel="다음 언급량"
+              barDaumData={socialAnalysisData?.map((item) => item.mentionCountInfo.daum)}
+              lineLabel="포도알 지수"
+              lineData={socialAnalysisData?.map((item) =>
+                Number(item.grapeQuotientInfo.grape.toFixed(2))
+              )}
+            />
+          ) : (
+            <ChartSkeleton />
+          )}
         </S.ChartWrapper>
 
         {/* 워드 클라우드 */}
         <S.RelatedKeywordContentsWrapper>
-          {isWordCloudKeywordsSuccess && <RelatedKeyword wordCloudKeywords={wordCloudKeywords} />}
+          {!isSocialAnalysisDataLoading && isWordCloudKeywordsSuccess ? (
+            <RelatedKeywordWordCloud wordCloudKeywords={wordCloudKeywords} />
+          ) : (
+            <RelatedKeywordWordCloudSkeleton />
+          )}
         </S.RelatedKeywordContentsWrapper>
       </S.KeywordContentsWrapper>
       {/* 긍부정, 트렌드 LineChart */}
       <S.FlexBox>
         <S.TrendChartContentsWrapper>
-          {isSocialAnalysisDataSuccess && (
+          {!isSocialAnalysisDataLoading && isWordCloudKeywordsSuccess ? (
             <TrendLineChart text="긍부정 추이" socialAnalysisData={socialAnalysisData} />
+          ) : (
+            <TrendLineChartSkeleton />
           )}
         </S.TrendChartContentsWrapper>
         <SocialRelatedContents
+          isSocialAnalysisDataLoading={isSocialAnalysisDataLoading}
+          isWordCloudKeywordsSuccess={isWordCloudKeywordsSuccess}
           keyword={keyword}
           startDate={getDateToYYYYDDMM(startDate as Date)}
           endDate={getDateToYYYYDDMM(endDate as Date)}

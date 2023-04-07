@@ -9,7 +9,7 @@ import * as S from './index.styles';
 import { useAppSelector } from '@/hooks/storeHook';
 import { SocialContentInterface } from '@/types/social';
 import { CONTENT_CODE } from '@/constants/code';
-import { getDateToYYYYDDMM, getSevenDaysAgoDate } from '@/utils/date';
+import { getDateToYYYYDDMM, getOneMonthAgoDate } from '@/utils/date';
 import { getContents } from '@/apis/analyze';
 import { Youtube2 } from '@/assets';
 import Svg from '@/components/atoms/Svg';
@@ -18,7 +18,6 @@ import YoutubeItemSkeleton from '@/pages/YoutubeMainPage/YoutubeItemSkeleton';
 const YoutubeMainPage = () => {
   const theme = useTheme();
   const navi = useNavigate();
-  const { bestHotKeyword } = useAppSelector((state) => state);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [youtubeList, setYoutubeList] = useState<Array<SocialContentInterface>>([]);
 
@@ -30,7 +29,7 @@ const YoutubeMainPage = () => {
       1,
       4,
       getDateToYYYYDDMM(new Date()),
-      getDateToYYYYDDMM(getSevenDaysAgoDate())
+      getDateToYYYYDDMM(getOneMonthAgoDate())
     );
     setYoutubeList(data);
     setTimeout(() => {
@@ -39,8 +38,8 @@ const YoutubeMainPage = () => {
   };
 
   useEffect(() => {
-    getData(bestHotKeyword);
-  }, [bestHotKeyword]);
+    getData('삼성');
+  }, []);
 
   return (
     <>
@@ -67,7 +66,7 @@ const YoutubeMainPage = () => {
                 해당 유튜브 링크에 대한 기본 정보와
               </Typography>
               <Typography variant="BASE" color={theme.text}>
-                댓글에 대한 선호도 분석을 해드립니다.
+                댓글의 선호도 분석을 해드립니다.
               </Typography>
             </S.TypoBox>
           </S.Wrapper>

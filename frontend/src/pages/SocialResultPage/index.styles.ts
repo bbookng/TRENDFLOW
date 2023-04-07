@@ -4,6 +4,7 @@ import { Img } from '@/components/atoms';
 import { Typography } from '@/components/atoms/Typography/index.styles';
 import { MEDIA_QUERY, BREAK_POINTS, MOBILE_MIN_WIDTH, MOBILE_MAX_WIDTH } from '@/constants/media';
 import { FONT_SIZE, FONT_WEIGHT } from '@/constants/styles';
+import { Skeleton } from '@/components/atoms/Skeleton/index.styles';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -60,6 +61,11 @@ export const DateSelectWrapper = styled.div`
 `;
 
 export const ChartWrapper = styled.div``;
+
+export const ChartSkeleton = styled(Skeleton)`
+  width: 100%;
+  height: 100%;
+`;
 export const Title = styled.div`
   font-size: ${FONT_SIZE.TITLE};
   font-weight: ${FONT_WEIGHT.TITLE};

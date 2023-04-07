@@ -14,10 +14,12 @@ import {
   SpaceTypography,
   TrendChartContentsWrapper,
 } from '@/pages/SocialResultPage/index.styles';
-import { getDateToYYYYDDMM, getOneDaysAgoDate, getSevenDaysAgoDate } from '@/utils/date';
+import { getDateToYYYYDDMM, getOneDaysAgoDate, getOneMonthAgoDate } from '@/utils/date';
 import { useGetComparisonAnalysisQuery, useGetSocialAnalysisQuery } from '@/apis/analyze';
 import ComparisonLineChart from '@/components/organisms/ComparisonResult/ComparisonLineChart';
 import * as S from './index.styles';
+import BarStackedChart from '@/components/molecules/BarStackedChart';
+import ChartSkeleton from '@/components/molecules/BarStackedChart/Skeleton';
 
 const ComparisonResultPage = () => {
   // 키워드
@@ -25,7 +27,7 @@ const ComparisonResultPage = () => {
   const { keyword1, keyword2 } = location.state;
 
   // 날짜
-  const [startDate, setStartDate] = useState<Date | null>(getSevenDaysAgoDate());
+  const [startDate, setStartDate] = useState<Date | null>(getOneMonthAgoDate());
   const [endDate, setEndDate] = useState<Date | null>(getOneDaysAgoDate());
 
   // 키워드1 소셜 분석
@@ -55,18 +57,18 @@ const ComparisonResultPage = () => {
     );
 
   // 비교 분석
-  const { data: comparisonAnalysis } = useGetComparisonAnalysisQuery(
-    {
-      keyword1,
-      keyword2,
-      startDate: getDateToYYYYDDMM(startDate!),
-      endDate: getDateToYYYYDDMM(endDate!),
-    },
-    {
-      refetchOnMountOrArgChange: true,
-    }
-  );
-
+  const { data: comparisonAnalysis, isSuccess: comparisonAnalysisSuccess } =
+    useGetComparisonAnalysisQuery(
+      {
+        keyword1,
+        keyword2,
+        startDate: getDateToYYYYDDMM(startDate!),
+        endDate: getDateToYYYYDDMM(endDate!),
+      },
+      {
+        refetchOnMountOrArgChange: true,
+      }
+    );
   return (
     <S.Wrapper>
       <S.TitleWrapper>
@@ -111,47 +113,74 @@ const ComparisonResultPage = () => {
       <S.ChartsWrapper>
         <S.ChartWrapper>
           <Label>{keyword1}</Label>
-          <BarChart
-            labels={keyword1SocialAnalysis?.map((item) => item.date.slice(5))}
-            barLabel="언급량"
-            barData={keyword1SocialAnalysis?.map((item) => item.mentionCountInfo.total)}
-            lineLabel="피치 지수"
-            lineData={keyword2SocialAnalysis?.map((item) => item.grapeQuotientInfo.positive)}
-            barColor={PALETTE.RED400}
-            desktopWidth="100%"
-          />
+          {keyword1SocialAnalysisSuccess &&
+          keyword2SocialAnalysisSuccess &&
+          comparisonAnalysisSuccess ? (
+            <BarStackedChart
+              labels={keyword1SocialAnalysis?.map((item) => item.date.slice(5))}
+              barNaverLabel="네이버 언급량"
+              barNaverData={keyword1SocialAnalysis?.map((item) => item.mentionCountInfo.naver)}
+              barDaumLabel="다음 언급량"
+              barDaumData={keyword1SocialAnalysis?.map((item) => item.mentionCountInfo.daum)}
+              lineLabel="포도알 지수"
+              lineData={keyword1SocialAnalysis?.map((item) =>
+                Number(item.grapeQuotientInfo.grape.toFixed(2))
+              )}
+              desktopWidth="100%"
+            />
+          ) : (
+            <ChartSkeleton desktopWidth="100%" />
+          )}
         </S.ChartWrapper>
         <S.ChartWrapper>
           <Label>{keyword2}</Label>
-          <BarChart
-            labels={keyword2SocialAnalysis?.map((item) => item.date.slice(5))}
-            barLabel="언급량"
-            barData={keyword2SocialAnalysis?.map((item) => item.mentionCountInfo.total)}
-            lineLabel="피치 지수"
-            lineData={keyword2SocialAnalysis?.map((item) => item.grapeQuotientInfo.positive)}
-            barColor={PALETTE.BLUE400}
-            desktopWidth="100%"
-          />
+          {keyword1SocialAnalysisSuccess &&
+          keyword2SocialAnalysisSuccess &&
+          comparisonAnalysisSuccess ? (
+            <BarStackedChart
+              labels={keyword2SocialAnalysis?.map((item) => item.date.slice(5))}
+              barNaverLabel="네이버 언급량"
+              barNaverData={keyword2SocialAnalysis?.map((item) => item.mentionCountInfo.naver)}
+              barDaumLabel="다음 언급량"
+              barDaumData={keyword2SocialAnalysis?.map((item) => item.mentionCountInfo.daum)}
+              lineLabel="포도알 지수"
+              lineData={keyword2SocialAnalysis?.map((item) =>
+                Number(item.grapeQuotientInfo.grape.toFixed(2))
+              )}
+              desktopWidth="100%"
+            />
+          ) : (
+            <ChartSkeleton desktopWidth="100%" />
+          )}
         </S.ChartWrapper>
       </S.ChartsWrapper>
 
       {/* 꺾은선 차트 */}
-      {comparisonAnalysis && (
-        <TrendChartContentsWrapper>
-          <ComparisonLineChart
-            title="피치 지수 비교"
-            keyword1={keyword1}
-            keyword2={keyword2}
-            comparisonData={comparisonAnalysis!.grapeQuotientCompare}
-          />
-          <ComparisonLineChart
-            title="언급량 비교"
-            keyword1={keyword1}
-            keyword2={keyword2}
-            comparisonData={comparisonAnalysis!.mentionCountCompare}
-          />
-        </TrendChartContentsWrapper>
-      )}
+      <TrendChartContentsWrapper>
+        {keyword1SocialAnalysisSuccess &&
+        keyword2SocialAnalysisSuccess &&
+        comparisonAnalysisSuccess ? (
+          <>
+            <ComparisonLineChart
+              title="포도알 지수 비교"
+              keyword1={keyword1}
+              keyword2={keyword2}
+              comparisonData={comparisonAnalysis!.grapeQuotientCompare}
+            />
+            <ComparisonLineChart
+              title="언급량 비교"
+              keyword1={keyword1}
+              keyword2={keyword2}
+              comparisonData={comparisonAnalysis!.mentionCountCompare}
+            />
+          </>
+        ) : (
+          <>
+            <ChartSkeleton />
+            <ChartSkeleton />
+          </>
+        )}
+      </TrendChartContentsWrapper>
     </S.Wrapper>
   );
 };
