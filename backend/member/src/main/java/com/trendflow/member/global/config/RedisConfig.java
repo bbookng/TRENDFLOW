@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.trendflow.member.global.redis.session.LoginRefreshToken;
 import com.trendflow.member.global.redis.session.LoginAccessToken;
-import com.trendflow.member.global.redis.session.LogoutAccessToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +36,7 @@ public class RedisConfig {
     @Value("${spring.redis.cache.password}")
     private String cachePassword;
 
+
     @Bean
     public Jackson2JsonRedisSerializer loginAccessTokenObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper()
@@ -50,14 +51,14 @@ public class RedisConfig {
     }
 
     @Bean
-    public Jackson2JsonRedisSerializer logoutAccessTokenObjectMapper() {
+    public Jackson2JsonRedisSerializer loginRefreshTokenObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper()
                 .findAndRegisterModules()
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .registerModules(new JavaTimeModule());
-        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(LogoutAccessToken.class);
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(LoginRefreshToken.class);
         serializer.setObjectMapper(objectMapper);
         return serializer;
     }
@@ -82,18 +83,25 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisSessionTemplate(
+    public RedisTemplate<?, ?> redisSessionLoginAccessTokenTemplate(
             @Qualifier("redisSessionConnectionFactory") RedisConnectionFactory redisConnectionFactory,
             @Qualifier("loginAccessTokenObjectMapper") Jackson2JsonRedisSerializer serializer) {
         return getRedisTemplate(redisConnectionFactory, serializer);
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisCacheTemplate(
-            @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
-            @Qualifier("logoutAccessTokenObjectMapper") Jackson2JsonRedisSerializer serializer) {
+    public RedisTemplate<?, ?> redisSessionLoginRefreshTokenTemplate(
+            @Qualifier("redisSessionConnectionFactory") RedisConnectionFactory redisConnectionFactory,
+            @Qualifier("loginRefreshTokenObjectMapper") Jackson2JsonRedisSerializer serializer) {
         return getRedisTemplate(redisConnectionFactory, serializer);
     }
+
+//    @Bean
+//    public RedisTemplate<?, ?> redisCacheTemplate(
+//            @Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionFactory,
+//            @Qualifier("loginRefreshTokenObjectMapper") Jackson2JsonRedisSerializer serializer) {
+//        return getRedisTemplate(redisConnectionFactory, serializer);
+//    }
 
     private static RedisTemplate<?, ?> getRedisTemplate(RedisConnectionFactory redisConnectionFactory, Jackson2JsonRedisSerializer serializer) {
         RedisTemplate<byte[], byte[]> redisSessionTemplate = new RedisTemplate<>();
