@@ -1,39 +1,82 @@
 package com.trendflow.common.local.controller;
 
-import com.trendflow.common.global.code.CommonCode;
 import com.trendflow.common.global.exception.NotFoundException;
-import com.trendflow.common.global.response.BasicResponse;
+import com.trendflow.common.local.dto.request.GetSourceRequest;
 import com.trendflow.common.local.dto.response.FindLocalCodeResponse;
+import com.trendflow.common.local.dto.response.FindRelateCodeResponse;
+import com.trendflow.common.local.dto.response.GetSourceResponse;
 import com.trendflow.common.local.service.LocalCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/localcode")
+@RequestMapping("/common")
 public class LocalCodeController {
-
     private final LocalCodeService localCodeService;
 
-    @GetMapping("/{groupCode}")
-    public ResponseEntity<BasicResponse> findAllLocalCode(@PathVariable(name = "groupCode") String groupCode){
+    @GetMapping("/group/{groupCode}")
+    public ResponseEntity<List<FindLocalCodeResponse>> findAllLocalCode(@PathVariable(name = "groupCode") String groupCode){
         log.info("findAllLocalCode - Call");
 
         try {
             List<FindLocalCodeResponse> findLocalCodeResponseList = localCodeService.findAllLocalCode(groupCode);
-            return ResponseEntity.ok().body(BasicResponse.Body(CommonCode.SUCCESS, findLocalCodeResponseList));
+            return ResponseEntity.ok().body(findLocalCodeResponseList);
         } catch (NotFoundException e){
-            return ResponseEntity.badRequest().body(BasicResponse.Body(CommonCode.FAIL, null));
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body(BasicResponse.Body(CommonCode.FAIL, null));
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
+    @GetMapping("/local/{name}")
+    public ResponseEntity<FindLocalCodeResponse> findLocalCode(@PathVariable(name = "name") String name){
+        log.info("findLocalCode - Call");
+
+        try {
+            FindLocalCodeResponse findLocalCodeResponse = localCodeService.findLocalCode(name);
+            return ResponseEntity.ok().body(findLocalCodeResponse);
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
+    @GetMapping("/relate/{name}")
+    public ResponseEntity<List<FindRelateCodeResponse>> findRelateCode(@PathVariable(name = "name") String name){
+        log.info("findRelateCode - Call");
+
+        try {
+            List<FindRelateCodeResponse> findRelateCodeResponseList = localCodeService.findRelateCode(name);
+            return ResponseEntity.ok().body(findRelateCodeResponseList);
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
+    @PostMapping("/source")
+    public ResponseEntity<List<GetSourceResponse>> getSource(@RequestBody List<Long> sourceIdList){
+        log.info("getSource - Call");
+
+        try {
+            List<GetSourceResponse> getSourceResponseList = localCodeService.getSource(sourceIdList);
+            return ResponseEntity.ok().body(getSourceResponseList);
+        } catch (NotFoundException e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 }

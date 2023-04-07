@@ -1,7 +1,8 @@
 package com.trendflow.member.global.redis.session;
 
-import lombok.*;
-import org.springframework.data.redis.core.RedisHash;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 import javax.persistence.Id;
 import java.time.LocalDateTime;
@@ -12,8 +13,8 @@ import java.time.LocalDateTime;
 public class LoginAccessToken {
     @Id
     private String accessToken;
+    private LocalDateTime accessExpire;
     private String refreshToken;
     private Long memberId;
-    private Long expiration;
-    private LocalDateTime expire;
+    private Boolean isValid;
 }
