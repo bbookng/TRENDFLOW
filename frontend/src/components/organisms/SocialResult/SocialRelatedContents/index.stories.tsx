@@ -36,11 +36,19 @@ export default {
 } as ComponentMeta<typeof SocialRelatedContents>;
 
 const Template: ComponentStory<typeof SocialRelatedContents> = ({
+  isSocialAnalysisDataLoading,
+  isWordCloudKeywordsSuccess,
   keyword,
   startDate,
   endDate,
 }: SocialRelatedContentsInterface) => (
-  <SocialRelatedContents keyword={keyword} startDate={startDate} endDate={endDate} />
+  <SocialRelatedContents
+    isSocialAnalysisDataLoading={isSocialAnalysisDataLoading}
+    isWordCloudKeywordsSuccess={isWordCloudKeywordsSuccess}
+    keyword={keyword}
+    startDate={startDate}
+    endDate={endDate}
+  />
 );
 
 export const Primary = Template.bind({});

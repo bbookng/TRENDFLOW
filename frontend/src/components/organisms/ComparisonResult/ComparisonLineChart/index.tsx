@@ -40,7 +40,7 @@ const ComparisonLineChart = ({
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom' as const,
+        position: 'top' as const,
         labels: {
           font: { family: 'PRETENDARD', size: 14 },
           boxWidth: 20,
@@ -89,7 +89,7 @@ const ComparisonLineChart = ({
   };
 
   const data = {
-    labels,
+    labels: labels.map((item) => item.slice(5)),
     datasets: [
       {
         label: keyword1,

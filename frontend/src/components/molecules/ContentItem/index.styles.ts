@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { PALETTE } from '@/constants/palette';
 import { FONT_WEIGHT } from '@/constants/styles';
 
 export const Wrapper = styled.div`
@@ -19,6 +18,7 @@ export const Thumbnail = styled.img`
 `;
 
 export const TextContainer = styled.div`
+  flex: 1;
   color: ${({ theme }) => theme.text};
 `;
 

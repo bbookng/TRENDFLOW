@@ -49,7 +49,7 @@ const SocialMainPage = () => {
                 여러 소셜 미디어를 종합하여 분석한{' '}
               </Typography>
               <Typography variant="BASE" color={theme.text}>
-                언급량, 긍정 지수 등등 알려드랴용
+                결과를 한 눈에 보여드려요.
               </Typography>
             </S.TypoBox>
           </S.Wrapper>

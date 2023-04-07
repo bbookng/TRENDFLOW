@@ -17,6 +17,7 @@ const CommentAnalysis = ({ link }: Props): React.ReactElement => {
   const getData = async () => {
     setIsLoading(true);
     const { data } = await getComments(link, code, page, 10);
+    if (data === '') return;
     setComments((prev) => prev.concat(data));
     setIsLoading(false);
   };
@@ -41,7 +42,6 @@ const CommentAnalysis = ({ link }: Props): React.ReactElement => {
     setPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [link]);
-
   return (
     <S.Wrapper>
       <S.Title>댓글 분석</S.Title>
@@ -57,7 +57,7 @@ const CommentAnalysis = ({ link }: Props): React.ReactElement => {
             중립
           </S.FilterBtn>
         </S.Filter>
-        {comments?.map((comment, index) => {
+        {comments.map((comment, index) => {
           return (
             <CommentItem
               key={index}

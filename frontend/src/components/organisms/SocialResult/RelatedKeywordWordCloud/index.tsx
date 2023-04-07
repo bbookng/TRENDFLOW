@@ -3,13 +3,11 @@ import { useMemo } from 'react';
 import _ from 'lodash';
 import * as S from './index.styles';
 import { WordCloudInterface } from '@/types/keyword';
-import { RankingListItemInterface } from '@/types/ranking';
-import { wordCloud } from '@/mocks/data';
 
 interface Props {
   wordCloudKeywords: WordCloudInterface[];
 }
-const RelatedKeyword = ({ wordCloudKeywords }: Props) => {
+const RelatedKeywordWordCloud = ({ wordCloudKeywords }: Props) => {
   // 워드클라우드 deppCopy
   const wordCloudData = useMemo(() => {
     return _.cloneDeep(wordCloudKeywords);
@@ -32,4 +30,4 @@ const RelatedKeyword = ({ wordCloudKeywords }: Props) => {
   );
 };
 
-export default RelatedKeyword;
+export default RelatedKeywordWordCloud;

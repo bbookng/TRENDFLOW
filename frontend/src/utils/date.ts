@@ -4,9 +4,9 @@ export const getOneDaysAgoDate = (): Date => {
   return pastDate;
 };
 
-export const getSevenDaysAgoDate = (): Date => {
+export const getOneMonthAgoDate = (): Date => {
   const pastDate = new Date();
-  pastDate.setDate(pastDate.getDate() - 7);
+  pastDate.setDate(pastDate.getDate() - 30);
   return pastDate;
 };
 

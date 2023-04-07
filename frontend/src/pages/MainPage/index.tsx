@@ -7,10 +7,9 @@ import { HotKeywords, NoBookmark, DailyAnalysis } from '@/components/organisms/M
 import HotKeywordsSkeleton from '@/components/organisms/MainPage/HotKeywords/Skeleton';
 import { useGetBookmarkQuery } from '@/apis/member';
 import { getToken } from '@/utils/token';
-import { getDateToYYYYDDMM, getOneDaysAgoDate, getSevenDaysAgoDate } from '@/utils/date';
-import { useAppDispatch } from '@/hooks/storeHook';
-import { setHotKeyword } from '@/store/slices/keywordSlice';
+import { getDateToYYYYDDMM, getOneDaysAgoDate, getOneMonthAgoDate } from '@/utils/date';
 import * as S from './index.styles';
+import DailyAnalysisSkeleton from '@/components/organisms/MainPage/DailyAnalysis/Skeleton';
 
 const MainPage = () => {
   const token = getToken();
@@ -37,7 +36,7 @@ const MainPage = () => {
   } = useGetSocialAnalysisQuery(
     {
       keyword: bookmarkSuccess ? bookmark!.bookmark : '',
-      startDate: getDateToYYYYDDMM(getSevenDaysAgoDate()),
+      startDate: getDateToYYYYDDMM(getOneMonthAgoDate()),
       endDate: getDateToYYYYDDMM(getOneDaysAgoDate()),
     },
     {
@@ -60,13 +59,24 @@ const MainPage = () => {
     }
   );
 
-  console.log('북마크', bookmark, bookmarkLoading, bookmarkError);
-  console.log('소셜', socialAnalysis, socialAnalysisLoading, socialAnalysisError);
-  console.log('연관 키워드', relatedKeywords, relatedKeywordsLoading, relatedKeywordsError);
-  // useEffect(() => {
-  //   dispatch(setHotKeyword(hotKeywords?.week[0].keyword));
-  // }, [hotKeywords]);
-
+  function a() {
+    if (token) {
+      if (socialAnalysis && relatedKeywords) {
+        return (
+          <DailyAnalysis
+            keyword={bookmark!.bookmark}
+            socialAnalysis={socialAnalysis!}
+            relatedKeywords={relatedKeywords!}
+          />
+        );
+        // eslint-disable-next-line no-else-return
+      } else {
+        return <DailyAnalysisSkeleton keyword="키워드" />;
+      }
+    }
+    // eslint-disable-next-line no-useless-return, consistent-return
+    return;
+  }
   return (
     <S.Wrapper>
       <SearchBar placeholder="키워드를 입력하세요" />
@@ -87,13 +97,7 @@ const MainPage = () => {
 
       {!token && !bookmark && <NoBookmark />}
 
-      {socialAnalysis && relatedKeywords && (
-        <DailyAnalysis
-          keyword={bookmark!.bookmark}
-          socialAnalysis={socialAnalysis!}
-          relatedKeywords={relatedKeywords!}
-        />
-      )}
+      {a()}
     </S.Wrapper>
   );
 };

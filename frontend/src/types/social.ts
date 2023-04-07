@@ -10,6 +10,7 @@ export interface SocialAnalysisItemInterface {
     positive: number;
     negative: number;
     neutral: number;
+    grape: number;
   };
   compareInfo: {
     mention: {
