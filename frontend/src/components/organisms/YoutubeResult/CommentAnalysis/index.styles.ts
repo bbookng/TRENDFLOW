@@ -70,3 +70,5 @@ export const FilterBtn = styled.span<FBProps>`
       : PALETTE.BLACK100};
   font-weight: ${({ isClick }) => isClick && '700'};
 `;
+
+export const NoComment = styled.div``;

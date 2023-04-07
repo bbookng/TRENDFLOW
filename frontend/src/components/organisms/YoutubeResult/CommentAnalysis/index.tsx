@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CommentItem } from '@/components/molecules';
@@ -57,18 +58,28 @@ const CommentAnalysis = ({ link }: Props): React.ReactElement => {
             중립
           </S.FilterBtn>
         </S.Filter>
-        {comments.map((comment, index) => {
-          return (
-            <CommentItem
-              key={index}
-              comment={comment.comment}
-              upCount={comment.upCount}
-              downCount={comment.downCount}
-              isLast={index === comments.length - 1}
-              nextPage={nextPage}
-            />
-          );
-        })}
+        {comments.length === 0 ? (
+          <S.NoComment>
+            {code === 0
+              ? '긍정 댓글이 없습니다.'
+              : code === 1
+              ? '부정 댓글이 없습니다.'
+              : '중립 댓글이 없습니다.'}
+          </S.NoComment>
+        ) : (
+          comments.map((comment, index) => {
+            return (
+              <CommentItem
+                key={index}
+                comment={comment.comment}
+                upCount={comment.upCount}
+                downCount={comment.downCount}
+                isLast={index === comments.length - 1}
+                nextPage={nextPage}
+              />
+            );
+          })
+        )}
       </S.CommentPaper>
     </S.Wrapper>
   );
