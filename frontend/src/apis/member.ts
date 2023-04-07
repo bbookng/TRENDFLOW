@@ -3,12 +3,12 @@ import { PostBookmarkReqInterface } from '@/types/member';
 import { getToken } from '@/utils/token';
 
 const { VITE_API_URL: BASE_URL } = import.meta.env;
-const port = window.location.href.split(':', 3)[2].substring(0, 4);
+// const port = window.location.href.split(':', 3)[2].substring(0, 4);
 
 export const memberApi = createApi({
   reducerPath: 'memberApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: port === '6006' ? 'http://localhost:6006/member/' : `${BASE_URL}/member/`,
+    baseUrl: `${BASE_URL}/member/`,
     credentials: 'include',
     prepareHeaders: (headers) => {
       const token = getToken();
