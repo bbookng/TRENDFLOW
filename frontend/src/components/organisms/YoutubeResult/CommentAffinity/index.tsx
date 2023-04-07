@@ -13,10 +13,6 @@ function convertPercentage(value: number, total: number) {
 }
 
 const CommentAffinity = ({ positive, negative, neutral }: AffinityProps): React.ReactElement => {
-  console.log(positive);
-  console.log(negative);
-  console.log(neutral);
-
   return (
     <S.Wrapper>
       <S.Title>댓글 선호도 분석</S.Title>
@@ -29,15 +25,15 @@ const CommentAffinity = ({ positive, negative, neutral }: AffinityProps): React.
         <S.ChartLabels>
           <S.ChartLabel kind="positive">
             <S.Circle kind="positive"></S.Circle>
-            <S.Span>긍정 {positive}%</S.Span>
+            <S.Span>긍정 {positive?.toFixed(2)}%</S.Span>
           </S.ChartLabel>
           <S.ChartLabel kind="negative">
             <S.Circle kind="negative"></S.Circle>
-            <S.Span>부정 {negative}%</S.Span>
+            <S.Span>부정 {negative?.toFixed(2)}%</S.Span>
           </S.ChartLabel>
           <S.ChartLabel kind="neutral">
             <S.Circle kind="neutral"></S.Circle>
-            <S.Span>중립 {neutral}%</S.Span>
+            <S.Span>중립 {neutral?.toFixed(2)}%</S.Span>
           </S.ChartLabel>
         </S.ChartLabels>
       </S.AffinityPaper>
