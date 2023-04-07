@@ -4,10 +4,11 @@ import { ROUTER_PATH } from '@/constants/path';
 
 import MainPage from '@/pages/MainPage';
 import LandingPage from '@/pages/LandingPage';
-import BaseLayout from '@/Layout/BaseLayout';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 import LoginPage from '@/pages/LoginPage';
 import Kakao from '@/pages/LoginPage/platform/Kakao';
+import BaseLayout from '@/layouts/BaseLayout';
 
 const SocialMainPage = lazy(() => import('@/pages/SocialMainPage'));
 const SocialResultPage = lazy(() => import('@/pages/SocialResultPage'));
@@ -15,7 +16,6 @@ const YoutubeMainPage = lazy(() => import('@/pages/YoutubeMainPage'));
 const YoutubeResultPage = lazy(() => import('@/pages/YoutubeResultPage'));
 const ComparisonMainPage = lazy(() => import('@/pages/ComparisonMainPage'));
 const ComparisonResultPage = lazy(() => import('@/pages/ComparisonResultPage'));
-const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 const router = createBrowserRouter([
   {

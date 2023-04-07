@@ -1,17 +1,26 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import ContentItem from '@/components/molecules/ContentItem';
-import Typography from '@/components/atoms/Typography';
+import ContentItem, { ContentItemProps } from '@/components/molecules/ContentItem';
+import { SocialContentInterface } from '@/types/social';
+import { CONTENT_CODE } from '@/constants/code';
+import { Paper } from '@/components/atoms';
+import ThemeComponent from '@/components/@shared/Storybook/ThemeComponent';
 
 export default {
-  title: 'Molecules/ContentItem',
+  title: 'molecules/ContentItem',
   component: ContentItem,
 } as ComponentMeta<typeof ContentItem>;
 
-const Template: ComponentStory<typeof ContentItem> = () => (
-  <ContentItem>
-    <Typography variant="H1">안녕하세요</Typography>
-  </ContentItem>
+const Template: ComponentStory<typeof ContentItem> = ({
+  content,
+  nextPage,
+  isLast,
+}: ContentItemProps) => (
+  <ThemeComponent>
+    <Paper>
+      <ContentItem content={content} nextPage={nextPage} isLast={isLast} />
+    </Paper>
+  </ThemeComponent>
 );
 
-export const ContentItemTemplate = Template.bind({});
-ContentItemTemplate.args = {};
+export const EmptyTemplate = Template.bind({});
+EmptyTemplate.args = {};

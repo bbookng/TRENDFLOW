@@ -28,7 +28,7 @@ const Navbar = () => {
   const {
     isDark,
     isNavbar,
-    user: { isLoggedIn },
+    user: { userName, isLoggedIn },
   } = useAppSelector((state) => state);
   const [open, setOpen] = useState(false);
   const navi = useNavigate();
@@ -45,7 +45,7 @@ const Navbar = () => {
         </S.NavItem>
       ))}
       <S.NavUser isLogin={isLoggedIn} onClick={handleClickBtn}>
-        {isLoggedIn ? '반갑습니다, 에헴띠님!' : '로그인'}
+        {isLoggedIn ? `반갑습니다, ${userName}님!` : '로그인'}
       </S.NavUser>
       {open && (
         <LoginModal handleClickModalClose={() => setOpen(false)} width="400px" height="360px" />

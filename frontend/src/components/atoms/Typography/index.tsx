@@ -1,5 +1,5 @@
 /* eslint-disable react/require-default-props */
-import { ElementType } from 'react';
+import React, { ElementType } from 'react';
 import * as S from './index.styles';
 
 export interface TypographyPropsInterface {
@@ -9,6 +9,13 @@ export interface TypographyPropsInterface {
   weight?: string;
 }
 
+/**
+ *
+ * @param {React.ReactNode} children
+ * @param {string} variant font-size
+ * @param {string?} color color
+ * @param {string} weight font-weight
+ */
 const Typography = (props: TypographyPropsInterface) => {
   const { children, variant } = props;
 

@@ -1,25 +1,26 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-
 import { PALETTE } from '@/constants/palette';
 import { BORDER_RADIUS, BOX_SHADOW } from '@/constants/styles';
-
 import { BadgePropsInterface } from '@/components/atoms/Badge';
 
-const backgroundColorList = {
-  red: css`
+export const badgeColorList = {
+  up: css`
+    color: ${PALETTE.RED400};
     background-color: ${PALETTE.RED100};
   `,
-  blue: css`
+  down: css`
+    color: ${PALETTE.BLUE400};
     background-color: ${PALETTE.BLUE100};
   `,
-  purple: css`
+  same: css`
+    color: ${PALETTE.BRAND400};
     background-color: ${PALETTE.BRAND100};
   `,
 };
 
 export const Badge = styled.div<Partial<BadgePropsInterface>>`
-  ${({ color }) => color && backgroundColorList[color]}
+  ${({ type }) => type && badgeColorList[type]}
   width: ${({ width }) => width};
   height: ${({ width }) => width};
 
