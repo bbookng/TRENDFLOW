@@ -1,12 +1,12 @@
 export const getOneDaysAgoDate = (): Date => {
   const pastDate = new Date();
-  pastDate.setDate(pastDate.getDate() - 1);
+  pastDate.setDate(pastDate.getDate() - 3);
   return pastDate;
 };
 
 export const getOneMonthAgoDate = (): Date => {
   const pastDate = new Date();
-  pastDate.setDate(pastDate.getDate() - 30);
+  pastDate.setDate(pastDate.getDate() - 32);
   return pastDate;
 };
 
