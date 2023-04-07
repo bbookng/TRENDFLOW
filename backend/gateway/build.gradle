@@ -32,7 +32,7 @@ dependencies {
 	// eureka
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	// Security
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.7.9'
+//	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.7.9'
 	// Openfeign
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	// gateway
