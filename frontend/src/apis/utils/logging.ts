@@ -1,4 +1,4 @@
-import { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 interface LogOnDevInterface {
   log: (msg: any, color?: string) => void;

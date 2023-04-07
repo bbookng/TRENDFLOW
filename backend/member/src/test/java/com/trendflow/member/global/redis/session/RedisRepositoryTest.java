@@ -1,11 +1,12 @@
 package com.trendflow.member.global.redis.session;
 
+import com.trendflow.member.global.exception.NotFoundException;
+import com.trendflow.member.member.entity.Token;
+import com.trendflow.member.member.repository.TokenRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,36 +14,49 @@ import static org.junit.jupiter.api.Assertions.*;
 class RedisRepositoryTest {
 
     @Autowired
-    private LoginAccessTokenRepository loginAccessTokenRepository;
+    private LoginRefreshTokenRepository loginRefreshTokenRepository;
     @Autowired
-    private LogoutAccessTokenRepository logoutAccessTokenRepository;
+    private TokenRepository tokenRepository;
 
     @Test
     @Transactional
     void redisSessionTest() {
-        loginAccessTokenRepository.save(LoginAccessToken.builder()
-                .accessToken("accessTokenTest")
-                .refreshToken("refreshTokenTest")
-                .memberId(100L)
-                .expiration(10000L)
-                .build());
+        try {
+            loginRefreshTokenRepository.saveLogin(LoginRefreshToken.builder()
+                    .accessToken("accessTokenTest")
+                    .refreshToken("refreshTokenTest")
+                    .memberId(100L)
+                    .accessTokenExpire(60)
+                    .refreshTokenExpire(120)
+                    .build());
 
-        LoginAccessToken loginAccessToken = loginAccessTokenRepository.findById("accessTokenTest").get();
-        assertEquals(loginAccessToken.getExpire().getClass().getName(), "java.time.LocalDateTime");
+            LoginRefreshToken loginRefreshToken = loginRefreshTokenRepository.findById("refreshTokenTest")
+                    .orElseThrow(() -> new NotFoundException());
+
+            System.out.println("loginRefreshToken = " + loginRefreshToken);
+
+            assertTrue(true);
+        } catch (NotFoundException e){
+            assertTrue(false);
+        }
     }
 
     @Test
-//    @Transactional
-    void redisCacheTest() {
-        logoutAccessTokenRepository.save(LogoutAccessToken.builder()
-                .accessToken("accessTokenTest")
-                .memberId(100L)
-                .expiration(10000L)
-                .expire(LocalDateTime.now())
-                .build());
+    void redisSessionSearchTest() {
+        try {
+            Token token = tokenRepository.findById(21L)
+                    .orElseThrow(() -> new NotFoundException());
+            LoginRefreshToken loginRefreshToken = loginRefreshTokenRepository.findById("5fpaFEvVruQ2LYikX2Z88IG3TyIil9_2ckBQlA_GCj1zTQAAAYcm0tLu")
+                    .orElseThrow(() -> new NotFoundException());
 
-        LogoutAccessToken logoutAccessToken = logoutAccessTokenRepository.findById("accessTokenTest").get();
-        assertEquals(logoutAccessToken.getExpire().getClass().getName(), "java.time.LocalDateTime");
+            System.out.println("loginRefreshToken = " + loginRefreshToken);
+        } catch (NotFoundException e){
+            assertTrue(false);
+        }
     }
 
+    @Test
+    @Transactional
+    void redisCacheTest() {
+    }
 }

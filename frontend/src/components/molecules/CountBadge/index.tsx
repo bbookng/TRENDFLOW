@@ -1,11 +1,10 @@
+import Badge, { BadgePropsInterface } from '@/components/atoms/Badge';
 import * as S from './index.styles';
 
-import Badge, { BadgePropsInterface } from '@/components/atoms/Badge';
-
-const CountBadge = ({ children, width, color }: BadgePropsInterface) => {
+const CountBadge = ({ children, width, type }: BadgePropsInterface) => {
   return (
-    <Badge width={width} color={color}>
-      <S.CountText variant="H2" color={color} weight="700">
+    <Badge width={width} type={type}>
+      <S.CountText variant="H2" type={type} weight="700">
         {children}
       </S.CountText>
     </Badge>

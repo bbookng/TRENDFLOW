@@ -11,29 +11,30 @@ import {
 import { useTheme } from '@emotion/react';
 import * as S from './index.styles';
 import { PALETTE } from '@/constants/palette';
-import { Paper } from '@/components/atoms';
-
-interface LineChartInterface {
-  labels: string[];
-}
+import { SocialAnalysisItemInterface } from '@/types/social';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
-const LineChart = () => {
+interface LineChartPropsInterface {
+  socialAnalysisData: SocialAnalysisItemInterface[];
+}
+
+const LineChart = ({ socialAnalysisData }: Partial<LineChartPropsInterface>) => {
   const theme = useTheme();
 
-  const labels = ['January', 'February', 'March', 'April', 'May'];
+  const labels = socialAnalysisData?.map((data) => data.date.slice(5));
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom' as const,
+        position: 'top' as const,
         labels: {
           font: { family: 'PRETENDARD', size: 14 },
           boxWidth: 20,
           boxHeight: 2,
+          color: theme.text,
         },
       },
       interaction: {
@@ -52,18 +53,20 @@ const LineChart = () => {
     scales: {
       x: {
         grid: {
-          color: theme.darkToggleBackground,
+          color: PALETTE.WHITE300,
         },
         ticks: {
+          fontSize: 14,
           color: theme.text,
         },
       },
 
       y: {
         grid: {
-          color: theme.darkToggleBackground,
+          color: PALETTE.WHITE300,
         },
         ticks: {
+          fontSize: 14,
           color: theme.text,
         },
       },
@@ -80,7 +83,7 @@ const LineChart = () => {
     datasets: [
       {
         label: '긍정',
-        data: [-1000, -500, 0, 500, -300],
+        data: socialAnalysisData?.map((data) => Number(data.grapeQuotientInfo.positive.toFixed(2))),
         borderColor: theme.positive,
         backgroundColor: theme.positive,
         pointBorderColor: theme.positive,
@@ -88,7 +91,7 @@ const LineChart = () => {
       },
       {
         label: '중립',
-        data: [-800, -300, 192, 400, -200],
+        data: socialAnalysisData?.map((data) => Number(data.grapeQuotientInfo.neutral.toFixed(2))),
         borderColor: theme.neutrality,
         backgroundColor: theme.neutrality,
         pointBorderColor: theme.neutrality,
@@ -96,7 +99,7 @@ const LineChart = () => {
       },
       {
         label: '부정',
-        data: [-1500, -1000, -400, 0, -288],
+        data: socialAnalysisData?.map((data) => Number(data.grapeQuotientInfo.negative.toFixed(2))),
         borderColor: theme.negative,
         backgroundColor: theme.negative,
         pointBorderColor: theme.negative,
@@ -104,6 +107,7 @@ const LineChart = () => {
       },
     ],
   };
+
   return (
     <S.Container>
       <Line options={options} data={data} style={{ height: '100%', width: '100%' }} />

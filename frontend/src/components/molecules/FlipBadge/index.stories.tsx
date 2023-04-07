@@ -15,8 +15,8 @@ export default {
     width: {
       control: { type: 'text' },
     },
-    color: {
-      options: ['red', 'blue', 'purple'],
+    type: {
+      options: ['up', 'down', 'same'],
       control: { type: 'radio' },
     },
   },
@@ -29,5 +29,5 @@ Primary.args = {
   count: '99%',
   changed: '120건',
   width: '120px',
-  color: 'red',
+  type: 'up',
 };

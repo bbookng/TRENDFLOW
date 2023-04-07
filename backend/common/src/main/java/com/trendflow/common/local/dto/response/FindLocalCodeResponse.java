@@ -15,7 +15,7 @@ public class FindLocalCodeResponse {
     private String groupCode;
     private String groupName;
 
-    public static FindLocalCodeResponse fromEntity(LocalCode commonCode){
+    public static FindLocalCodeResponse of(LocalCode commonCode){
         return FindLocalCodeResponse.builder()
                 .code(commonCode.getCode())
                 .name(commonCode.getName())
@@ -26,7 +26,7 @@ public class FindLocalCodeResponse {
 
     public static List<FindLocalCodeResponse> toList(List<LocalCode> commonCodeList){
         return commonCodeList.stream()
-                .map(FindLocalCodeResponse::fromEntity)
+                .map(FindLocalCodeResponse::of)
                 .collect(Collectors.toList());
     }
 }
