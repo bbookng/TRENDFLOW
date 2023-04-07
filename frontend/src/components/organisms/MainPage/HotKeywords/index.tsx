@@ -1,5 +1,6 @@
 import { Divider, Label } from '@/components/atoms';
 import { CircleChart, RankingItem } from '@/components/molecules';
+import { CIRCLE_CHART_PALLETE } from '@/constants/palette';
 import { RankingListItemInterface } from '@/types/ranking';
 
 import * as S from './index.styles';
@@ -12,7 +13,7 @@ interface HotKeywordsPropsInterface {
 }
 
 const HotKeywords = ({ type, ranking }: HotKeywordsPropsInterface) => {
-  const label = ranking.map((item) => item.keyword);
+  const labels = ranking.map((item) => item.keyword);
   const data = ranking.map((item) => item.mentionCount);
 
   return (
@@ -21,7 +22,13 @@ const HotKeywords = ({ type, ranking }: HotKeywordsPropsInterface) => {
 
       <S.ContentPaper>
         <S.ChartWrapper>
-          <CircleChart width="240px" label={label} data={data} />
+          <CircleChart
+            width="240px"
+            labels={labels}
+            label="언급량"
+            pallete={CIRCLE_CHART_PALLETE}
+            data={data}
+          />
           <Divider type="solid" direction="vertical" width={0.1} length="100%" />
         </S.ChartWrapper>
 

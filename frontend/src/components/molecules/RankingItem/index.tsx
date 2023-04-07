@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import Typography from '@/components/atoms/Typography';
+import { ROUTER_PATH } from '@/constants/path';
 import * as S from './index.styles';
 
 export type RankChangeType = 'up' | 'down' | 'new' | 'same';
@@ -23,7 +24,10 @@ const RankingItem = ({ rank, keyword, type, step, width }: RankingItemPropsInter
   const navi = useNavigate();
 
   return (
-    <S.Wrapper width={width} onClick={() => navi('/social/result', { state: { keyword } })}>
+    <S.Wrapper
+      width={width}
+      onClick={() => navi(`/${ROUTER_PATH.SOCIAL_RESULT_PAGE}`, { state: { keyword } })}
+    >
       <S.RankKeywordWrapper>
         {/* 순위 */}
         <S.Rank variant="BASE" weight="700">

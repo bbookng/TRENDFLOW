@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as S from './index.styles';
 import Hamburger from '@/components/@shared/Header/components/Hamburger';
 import Menu from '@/components/@shared/Header/components/Menu';
@@ -11,9 +11,15 @@ const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const { isDark } = useAppSelector((state) => state);
   const navi = useNavigate();
+  const location = useLocation();
   const handleMenuState = () => {
     setOpenMenu(!openMenu);
   };
+
+  // URL이 변경될 때마다 모바일 Header 상태 false로 바꿔서 집어넣음
+  useEffect(() => {
+    setOpenMenu(false);
+  }, [location]);
 
   return (
     <S.Header>

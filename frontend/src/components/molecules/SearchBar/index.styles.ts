@@ -1,13 +1,20 @@
 import styled from '@emotion/styled';
-import Input from '@/components/atoms/Input';
-import { MEDIA_QUERY } from '@/constants/media';
+import { Input } from '@/components/atoms/Input/index.styles';
+import { MEDIA_QUERY, MOBILE_MIN_WIDTH } from '@/constants/media';
 import { BORDER_RADIUS, BOX_SHADOW } from '@/constants/styles';
 
 export const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  min-width: ${MOBILE_MIN_WIDTH}px;
+
+  & .tooltip {
+    background-color: ${({ theme }) => theme.contentBackground};
+    color: ${({ theme }) => theme.negative};
+  }
 `;
+
 export const Form = styled.form`
   width: 100%;
   height: 48px;
@@ -29,5 +36,3 @@ export const FormInput = styled(Input)`
   height: 100%;
   flex: 1;
 `;
-
-export const FormBtn = styled.button``;
