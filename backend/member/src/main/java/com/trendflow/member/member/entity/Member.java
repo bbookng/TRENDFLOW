@@ -22,8 +22,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private  Long memberId;
-    @Column(name = "keyword_id")
-    private Long keywordId;
+    @Column(name = "keyword")
+    private String keyword;
     @Column(name = "platform_code")
     private String platformCode;
     @Column(name = "name")

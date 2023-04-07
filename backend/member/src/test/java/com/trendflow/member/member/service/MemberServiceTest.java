@@ -1,8 +1,6 @@
 package com.trendflow.member.member.service;
 
-import com.trendflow.member.auth.dto.authentication.KakaoUser;
-import com.trendflow.member.global.code.PlatformCode;
-import com.trendflow.member.global.code.RoleCode;
+import com.trendflow.member.auth.dto.authentication.SocialUser;
 import com.trendflow.member.global.exception.NotFoundException;
 import com.trendflow.member.member.entity.Member;
 import com.trendflow.member.member.entity.Role;
@@ -37,6 +35,8 @@ class MemberServiceTest {
     @Test
     @Transactional
     void registMemberTest() {
+        String platformCode = "KAKAO";
+        String roleCode = "NORMAL_USER";
         String name = "박상민";                    // nickname
         String email = "tablemin@kakao.com";     // email
         String gender = "male";                  // gender
@@ -44,7 +44,7 @@ class MemberServiceTest {
         String birthday = "0506";                // birthday
         String password = UUID.randomUUID().toString().replace("-", "");
 
-        KakaoUser kakaoUser = KakaoUser.builder()
+        SocialUser socialUser = SocialUser.builder()
                             .name(name)
                             .email(email)
                             .gender(gender)
@@ -53,18 +53,18 @@ class MemberServiceTest {
                             .build();
 
         Member member = Member.builder()
-                .platformCode(PlatformCode.KAKAO.getCode())
-                .name(kakaoUser.getName())
-                .email(kakaoUser.getEmail())
-                .gender(kakaoUser.getGender())
-                .age(kakaoUser.getAge())
-                .birthday(kakaoUser.getBirthday())
+                .platformCode(platformCode)
+                .name(socialUser.getName())
+                .email(socialUser.getEmail())
+                .gender(socialUser.getGender())
+                .age(socialUser.getAge())
+                .birthday(socialUser.getBirthday())
                 .password(password)
                 .build();
         memberRepository.save(member);
 
         roleRepository.save(Role.builder()
-                .roleCode(RoleCode.NORMAL.getCode())
+                .roleCode(roleCode)
                 .member(member)
                 .build());
     }

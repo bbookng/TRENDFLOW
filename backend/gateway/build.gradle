@@ -25,19 +25,20 @@ ext {
 dependencies {
 	// spring
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+	testImplementation 'org.springframework.security:spring-security-test'
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-
-	// gateway
-	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
-
 	// eureka
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
 	// Security
 //	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.7.9'
+	// Openfeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	// gateway
+	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+	// actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 dependencyManagement {

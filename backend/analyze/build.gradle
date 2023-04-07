@@ -27,21 +27,31 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-
 	// eureka
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
 	// Database
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// Openfeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	// actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	// kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'org.json:json:20210307'
 }
 
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
 }

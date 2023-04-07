@@ -3,12 +3,15 @@ import { css, Global, useTheme } from '@emotion/react';
 import emotionReset from 'emotion-reset';
 import PRETENDARD_WOFF from '@/assets/fonts/PRETENDARD/PretendardVariable.woff2';
 import { MEDIA_QUERY } from '@/constants/media';
+import { PALETTE } from '@/constants/palette';
+import { dataPickerGlobalStyle } from '@/styles/dataPicker/inddex';
 
 const GlobalStyle = () => {
   const theme = useTheme();
 
   const style = css`
     ${emotionReset}
+    ${dataPickerGlobalStyle}
     @font-face {
       font-family: 'PRETENDARD';
       src: url('${PRETENDARD_WOFF}') format('woff2-variations');

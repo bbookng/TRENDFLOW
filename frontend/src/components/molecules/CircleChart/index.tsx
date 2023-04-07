@@ -1,27 +1,28 @@
 import { useTheme } from '@emotion/react';
 import { Chart, ArcElement, Tooltip } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import { CIRCLE_CHART_PALLETE } from '@/constants/palette';
 import * as S from './index.styles';
 
 Chart.register(ArcElement, Tooltip);
 
 interface CircleChartPropsInterface {
   width: string;
-  label: Array<string>;
+  labels: Array<string>;
+  label: string;
+  pallete: Array<string>;
   data: Array<number>;
 }
 
-const CircleChart = ({ width, label, data }: CircleChartPropsInterface) => {
+const CircleChart = ({ width, labels, label, pallete, data }: CircleChartPropsInterface) => {
   const theme = useTheme();
 
   const chartData = {
-    labels: label,
+    labels,
     datasets: [
       {
-        label: '언급량',
+        label,
         data,
-        backgroundColor: CIRCLE_CHART_PALLETE,
+        backgroundColor: pallete,
         borderWidth: 0,
         hoverOffset: 2,
       },

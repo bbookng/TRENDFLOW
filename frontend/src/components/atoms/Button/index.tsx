@@ -8,9 +8,20 @@ export interface ButtonPropsInterface {
   variant?: 'contained' | 'outlined';
   fontSize?: 'LARGE' | 'BASE' | 'SMALL' | 'X_SMALL';
   size?: 'LARGE' | 'MEDIUM' | 'SMALL';
+  borderSize?: string;
+  isDark?: boolean;
+  weight?: 'string';
   onClick?: () => void;
 }
 
+/**
+ *
+ * @param variant
+ * @param fontSize
+ * @param size
+ * @param onClick
+ * @returns
+ */
 const Button = (props: ButtonPropsInterface) => {
   const { children, onClick } = props;
 
