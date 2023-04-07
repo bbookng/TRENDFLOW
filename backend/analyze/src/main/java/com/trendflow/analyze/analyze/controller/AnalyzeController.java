@@ -12,9 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -83,28 +81,18 @@ public class AnalyzeController {
     }
 
     @GetMapping("/youtube")
-    public ResponseEntity<Payload> findYoutube(@RequestParam String link){
+    public ResponseEntity<FindYoutubeResponse> findYoutube(@RequestParam String link){
         log.info("findYoutube - Call");
 
         try {
-            ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-            taskExecutor.initialize();
-            taskExecutor.execute(() -> {
-                try {
-                    Payload payload = analyzeService.findYoutube(FindYoutubeRequest.builder()
-                            .link(link)
-                            .build());
-                    System.out.println("payload = " + payload);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-
-            return ResponseEntity.ok().body(null);
+            FindYoutubeResponse findYoutubeResponse = analyzeService.findYoutube(link);
+            return ResponseEntity.ok().body(findYoutubeResponse);
         } catch (NotFoundException e){
+            e.printStackTrace();
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
+            e.printStackTrace();
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().body(null);
         }
@@ -128,9 +116,11 @@ public class AnalyzeController {
 
             return ResponseEntity.ok().body(findYoutubeCommentResponseList);
         } catch (NotFoundException e){
+            e.printStackTrace();
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e){
+            e.printStackTrace();
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().body(null);
         }

@@ -9,9 +9,8 @@ import com.trendflow.analyze.analyze.repository.RelationRepository;
 import com.trendflow.analyze.analyze.repository.SentimentRepository;
 import com.trendflow.analyze.global.code.Code;
 import com.trendflow.analyze.global.code.SocialCacheCode;
-import com.trendflow.analyze.global.redis.Social;
-import com.trendflow.analyze.global.redis.YoutubeSource;
-import com.trendflow.analyze.global.redis.YoutubeSourceRepository;
+import com.trendflow.analyze.global.exception.NotFoundException;
+import com.trendflow.analyze.global.redis.*;
 import com.trendflow.analyze.msa.dto.vo.Keyword;
 import com.trendflow.analyze.msa.dto.vo.KeywordCount;
 import com.trendflow.analyze.msa.dto.vo.Source;
@@ -21,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +38,7 @@ public class AnalyzeService {
     private final RelationRepository relationRepository;
     private final SentimentRepository sentimentRepository;
     private final YoutubeSourceRepository youtubeSourceRepository;
+    private final YoutubueAnalyzeRepository youtubueAnalyzeRepository;
 
     private final CommonService commonService;
     private final KeywordService keywordService;
@@ -70,9 +71,10 @@ public class AnalyzeService {
         }
         if (!sentimentCountMap.containsKey(now.minusDays(1))) {
             sentimentCountMap.put(now.minusDays(1), GrapeQuotientInfo.builder()
-                    .positive(0)
-                    .negative(0)
-                    .neutral(0)
+                    .positive(0D)
+                    .negative(0D)
+                    .neutral(0D)
+                    .grape(0D)
                     .build());
         }
 
@@ -106,16 +108,31 @@ public class AnalyzeService {
             // 긍부정 지수 일자별 정리
             if (sentimentCountMap.containsKey(now)) {
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMap.get(now);
+                Double positive = nowGrapeQuotient.getPositive();
+                Double negative = nowGrapeQuotient.getNegative();
+                Double neutral = nowGrapeQuotient.getNeutral();
+                Double grape = positive + neutral;
+                Double sum = positive + negative + neutral;
+
+                if (sum != 0) {
+                    positive = positive / sum * 100;
+                    negative = negative / sum * 100;
+                    neutral = neutral / sum * 100;
+                    grape = grape / sum * 100;
+                }
+
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
-                        .positive(nowGrapeQuotient.getPositive())
-                        .negative(nowGrapeQuotient.getNegative())
-                        .neutral(nowGrapeQuotient.getNeutral())
-                        .build();
+                    .positive(positive)
+                    .negative(negative)
+                    .neutral(neutral)
+                    .grape(grape)
+                    .build();
             } else {
                 grapeQuotientInfo = GrapeQuotientInfo.builder()
-                        .positive(0)
-                        .negative(0)
-                        .neutral(0)
+                        .positive(0D)
+                        .negative(0D)
+                        .neutral(0D)
+                        .grape(0D)
                         .build();
                 sentimentCountMap.put(now, grapeQuotientInfo);
             }
@@ -205,17 +222,60 @@ public class AnalyzeService {
         return findRelationContentResponseList;
     }
 
-    public Payload findYoutube(FindYoutubeRequest findYoutubeRequest) {
+    public FindYoutubeResponse findYoutube(String link) {
 
+        String key = "YOUTUBE_ANALYZE_" + link;
 
+        YoutubueAnalyze youtubueAnalyze = youtubueAnalyzeRepository.findById(key)
+                .orElseGet(() -> {
+                    YoutubueAnalyze now = youtubeService.getYoutubeVideo(link);
+                    youtubueAnalyzeRepository.save(key, now, 60000);
+                    return now;
+                });
 
-        kafkaService.sendYoutubeUrl(findYoutubeRequest.getLink());
-        return kafkaService.consumeYoutubeAnalyze();
+        return FindYoutubeResponse.builder()
+                        .title(youtubueAnalyze.getTitle())
+                        .url(youtubueAnalyze.getUrl())
+                        .reaction(FindYoutubeResponse.Reaction.builder()
+                                .viewCount(youtubueAnalyze.getViewCount())
+                                .likeCount(youtubueAnalyze.getLikeCOunt())
+                                .commentCount(youtubueAnalyze.getCommentCount())
+                                .build())
+                        .affinityInfo(FindYoutubeResponse.AffinityInfo.builder()
+                                .positive(youtubueAnalyze.getPositive())
+                                .negative(youtubueAnalyze.getNegative())
+                                .neutral(youtubueAnalyze.getNeutral())
+                                .build())
+                        .owner(FindYoutubeResponse.Owner.builder()
+                                .name(youtubueAnalyze.getName())
+                                .subscribeCount(youtubueAnalyze.getSubscribeCount())
+                                .build())
+                        .build();
     }
 
     public List<FindYoutubeCommentResponse> findYoutubeComment(FindYoutubeCommentRequest findYoutubeCommentRequest) {
-        System.out.println("findYoutubeCommentRequest = " + findYoutubeCommentRequest);
-        return null;
+
+        String link = findYoutubeCommentRequest.getLink();
+        Integer code = findYoutubeCommentRequest.getCode();
+        Integer page = findYoutubeCommentRequest.getPage();
+        Integer perPage = findYoutubeCommentRequest.getPerPage();
+        String key = "YOUTUBE_ANALYZE_" + link;
+
+        YoutubueAnalyze youtubueAnalyze = youtubueAnalyzeRepository.findById(key)
+                .orElseGet(() -> {
+                    YoutubueAnalyze now = youtubeService.getYoutubeVideo(link);
+                    youtubueAnalyzeRepository.save(key, now, 60000);
+                    return now;
+                });
+
+        List<Payload.Comment> commentList =  youtubueAnalyze.getCommentList().stream().filter(comment -> comment.getSentiment() == code.doubleValue()).collect(Collectors.toList());
+
+        PageRequest pageRequest = PageRequest.of((page - 1), perPage);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), commentList.size());
+        Page<Payload.Comment> commentPage = new PageImpl<>(commentList.subList(start, end), pageRequest, commentList.size());
+
+        return FindYoutubeCommentResponse.toList(commentPage.toList());
     }
 
     public FindCompareKeywordResponse findCompareKeyword(FindCompareKeywordRequest findCompareKeywordRequest) {
@@ -248,6 +308,7 @@ public class AnalyzeService {
                     .date(now)
                     .build();
 
+            // 워드 카운트
             Integer countA = 0;
             Integer countB = 0;
             if (keywordCountMapA.containsKey(now)){
@@ -273,30 +334,39 @@ public class AnalyzeService {
             mentionCountCompare.setKeyword1(countA);
             mentionCountCompare.setKeyword2(countB);
 
-            countA = 0;
-            countB = 0;
+            // 긍 부정
+            Double senA = 0D;
+            Double senB = 0D;
             if (sentimentCountMapA.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapA.get(now);
-                countA = nowGrapeQuotient.getPositive() - nowGrapeQuotient.getNegative();
+                Double sum = nowGrapeQuotient.getPositive().doubleValue() +
+                                nowGrapeQuotient.getNegative().doubleValue() +
+                                    nowGrapeQuotient.getNeutral().doubleValue();
+                senA = nowGrapeQuotient.getPositive().doubleValue() + nowGrapeQuotient.getNeutral().doubleValue();
+                if (sum != 0) senA = senA / sum * 100;
             }
             if (sentimentCountMapB.containsKey(now)){
                 GrapeQuotientInfo nowGrapeQuotient = sentimentCountMapB.get(now);
-                countB = nowGrapeQuotient.getPositive() - nowGrapeQuotient.getNegative();
+                Double sum = nowGrapeQuotient.getPositive().doubleValue() +
+                                nowGrapeQuotient.getNegative().doubleValue() +
+                                    nowGrapeQuotient.getNeutral().doubleValue();
+                senB = nowGrapeQuotient.getPositive().doubleValue() + nowGrapeQuotient.getNeutral().doubleValue();
+                if (sum != 0) senB = senB / sum * 100;
             }
 
             // 비교
-            if (countA > countB) {
+            if (senA > senB) {
                 grapeQuotientCompare.setType(SocialCacheCode.TYPE_UP.getCode());
-                grapeQuotientCompare.setDifference(countA - countB);
-            } else if (countA == countB) {
+                grapeQuotientCompare.setDifference(new Double(senA - senB).intValue());
+            } else if (senA == senB) {
                 grapeQuotientCompare.setType(SocialCacheCode.TYPE_SAME.getCode());
                 grapeQuotientCompare.setDifference(0);
             } else {
                 grapeQuotientCompare.setType(SocialCacheCode.TYPE_DOWN.getCode());
-                grapeQuotientCompare.setDifference(countB - countA);
+                grapeQuotientCompare.setDifference(new Double(senB - senA).intValue());
             }
-            grapeQuotientCompare.setKeyword1(countA);
-            grapeQuotientCompare.setKeyword2(countB);
+            grapeQuotientCompare.setKeyword1(senA.intValue());
+            grapeQuotientCompare.setKeyword2(senB.intValue());
 
             findCompareKeywordResponse.getMentionCountCompare().add(mentionCountCompare);
             findCompareKeywordResponse.getGrapeQuotientCompare().add(grapeQuotientCompare);
@@ -358,14 +428,14 @@ public class AnalyzeService {
         Map<LocalDate, GrapeQuotientInfo> sentimentCountMap = new HashMap<>();
         for (SentimentCount sentimentCount : sentimentList) {
             LocalDate now = sentimentCount.getRegDt();
-            Double score = sentimentCount.getScore();
+            Long score = sentimentCount.getScore();
             Long count = sentimentCount.getCount();
 
             if (!sentimentCountMap.containsKey(now))
                 sentimentCountMap.put(now, setGrapeQuotientInfo(GrapeQuotientInfo.builder()
-                        .positive(0)
-                        .negative(0)
-                        .neutral(0)
+                        .positive(0D)
+                        .negative(0D)
+                        .neutral(0D)
                         .build(), score, count));
             else sentimentCountMap.put(now, setGrapeQuotientInfo(sentimentCountMap.get(now), score, count));
         }
@@ -378,17 +448,17 @@ public class AnalyzeService {
 
     private CompareInfoVo compareKeywrodCount(MentionCountInfo past, MentionCountInfo now) {
         String type;
-        Integer changed;
+        Double changed;
 
-        Integer pastTotal = past.getTotal();
-        Integer nowTotal = now.getTotal();
+        Double pastTotal = past.getTotal().doubleValue();
+        Double nowTotal = now.getTotal().doubleValue();
 
         if (nowTotal > pastTotal) {
             type = SocialCacheCode.TYPE_UP.getCode();
             changed = nowTotal - pastTotal;
         } else if (nowTotal == pastTotal) {
             type = SocialCacheCode.TYPE_SAME.getCode();
-            changed = 0;
+            changed = 0D;
         } else {
             type = SocialCacheCode.TYPE_DOWN.getCode();
             changed = pastTotal - nowTotal;
@@ -402,17 +472,22 @@ public class AnalyzeService {
 
     private CompareInfoVo compareSentimentCount(GrapeQuotientInfo past, GrapeQuotientInfo now) {
         String type;
-        Integer changed;
+        Double changed;
 
-        Integer pastGrape = past.getPositive() - past.getNegative();
-        Integer nowGrape = now.getPositive() - now.getNegative();
+        Double pastSum = past.getPositive() + past.getNegative() + past.getNeutral();
+        Double pastGrape = past.getPositive() + past.getNeutral();
+        if (pastSum != 0D) pastGrape = pastGrape / pastSum * 100;
+
+        Double nowSum = now.getPositive() + now.getNegative() + now.getNeutral();
+        Double nowGrape = now.getPositive() + now.getNeutral();
+        if (nowSum != 0D) nowGrape = nowGrape / nowSum * 100;
 
         if (nowGrape > pastGrape) {
             type = SocialCacheCode.TYPE_UP.getCode();
             changed = nowGrape - pastGrape;
         } else if (nowGrape == pastGrape) {
             type = SocialCacheCode.TYPE_SAME.getCode();
-            changed = 0;
+            changed = 0D;
         } else {
             type = SocialCacheCode.TYPE_DOWN.getCode();
             changed = pastGrape - nowGrape;
@@ -440,18 +515,18 @@ public class AnalyzeService {
         else if (platformCode.equals(NAVER_BLOG)) naverBlog = count.intValue();
         else if (platformCode.equals(TWITTER)) twitter = count.intValue();
 
-        mentionCountInfo.setDaum(daumNews);
-        mentionCountInfo.setNaver(naverNews + naverBlog);
-        mentionCountInfo.setTwitter(twitter);
-        mentionCountInfo.setTotal(daumNews + naverNews + naverBlog + twitter);
+        mentionCountInfo.setDaum(mentionCountInfo.getDaum() + daumNews);
+        mentionCountInfo.setNaver(mentionCountInfo.getNaver() + naverNews + naverBlog);
+        mentionCountInfo.setTwitter(mentionCountInfo.getTwitter() + twitter);
+        mentionCountInfo.setTotal(mentionCountInfo.getTotal() + daumNews + naverNews + naverBlog + twitter);
 
         return mentionCountInfo;
     }
 
-    private GrapeQuotientInfo setGrapeQuotientInfo(GrapeQuotientInfo grapeQuotientInfo, Double score, Long count) {
-        if (score == 1.0) grapeQuotientInfo.setPositive(count.intValue());
-        else if (score == 0.0) grapeQuotientInfo.setNegative(count.intValue());
-        else grapeQuotientInfo.setNeutral(count.intValue());
+    private GrapeQuotientInfo setGrapeQuotientInfo(GrapeQuotientInfo grapeQuotientInfo, Long score, Long count) {
+        if (score == 1L) grapeQuotientInfo.setPositive(count.doubleValue());
+        else if (score == 0L) grapeQuotientInfo.setNegative(count.doubleValue());
+        else grapeQuotientInfo.setNeutral(count.doubleValue());
 
         return grapeQuotientInfo;
     }
