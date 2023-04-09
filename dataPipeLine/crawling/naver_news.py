@@ -1,3 +1,4 @@
+import pymysql
 import os
 import sys
 import time
@@ -7,19 +8,54 @@ from bs4 import BeautifulSoup
 import re
 from urllib.request import urlopen
 from datetime import datetime, timedelta
+from emoji import core
 
 START_PAGE = 0
-END_PAGE = 268
+END_PAGE = 50
 SORT = '0'
+
+
+global con, cur, id, brand_ids
+
+def connect():
+    global id, con, cur, brand_ids
+    con = pymysql.connect(host='trendflow.site',port=3306, user='trendflow', password='trendflow205.!', db='common', charset='utf8') 
+    
+    # STEP 3: Connection 으로부터 Cursor 생성
+    cur = con.cursor()
+    
+    # STEP 4: SQL문 실행 및 Fetch
+    sql = "SELECT max(source_id) FROM source"
+    cur.execute(sql)
+    rows = cur.fetchall()
+
+    id = rows[0][0]+1
+
+    sql = "SELECT brand_id, name FROM brand"
+    cur.execute(sql)
+    rows = cur.fetchall()
+    
+    brand_ids={}
+    for row in rows:
+        if row[0]==0:
+            continue
+        brand_ids[row[1]]=row[0]
+    
 
 def datetime_to_str(date):
     return date.strftime("%Y%m%d")
 
 def getJsonContent(keyword, mem, searchUrl, startPage, endPage):
+    global id
     jsonContent = []
     prevPage=[]
     searchUrlWithPage=''
+    sql = "INSERT INTO source (source_id, brand_id, platform_code, title, link, content, reg_dt, thumb_img) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    cnt=0
     for page in range(startPage, endPage):    
+        if cnt>200:
+            print('200개 초과 중단!!')
+            break
         pageStr = str(page*15 + 1)
         searchUrlWithPage = searchUrl + pageStr
         #searchUrlWithPage= 'https://m.search.naver.com/search.naver?where=m_news&sm=mtb_pge&query='+word+'&sort='+ sort +'&photo=0&field=0&pd=0&ds=&de=&cluster_rank=44&mynews=0&office_type=0&office_section_code=0&news_office_checked=&nso=so:r,p:all&start=' + pageStr  #기간설정x
@@ -83,11 +119,19 @@ def getJsonContent(keyword, mem, searchUrl, startPage, endPage):
                     date = datetime.strptime(match.group(), '%Y-%m-%d').date()
                 
                 #year, month, day = date.year, date.month, date.day
+                img=''
+                img1 = page.find('img', {'id': 'img1'})
+                if img1:
+                    if img1.get('data-src') is not None:
+                        img = img1.get('data-src')
+                    elif img1.get('src') is not None:
+                        img = img1.get('src')
+                            
 
                 #쓸데없는 태그 제거
                 to_clean = re.compile('<.*?>')
                 content = re.sub(to_clean, '', content_tag)
-
+                
                 #print("================================")
                 #print("url : ",newsUrl)
                 # print("제목 : ",title)
@@ -96,11 +140,25 @@ def getJsonContent(keyword, mem, searchUrl, startPage, endPage):
 
                 #noun = word_extraction(content)
                 #print("단어 : ", noun)
+                title = core.replace_emoji(title, replace='')
+                content = core.replace_emoji(content, replace='')
                 
                 
-                pageContent.append({'title':title, 'link':newsUrl, 'content':content,'date':str(date)})                                
-                print(newsUrl + " : " + str(date) + " (" + keyword + ") : " + title)
-            except:
+                dateint=int(str(date).replace("-", ""))
+                cur.execute(sql, (id, brand_ids[keyword], 'SU200', title, newsUrl, content, dateint, img ))
+                con.commit()
+                pageContent.append({
+                    'title':title, 
+                    #'link':newsUrl, 
+                    'content':content,
+                    'date':str(date), 
+                    'id':id
+                }) 
+                id+=1                               
+                print('id:',(id-1) ,newsUrl ," : " , str(date) , " (" , keyword , ") : " , title)
+                cnt+=1
+            except Exception as e:
+                print(e)
                 pass
 
         #기사가 15개보다 작으면 마지막 페이지란뜻
@@ -115,6 +173,7 @@ def getJsonContent(keyword, mem, searchUrl, startPage, endPage):
                     return jsonContent
             jsonContent += pageContent
         prevPage = nowPage
+        
     return jsonContent
 
 def getNaverNews(keyword, startPage, endPage, sort, sYear, sMonth, sDay, eYear, eMonth, eDay):
@@ -136,59 +195,50 @@ def getNaverNews(keyword, startPage, endPage, sort, sYear, sMonth, sDay, eYear, 
     return jsonContent
 
 def crawling(start_date, end_date):
-    keyword_file = open("keyword.txt", 'r', encoding="utf-8")
-
     total_count = 0
     crawling_start = time.time()
     
-    while True:
-        now_date = start_date
+    iscontinue=True
+    for keyword in brand_ids.keys():
 
-        keyword_start = time.time()            
-        keyword = keyword_file.readline().strip()
+        keyword_start = time.time()      
+        start_str = datetime_to_str(start_date)
+        end_str = datetime_to_str(end_date)
 
-        list = []
-
-        if not keyword:
-            break
-
-        while True:
-            if now_date > end_date:
-                break
-
-            start = now_date
-            end = now_date + timedelta(days=15)
-
-            if end > end_date:
-                end = end_date        
-                
-            start_str = datetime_to_str(start)
-            end_str = datetime_to_str(end)
-
-            print(start_str + "-" + end_str + " (" + keyword + ")")
-            list_item = getNaverNews(keyword, START_PAGE, END_PAGE, SORT, str(start.year), str(start.month), str(start.day), str(end.year), str(end.month), str(end.day))  
-            
-            if len(list_item) > 1:
-                list = list + sorted(list_item, key = lambda item: (item['date']))
-
-            now_date = now_date + timedelta(days=16)
+        print(start_str + "-" + end_str + " (" + keyword + ")")
+        list = getNaverNews(keyword, START_PAGE, END_PAGE, SORT, str(start_date.year), str(start_date.month), str(start_date.day), str(end_date.year), str(end_date.month), str(end_date.day))  
         
-        folder = "../data/navernews/" + str(start_date.year) + "-" + str(start_date.month)
+        list.sort( key = lambda item: (item['date']))
+        
+        folder = "./data2/navernews/" + str(start_date.year) + "-" + str(start_date.month) + "-" + str(start_date.day)
         # 디렉토리가 없으면 생성
         if not os.path.isdir(folder):
             os.mkdir(folder)
-
-        with open(folder + "/navernews_" + keyword + "_" + datetime_to_str(start_date) + "-" + datetime_to_str(end_date) + ".json", "w", encoding="utf-8") as outfile:
+        
+        keyword = keyword.replace(' ','_')
+        keyword = keyword.replace('.','')
+        with open(folder + "/" + keyword + ".json", "w", encoding="utf-8") as outfile:
             json.dump(list, outfile, indent="\t", ensure_ascii=False)
         
         total_count += len(list)
         log = str(len(list)) + " : " + str(time.time() - keyword_start) + "s : " + keyword + "\n"
 
-        print(log, end="")
-        with open("../log/navernews/navernews_" + datetime_to_str(start_date) + "-" + datetime_to_str(end_date) + ".txt", "a+", encoding="utf-8") as log_file:
-            log_file.write(log)
+        logFolder = "./log/navernews"
+        if not os.path.isdir(logFolder):
+            os.mkdir(logFolder)
 
-    with open("../log/navernews/navernews_" + datetime_to_str(start_date) + "-" + datetime_to_str(end_date) + ".txt", "a+", encoding="utf-8") as log_file:
+        logFile = logFolder+"/navernews_" + datetime_to_str(start_date) + "-" + datetime_to_str(end_date) + ".txt"
+        if not os.path.exists(logFile):
+            with open(logFile, 'w', encoding='utf-8') as f:
+                f.write("")
+
+        print(log, end="")
+        with open(logFile, "a+", encoding="utf-8") as log_file:
+            log_file.write(log)
+        print('잠시 쉬기')
+        time.sleep(20)
+
+    with open("./log/navernews/navernews_" + datetime_to_str(start_date) + "-" + datetime_to_str(end_date) + ".txt", "a+", encoding="utf-8") as log_file:
         log = "#########################################\n"
         log += "total_time  : " + str(time.time() - crawling_start) +"s\n"
         log += "total_count : " + str(total_count) + "\n"
@@ -212,6 +262,7 @@ if __name__ == "__main__":
     }
 
     start_date = datetime(start['year'], start['month'], start['day'])
-    end_date = datetime(end['year'], end['month'], end['day']) + timedelta(days=-1)
+    end_date = datetime(end['year'], end['month'], end['day'])
 
+    connect()
     crawling(start_date, end_date)

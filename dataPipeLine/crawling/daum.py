@@ -1,3 +1,4 @@
+import pymysql
 import sys
 import json
 import os
@@ -6,6 +7,7 @@ import random
 import requests
 from bs4 import BeautifulSoup as bs
 from datetime import datetime, timedelta
+import datetime as dt
 from user_agent import generate_navigator
 
 DIV_VALUE = 100
@@ -19,6 +21,33 @@ CONTENT_MAX_SLEEP_TIME = 1
 KEYWORD_MIN_SLEEP_TIME = 1
 KEYWORD_MAX_SLEEP_TIME = 3
 
+yesterday = (dt.date.today() - dt.timedelta(days=1)).strftime("%Y-%m-%d")
+
+global con, cur, id, brand_ids
+def connect():
+    global id, con, cur, brand_ids
+    con = pymysql.connect(host='trendflow.site',port=3306, user='trendflow', password='trendflow205.!', db='common', charset='utf8') 
+    
+    # STEP 3: Connection 으로부터 Cursor 생성
+    cur = con.cursor()
+    
+    # STEP 4: SQL문 실행 및 Fetch
+    sql = "SELECT max(source_id) FROM source"
+    cur.execute(sql)
+    rows = cur.fetchall()
+
+    id = rows[0][0]+1
+
+    sql = "SELECT brand_id, name FROM brand"
+    cur.execute(sql)
+    rows = cur.fetchall()
+    
+    brand_ids={}
+    for row in rows:
+        if row[0]==0:
+            continue
+        brand_ids[row[1]]=row[0]
+
 def datetime_to_str(date):
     return date.strftime("%Y%m%d")
 
@@ -30,16 +59,27 @@ def get_content(url):
 
     for article in soup.select_one('div[class="article_view"]').select('p, div'):
         content = content + article.text
+    imgTag = soup.select_one('img[class="thumb_g_article"]')
+    img=''
+    if imgTag:
+        img = imgTag.get('src')
+        if not img:
+            img=''
 
-    return content
+    return content.strip(), img
 
 def process(keyword, start_date, end_date):
+    global id
     list = []
     title_list = []
     page = 1
     past_ul = ""
-
+    sql = "INSERT INTO source (source_id, brand_id, platform_code, title, link, content, reg_dt, thumb_img) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    cnt=0
     while True:
+        if cnt>80:
+            print('80개 초과 중단!')
+            break
         sleep = random.randint(DATE_MIN_SLEEP_TIME, DATE_MAX_SLEEP_TIME)
         time.sleep(sleep / DIV_VALUE)
         url = 'https://m.search.daum.net/search?w=news&DA=PGD&enc=utf8&cluster=y&cluster_page=10&q=' + keyword + '&sort=accuracy&p=' + str(page) + '&period=u&sd=' + start_date + '000000&ed=' + end_date + '235959&n=100'
@@ -61,104 +101,114 @@ def process(keyword, start_date, end_date):
             break
 
         for li in ul:
-            title_info = li.select("a")[0]
-            summary_info = li.select_one('a[class="desc clamp-g3"]')
-            writer_info = li.find('div', 'area_writer')
-
-            title = title_info.select_one('strong[class="tit-g clamp-g2"]').text.strip()
-            link = title_info.attrs['href'].strip()
-            summary = summary_info.text.strip()
-            company = writer_info.select_one('a[class="txt_info clamp"]').text.strip()
-            date_list = writer_info.select_one('span[class="txt_info"]').text[:-1].strip().split('.')            
-            date = '{0}-{1:0>2}-{2:0>2}'.format(date_list[0], date_list[1], date_list[2])
-
-            is_daum = writer_info.select_one('a[class="txt_info"]')
-
-            if not is_daum or is_daum.text != "다음뉴스":
-                continue
-            
-            if title in title_list:
-                continue      
-            title_list.append(title)
-
-            sleep = random.randint(CONTENT_MIN_SLEEP_TIME, CONTENT_MAX_SLEEP_TIME)
-            time.sleep(sleep / DIV_VALUE)
-
             try:
-                content = get_content(link).strip()
-            except:
-                continue
+                title_info = li.select("a")[0]
+                #summary_info = li.select_one('a[class="desc clamp-g3"]')
+                writer_info = li.find('div', 'area_writer')
 
-            list.append({
-                "title": title,
-                "link" : link,
-                "summary" : summary,
-                "company" : company,
-                "content" : content,
-                "date" : date
-            })
+                title = title_info.select_one('strong[class="tit-g clamp-g2"]').text.strip()
+                link = title_info.attrs['href'].strip()
+                #summary = summary_info.text.strip()
+                #company = writer_info.select_one('a[class="txt_info clamp"]').text.strip()
+                date_list = writer_info.select_one('span[class="txt_info"]').text[:-1].strip().split('.')  
+                date=''
+                try:     
+                    date = '{0}-{1:0>2}-{2:0>2}'.format(date_list[0], date_list[1], date_list[2])
+                except:
+                    date = yesterday
 
-            print(link + " : " + date + " (" + keyword + ") : " + title)
+                is_daum = writer_info.select_one('a[class="txt_info"]')
+
+                if not is_daum or is_daum.text != "다음뉴스":
+                    continue
+                
+                if title in title_list:
+                    continue      
+                title_list.append(title)
+
+                sleep = random.randint(CONTENT_MIN_SLEEP_TIME, CONTENT_MAX_SLEEP_TIME)
+                time.sleep(sleep / DIV_VALUE)
+
+            
+                content, img = get_content(link)
+
+                list.append({
+                    "title": title,
+                    #"link" : link,
+                    #"summary" : summary,
+                    #"company" : company,
+                    "content" : content,
+                    "date" : date,
+                    'id': id,
+                })
+                dateint=int(str(date).replace("-", ""))
+                cur.execute(sql, (id, brand_ids[keyword], 'SU100', title, link, content, dateint, img ))
+                con.commit()
+                id+=1
+                cnt+=1
+                print(id, link, img)
+            
+            except Exception as e:
+                print(e)
+                pass
+
+            
+
+            #print(link + " : " + date + " (" + keyword + ") : " + title)
 
         page = page + 1
         past_ul = ul
 
-    return list;
+    return list
 
 def crawling(start_date, end_date):
-    keyword_file = open("keyword.txt", 'r', encoding="utf-8")
 
     total_count = 0
     crawling_start = time.time()
     
-    while True:
-        now_date = start_date
-
+    iscontiue=True
+    for keyword in brand_ids.keys():
+        '''if keyword =='우리은행':
+            iscontiue=False
+        if iscontiue:
+            continue'''
         keyword_start = time.time()            
-        keyword = keyword_file.readline().strip()
 
         list = []
 
-        if not keyword:
-            break
+ 
+        start_str = datetime_to_str(start_date)
+        end_str = datetime_to_str(end_date)
 
-        while True:
-            if now_date > end_date:
-                break
-
-            start = now_date
-            end = now_date + timedelta(days=6)
-
-            if end > end_date:
-                end = end_date        
-                
-            start_str = datetime_to_str(start)
-            end_str = datetime_to_str(end)
-
-            print(start_str + "-" + end_str + " (" + keyword + ")")
-            list_item = process(keyword, start_str, end_str)
-            list = list + sorted(list_item, key = lambda item: (item['date']))
-            now_date = now_date + timedelta(weeks=1)
+        print(start_str + "-" + end_str + " (" + keyword + ")")
+        list = process(keyword, start_str, end_str)
+        #list.sort(key = lambda item: (item['date']))
         
-        folder = "../data/daum/" + str(start_date.year) + "-" + str(start_date.month)
+        folder = "./data2/daum/" + str(start_date.year) + "-" + str(start_date.month)  + "-" + str(start_date.day)
         # 디렉토리가 없으면 생성
         if not os.path.isdir(folder):
             os.mkdir(folder)
 
-        with open(folder + "/daum_" + keyword + "_" + datetime_to_str(start_date) + "-" + datetime_to_str(end_date) + ".json", "w", encoding="utf-8") as outfile:
+        keyword = keyword.replace(' ','_')
+        keyword = keyword.replace('.','')
+        with open(folder + "/" + keyword + ".json", "w", encoding="utf-8") as outfile:
             json.dump(list, outfile, indent="\t", ensure_ascii=False)
         
         total_count += len(list)
         log = str(len(list)) + " : " + str(time.time() - keyword_start) + "s : " + keyword + "\n"
 
         print(log, end="")
-        with open("../log/daum/daum_" + datetime_to_str(start_date) + "-" + datetime_to_str(end_date) + ".txt", "a+", encoding="utf-8") as log_file:
+
+        logfolder="./log/daum"
+        if not os.path.isdir(logfolder):
+            os.mkdir(logfolder)
+        with open(logfolder+"/daum_" + datetime_to_str(start_date) + "-" + datetime_to_str(end_date) + ".txt", "a+", encoding="utf-8") as log_file:
             log_file.write(log)
 
         sleep = random.randint(KEYWORD_MIN_SLEEP_TIME, KEYWORD_MAX_SLEEP_TIME)
         time.sleep(sleep / DIV_VALUE)
 
-    with open("../log/daum/daum_" + datetime_to_str(start_date) + "-" + datetime_to_str(end_date) + ".txt", "a+", encoding="utf-8") as log_file:
+    with open(logfolder+"/daum_" + datetime_to_str(start_date) + "-" + datetime_to_str(end_date) + ".txt", "a+", encoding="utf-8") as log_file:
         log = "#########################################\n"
         log += "total_time  : " + str(time.time() - crawling_start) +"s\n"
         log += "total_count : " + str(total_count) + "\n"
@@ -182,5 +232,6 @@ if __name__ == "__main__":
     }
 
     start_date = datetime(start['year'], start['month'], start['day'])
-    end_date = datetime(end['year'], end['month'], end['day']) + timedelta(days=-1)
+    end_date = datetime(end['year'], end['month'], end['day'])
+    connect()
     crawling(start_date, end_date)
