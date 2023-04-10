@@ -26,7 +26,7 @@ yesterday = (dt.date.today() - dt.timedelta(days=1)).strftime("%Y-%m-%d")
 global con, cur, id, brand_ids
 def connect():
     global id, con, cur, brand_ids
-    con = pymysql.connect(host='trendflow.site',port=3306, user='trendflow', password='trendflow205.!', db='common', charset='utf8') 
+    con = pymysql.connect(host='trendflow.site',port=3306, user='trendflow', password='', db='common', charset='utf8') 
     
     # STEP 3: Connection 으로부터 Cursor 생성
     cur = con.cursor()
