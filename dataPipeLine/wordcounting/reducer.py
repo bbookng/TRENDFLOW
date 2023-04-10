@@ -8,7 +8,7 @@ current_dateint=0
 wordDict = defaultdict(int)
 
 
-con = pymysql.connect(host='trendflow.site',port=3306, user='trendflow', password='trendflow205.!', db='keyword', charset='utf8')
+con = pymysql.connect(host='trendflow.site',port=3306, user='trendflow', password='', db='keyword', charset='utf8')
 
 cur = con.cursor()
 insertSql = 'INSERT INTO keyword(source_id, platform_code, keyword, count, reg_dt) VALUES( %s, %s, %s, %s, %s)'
