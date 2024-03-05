@@ -21,7 +21,7 @@ import kss
 import re
 import pandas as pd
 
-api_key = "AIzaSyBPiZUwiXhGTWni6H_z87-8VTe_21EXw5c"
+api_key = ""
 
 
 class SentimentPredictor:
